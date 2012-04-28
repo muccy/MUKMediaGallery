@@ -23,50 +23,18 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
-
-typedef enum {
-    MUKMediaAssetKindImage = 0,
-    MUKMediaAssetKindVideo,
-    MUKMediaAssetKindYouTubeVideo,
-    MUKMediaAssetKindAudio
-} MUKMediaAssetKind;
+#import <MUKMediaGallery/MUKMediaAssetProtocol.h>
 
 /**
- Protocol which marks a media asset.
+ Optional methods for audio assets.
  */
-@protocol MUKMediaAsset <NSObject>
-/**
- Media kind.
- 
- Kind could be:
- 
- * `MUKMediaAssetKindImage`, for an image.
- * `MUKMediaAssetKindVideo`, for a video.
- * `MUKMediaAssetKindYouTubeVideo`, for a YouTube video.
- * `MUKMediaAssetKindAudio`, for audio.
- 
- @return Kind of the media.
- */
-- (MUKMediaAssetKind)mediaKind;
-/**
- URL (remote URL or file URL) of the thumbnail.
- @return URL of media thumbnail.
- */
-- (NSURL *)mediaThumbnailURL;
-/**
- URL (remote URL or file URL) of the full media to show.
- @return URL of media.
- */
-- (NSURL *)mediaURL;
-
+@protocol MUKMediaAudioAsset <MUKMediaAsset>
 @optional
 /**
- Thumbnail image for media.
+ Audio duration.
  
- If you do not implement this method you let framework classes to load (or
- download) thumbnail for you.
+ If you don't implement this method or you return a negative value, it means
+ you haven't got a duration.
  */
-- (UIImage *)mediaThumbnail;
-
+- (NSTimeInterval)mediaDuration;
 @end
