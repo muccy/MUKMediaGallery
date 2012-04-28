@@ -25,6 +25,37 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol MUKMediaAsset <NSObject>
+typedef enum {
+    MUKMediaAssetKindImage = 0,
+    MUKMediaAssetKindVideo,
+    MUKMediaAssetKindYouTubeVideo,
+    MUKMediaAssetKindAudio
+} MUKMediaAssetKind;
 
+/**
+ Protocol whih marks a media asset.
+ */
+@protocol MUKMediaAsset <NSObject>
+/**
+ Media kind.
+ 
+ Kind could be:
+ * `MUKMediaAssetKindImage`, for an image.
+ * `MUKMediaAssetKindVideo`, for a video.
+ * `MUKMediaAssetKindYouTubeVideo`, for a YouTube video.
+ * `MUKMediaAssetKindAudio`, for audio.
+ 
+ @return Kind of the media.
+ */
+- (MUKMediaAssetKind)mediaKind;
+/**
+ URL (remote URL or file URL) of the thumbnail.
+ @return URL of media thumbnail.
+ */
+- (NSURL *)thumbnailURL;
+/**
+ URL (remote URL or file URL) of the full media to show.
+ @return URL of media.
+ */
+- (NSURL *)mediaURL;
 @end
