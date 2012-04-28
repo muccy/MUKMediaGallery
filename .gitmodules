@@ -1,0 +1,6 @@
+[submodule "Submodules/MUKScrolling"]
+	path = Submodules/MUKScrolling
+	url = git://github.com/muccy/MUKScrolling.git
+[submodule "Submodules/MUKNetworking"]
+	path = Submodules/MUKNetworking
+	url = git://github.com/muccy/MUKNetworking.git
