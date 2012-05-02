@@ -4,3 +4,6 @@
 [submodule "Submodules/MUKNetworking"]
 	path = Submodules/MUKNetworking
 	url = git://github.com/muccy/MUKNetworking.git
+[submodule "Submodules/MUKObjectCache"]
+	path = Submodules/MUKObjectCache
+	url = git://github.com/muccy/MUKObjectCache.git
