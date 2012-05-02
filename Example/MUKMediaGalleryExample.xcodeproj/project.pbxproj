@@ -1,0 +1,463 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		060B1ACA1551581A00454D72 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1AC91551581A00454D72 /* UIKit.framework */; };
+		060B1ACC1551581A00454D72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1ACB1551581A00454D72 /* Foundation.framework */; };
+		060B1ACE1551581A00454D72 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1ACD1551581A00454D72 /* CoreGraphics.framework */; };
+		060B1AD41551581A00454D72 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 060B1AD21551581A00454D72 /* InfoPlist.strings */; };
+		060B1AD61551581A00454D72 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1AD51551581A00454D72 /* main.m */; };
+		060B1B121551587500454D72 /* libMUKMediaGallery.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B031551584400454D72 /* libMUKMediaGallery.a */; };
+		060B1B171551587500454D72 /* libMUKNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B131551587500454D72 /* libMUKNetworking.a */; };
+		060B1B181551587500454D72 /* libMUKObjectCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B141551587500454D72 /* libMUKObjectCache.a */; };
+		060B1B191551587500454D72 /* libMUKScrolling.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B151551587500454D72 /* libMUKScrolling.a */; };
+		060B1B1A1551587500454D72 /* libMUKToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B161551587500454D72 /* libMUKToolkit.a */; };
+		060B1B1C1551587C00454D72 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B1B1551587C00454D72 /* Security.framework */; };
+		060B1B24155158CD00454D72 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1B20155158CD00454D72 /* AppDelegate.m */; };
+		060B1B27155158E400454D72 /* RootTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1B26155158E400454D72 /* RootTableViewController.m */; };
+		060B1B2B1551592200454D72 /* ThumbnailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1B291551592200454D72 /* ThumbnailsViewController.m */; };
+		060B1B2C1551592200454D72 /* ThumbnailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B2A1551592200454D72 /* ThumbnailsViewController.xib */; };
+		060B1B511551860800454D72 /* palms-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B4F1551860800454D72 /* palms-thumbnail.jpg */; };
+		060B1B521551860800454D72 /* palms.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B501551860800454D72 /* palms.jpg */; };
+		060B1B55155188BF00454D72 /* MUKMediaGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B071551584400454D72 /* MUKMediaGallery.bundle */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		060B1B021551584400454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06004950154C13BA004A3B17;
+			remoteInfo = MUKMediaGallery;
+		};
+		060B1B041551584400454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06004960154C13BA004A3B17;
+			remoteInfo = MUKMediaGalleryTests;
+		};
+		060B1B061551584400454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 060049F9154C18FC004A3B17;
+			remoteInfo = MUKMediaGalleryResources;
+		};
+		060B1B101551585B00454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0600494F154C13BA004A3B17;
+			remoteInfo = MUKMediaGallery;
+		};
+		060B1B531551888D00454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 060049F8154C18FC004A3B17;
+			remoteInfo = MUKMediaGalleryResources;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		060B1AC51551581A00454D72 /* MUKMediaGalleryExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MUKMediaGalleryExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		060B1AC91551581A00454D72 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		060B1ACB1551581A00454D72 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		060B1ACD1551581A00454D72 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		060B1AD11551581A00454D72 /* MUKMediaGalleryExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGalleryExample-Info.plist"; sourceTree = "<group>"; };
+		060B1AD31551581A00454D72 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		060B1AD51551581A00454D72 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		060B1AD71551581A00454D72 /* MUKMediaGalleryExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MUKMediaGalleryExample-Prefix.pch"; sourceTree = "<group>"; };
+		060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKMediaGallery.xcodeproj; path = ../MUKMediaGallery.xcodeproj; sourceTree = "<group>"; };
+		060B1B131551587500454D72 /* libMUKNetworking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKNetworking.a; path = "../Submodules/MUKNetworking/build/Release-iphoneos/libMUKNetworking.a"; sourceTree = "<group>"; };
+		060B1B141551587500454D72 /* libMUKObjectCache.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKObjectCache.a; path = "../Submodules/MUKObjectCache/build/Release-iphoneos/libMUKObjectCache.a"; sourceTree = "<group>"; };
+		060B1B151551587500454D72 /* libMUKScrolling.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKScrolling.a; path = "../Submodules/MUKScrolling/build/Release-iphoneos/libMUKScrolling.a"; sourceTree = "<group>"; };
+		060B1B161551587500454D72 /* libMUKToolkit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKToolkit.a; path = "../Submodules/MUKScrolling/Submodules/MUKToolkit/build/Release-iphoneos/libMUKToolkit.a"; sourceTree = "<group>"; };
+		060B1B1B1551587C00454D72 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		060B1B1F155158CD00454D72 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		060B1B20155158CD00454D72 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		060B1B25155158E400454D72 /* RootTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootTableViewController.h; sourceTree = "<group>"; };
+		060B1B26155158E400454D72 /* RootTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootTableViewController.m; sourceTree = "<group>"; };
+		060B1B281551592200454D72 /* ThumbnailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailsViewController.h; sourceTree = "<group>"; };
+		060B1B291551592200454D72 /* ThumbnailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailsViewController.m; sourceTree = "<group>"; };
+		060B1B2A1551592200454D72 /* ThumbnailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThumbnailsViewController.xib; sourceTree = "<group>"; };
+		060B1B4F1551860800454D72 /* palms-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "palms-thumbnail.jpg"; sourceTree = "<group>"; };
+		060B1B501551860800454D72 /* palms.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = palms.jpg; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		060B1AC21551581A00454D72 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				060B1B1C1551587C00454D72 /* Security.framework in Frameworks */,
+				060B1B171551587500454D72 /* libMUKNetworking.a in Frameworks */,
+				060B1B181551587500454D72 /* libMUKObjectCache.a in Frameworks */,
+				060B1B191551587500454D72 /* libMUKScrolling.a in Frameworks */,
+				060B1B1A1551587500454D72 /* libMUKToolkit.a in Frameworks */,
+				060B1B121551587500454D72 /* libMUKMediaGallery.a in Frameworks */,
+				060B1ACA1551581A00454D72 /* UIKit.framework in Frameworks */,
+				060B1ACC1551581A00454D72 /* Foundation.framework in Frameworks */,
+				060B1ACE1551581A00454D72 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		060B1ABA1551581900454D72 = {
+			isa = PBXGroup;
+			children = (
+				060B1ACF1551581A00454D72 /* MUKMediaGalleryExample */,
+				060B1AC81551581A00454D72 /* Frameworks */,
+				060B1AC61551581A00454D72 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		060B1AC61551581A00454D72 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				060B1AC51551581A00454D72 /* MUKMediaGalleryExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		060B1AC81551581A00454D72 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */,
+				060B1B1B1551587C00454D72 /* Security.framework */,
+				060B1B131551587500454D72 /* libMUKNetworking.a */,
+				060B1B141551587500454D72 /* libMUKObjectCache.a */,
+				060B1B151551587500454D72 /* libMUKScrolling.a */,
+				060B1B161551587500454D72 /* libMUKToolkit.a */,
+				060B1AC91551581A00454D72 /* UIKit.framework */,
+				060B1ACB1551581A00454D72 /* Foundation.framework */,
+				060B1ACD1551581A00454D72 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		060B1ACF1551581A00454D72 /* MUKMediaGalleryExample */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B1D155158CD00454D72 /* Classes */,
+				060B1AD01551581A00454D72 /* Supporting Files */,
+			);
+			path = MUKMediaGalleryExample;
+			sourceTree = "<group>";
+		};
+		060B1AD01551581A00454D72 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B4E1551860800454D72 /* Images */,
+				060B1AD11551581A00454D72 /* MUKMediaGalleryExample-Info.plist */,
+				060B1AD21551581A00454D72 /* InfoPlist.strings */,
+				060B1AD51551581A00454D72 /* main.m */,
+				060B1AD71551581A00454D72 /* MUKMediaGalleryExample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		060B1AE51551584200454D72 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B031551584400454D72 /* libMUKMediaGallery.a */,
+				060B1B051551584400454D72 /* MUKMediaGalleryTests.octest */,
+				060B1B071551584400454D72 /* MUKMediaGallery.bundle */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		060B1B1D155158CD00454D72 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B1E155158CD00454D72 /* App Delegate */,
+				060B1B21155158CD00454D72 /* View Controllers */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		060B1B1E155158CD00454D72 /* App Delegate */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B1F155158CD00454D72 /* AppDelegate.h */,
+				060B1B20155158CD00454D72 /* AppDelegate.m */,
+			);
+			path = "App Delegate";
+			sourceTree = "<group>";
+		};
+		060B1B21155158CD00454D72 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B22155158CD00454D72 /* Root */,
+				060B1B23155158CD00454D72 /* Thumbnails View */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		060B1B22155158CD00454D72 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B25155158E400454D72 /* RootTableViewController.h */,
+				060B1B26155158E400454D72 /* RootTableViewController.m */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		060B1B23155158CD00454D72 /* Thumbnails View */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B281551592200454D72 /* ThumbnailsViewController.h */,
+				060B1B291551592200454D72 /* ThumbnailsViewController.m */,
+				060B1B2A1551592200454D72 /* ThumbnailsViewController.xib */,
+			);
+			path = "Thumbnails View";
+			sourceTree = "<group>";
+		};
+		060B1B4E1551860800454D72 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B4F1551860800454D72 /* palms-thumbnail.jpg */,
+				060B1B501551860800454D72 /* palms.jpg */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		060B1AC41551581A00454D72 /* MUKMediaGalleryExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 060B1ADD1551581A00454D72 /* Build configuration list for PBXNativeTarget "MUKMediaGalleryExample" */;
+			buildPhases = (
+				060B1AC11551581A00454D72 /* Sources */,
+				060B1AC21551581A00454D72 /* Frameworks */,
+				060B1AC31551581A00454D72 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				060B1B541551888D00454D72 /* PBXTargetDependency */,
+				060B1B111551585B00454D72 /* PBXTargetDependency */,
+			);
+			name = MUKMediaGalleryExample;
+			productName = MUKMediaGalleryExample;
+			productReference = 060B1AC51551581A00454D72 /* MUKMediaGalleryExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		060B1ABC1551581900454D72 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 060B1ABF1551581900454D72 /* Build configuration list for PBXProject "MUKMediaGalleryExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 060B1ABA1551581900454D72;
+			productRefGroup = 060B1AC61551581A00454D72 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 060B1AE51551584200454D72 /* Products */;
+					ProjectRef = 060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				060B1AC41551581A00454D72 /* MUKMediaGalleryExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		060B1B031551584400454D72 /* libMUKMediaGallery.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMUKMediaGallery.a;
+			remoteRef = 060B1B021551584400454D72 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		060B1B051551584400454D72 /* MUKMediaGalleryTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MUKMediaGalleryTests.octest;
+			remoteRef = 060B1B041551584400454D72 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		060B1B071551584400454D72 /* MUKMediaGallery.bundle */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MUKMediaGallery.bundle;
+			remoteRef = 060B1B061551584400454D72 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		060B1AC31551581A00454D72 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				060B1B55155188BF00454D72 /* MUKMediaGallery.bundle in Resources */,
+				060B1AD41551581A00454D72 /* InfoPlist.strings in Resources */,
+				060B1B2C1551592200454D72 /* ThumbnailsViewController.xib in Resources */,
+				060B1B511551860800454D72 /* palms-thumbnail.jpg in Resources */,
+				060B1B521551860800454D72 /* palms.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		060B1AC11551581A00454D72 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				060B1AD61551581A00454D72 /* main.m in Sources */,
+				060B1B24155158CD00454D72 /* AppDelegate.m in Sources */,
+				060B1B27155158E400454D72 /* RootTableViewController.m in Sources */,
+				060B1B2B1551592200454D72 /* ThumbnailsViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		060B1B111551585B00454D72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MUKMediaGallery;
+			targetProxy = 060B1B101551585B00454D72 /* PBXContainerItemProxy */;
+		};
+		060B1B541551888D00454D72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MUKMediaGalleryResources;
+			targetProxy = 060B1B531551888D00454D72 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		060B1AD21551581A00454D72 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				060B1AD31551581A00454D72 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		060B1ADB1551581A00454D72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Marco Muccinelli (959P8R4D7Z)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PROVISIONING_PROFILE = "29A718E1-5F0E-4F78-BCCB-BD08AC04BC69";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		060B1ADC1551581A00454D72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		060B1ADE1551581A00454D72 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MUKMediaGalleryExample/MUKMediaGalleryExample-Prefix.pch";
+				INFOPLIST_FILE = "MUKMediaGalleryExample/MUKMediaGalleryExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		060B1ADF1551581A00454D72 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MUKMediaGalleryExample/MUKMediaGalleryExample-Prefix.pch";
+				INFOPLIST_FILE = "MUKMediaGalleryExample/MUKMediaGalleryExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		060B1ABF1551581900454D72 /* Build configuration list for PBXProject "MUKMediaGalleryExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				060B1ADB1551581A00454D72 /* Debug */,
+				060B1ADC1551581A00454D72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		060B1ADD1551581A00454D72 /* Build configuration list for PBXNativeTarget "MUKMediaGalleryExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				060B1ADE1551581A00454D72 /* Debug */,
+				060B1ADF1551581A00454D72 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 060B1ABC1551581900454D72 /* Project object */;
+}
