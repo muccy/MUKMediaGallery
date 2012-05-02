@@ -23,49 +23,14 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-
-typedef enum {
-    MUKMediaAssetKindNone = 0,
-    MUKMediaAssetKindImage,
-    MUKMediaAssetKindVideo,
-    MUKMediaAssetKindYouTubeVideo,
-    MUKMediaAssetKindAudio
-} MUKMediaAssetKind;
+#import <MUKMediaGallery/MUKMediaAsset.h>
+#import <MUKMediaGallery/MUKMediaImageAssetProtocol.h>
 
 /**
- Protocol which marks a media asset.
- */
-@protocol MUKMediaAsset <NSObject>
-/**
- Media kind.
+ Concrete MUKMediaAsset subclass which describes an audio track.
  
- Kind could be:
- 
- * `MUKMediaAssetKindImage`, for an image.
- * `MUKMediaAssetKindVideo`, for a video.
- * `MUKMediaAssetKindYouTubeVideo`, for a YouTube video.
- * `MUKMediaAssetKindAudio`, for audio.
- 
- @return Kind of the media.
- */
-- (MUKMediaAssetKind)mediaKind;
-
-@optional
-/**
- Thumbnail image for media.
- */
-- (UIImage *)mediaThumbnail;
-/**
- URL (remote URL or file URL) of the thumbnail.
- @return URL of media thumbnail.
- */
-- (NSURL *)mediaThumbnailURL;
-/**
- URL (remote URL or file URL) of the full media to show.
- @return URL of media.
- */
-- (NSURL *)mediaURL;
-
+ It properly returns `MUKMediaAssetKindAudio` responding to mediaKind
+ invocation.
+ */ 
+@interface MUKMediaImageAsset : MUKMediaAsset <MUKMediaImageAsset>
 @end

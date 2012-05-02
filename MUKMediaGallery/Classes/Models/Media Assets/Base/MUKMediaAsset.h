@@ -23,49 +23,25 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
-
-typedef enum {
-    MUKMediaAssetKindNone = 0,
-    MUKMediaAssetKindImage,
-    MUKMediaAssetKindVideo,
-    MUKMediaAssetKindYouTubeVideo,
-    MUKMediaAssetKindAudio
-} MUKMediaAssetKind;
+#import <MUKMediaGallery/MUKMediaAssetProtocol.h>
 
 /**
- Protocol which marks a media asset.
- */
-@protocol MUKMediaAsset <NSObject>
-/**
- Media kind.
+ A base class which implements MUKMediaAsset protocol.
  
- Kind could be:
+ @warning Instances return `MUKMediaAssetKindNone` responding to mediaKind
+ invocation.
+ */
+@interface MUKMediaAsset : NSObject <MUKMediaAsset>
+/**
+ Thumbnail image URL.
  
- * `MUKMediaAssetKindImage`, for an image.
- * `MUKMediaAssetKindVideo`, for a video.
- * `MUKMediaAssetKindYouTubeVideo`, for a YouTube video.
- * `MUKMediaAssetKindAudio`, for audio.
+ URL could either a file URL and a remote URL.
+ */
+@property (nonatomic, strong) NSURL *thumbnailURL;
+/**
+ Content URL.
  
- @return Kind of the media.
+ URL could either a file URL and a remote URL.
  */
-- (MUKMediaAssetKind)mediaKind;
-
-@optional
-/**
- Thumbnail image for media.
- */
-- (UIImage *)mediaThumbnail;
-/**
- URL (remote URL or file URL) of the thumbnail.
- @return URL of media thumbnail.
- */
-- (NSURL *)mediaThumbnailURL;
-/**
- URL (remote URL or file URL) of the full media to show.
- @return URL of media.
- */
-- (NSURL *)mediaURL;
-
+@property (nonatomic, strong) NSURL *mediaURL;
 @end

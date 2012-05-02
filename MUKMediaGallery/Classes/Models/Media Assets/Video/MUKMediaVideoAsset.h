@@ -23,49 +23,35 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import <MUKMediaGallery/MUKMediaAsset.h>
+#import <MUKMediaGallery/MUKMediaVideoAssetProtocol.h>
 
 typedef enum {
-    MUKMediaAssetKindNone = 0,
-    MUKMediaAssetKindImage,
-    MUKMediaAssetKindVideo,
-    MUKMediaAssetKindYouTubeVideo,
-    MUKMediaAssetKindAudio
-} MUKMediaAssetKind;
+    MUKMediaVideoAssetSourceNone = 0,
+    MUKMediaVideoAssetSourceYouTube
+} MUKMediaVideoAssetSource;
 
 /**
- Protocol which marks a media asset.
- */
-@protocol MUKMediaAsset <NSObject>
-/**
- Media kind.
+ Concrete MUKMediaAsset subclass which describes a video.
  
- Kind could be:
+ It properly returns `MUKMediaAssetKindVideo` or 
+ `MUKMediaAssetKindYouTubeVideo` responding to mediaKind invocation.
+ */ 
+@interface MUKMediaVideoAsset : MUKMediaAsset <MUKMediaVideoAsset>
+/**
+ Video duration.
  
- * `MUKMediaAssetKindImage`, for an image.
- * `MUKMediaAssetKindVideo`, for a video.
- * `MUKMediaAssetKindYouTubeVideo`, for a YouTube video.
- * `MUKMediaAssetKindAudio`, for audio.
+ Default is `-1.0`, which means no duration.
  
- @return Kind of the media.
+ This value is returned is response of `mediaDuration` MUKMediaVideoAsset
+ protocol method.
  */
-- (MUKMediaAssetKind)mediaKind;
-
-@optional
+@property (nonatomic) NSTimeInterval duration;
 /**
- Thumbnail image for media.
+ Video source.
+ 
+ It could be `MUKMediaVideoAssetSourceNone` (which is deafult) or
+ `MUKMediaVideoAssetSourceYouTube` if it comes from YouTube.
  */
-- (UIImage *)mediaThumbnail;
-/**
- URL (remote URL or file URL) of the thumbnail.
- @return URL of media thumbnail.
- */
-- (NSURL *)mediaThumbnailURL;
-/**
- URL (remote URL or file URL) of the full media to show.
- @return URL of media.
- */
-- (NSURL *)mediaURL;
-
+@property (nonatomic) MUKMediaVideoAssetSource source;
 @end
