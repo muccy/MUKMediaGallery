@@ -5,4 +5,9 @@
 #import <MUKMediaGallery/MUKMediaVideoAssetProtocol.h>
 #import <MUKMediaGallery/MUKMediaAudioAssetProtocol.h>
 
+#import <MUKMediaGallery/MUKMediaAsset.h>
+#import <MUKMediaGallery/MUKMediaImageAsset.h>
+#import <MUKMediaGallery/MUKMediaAudioAsset.h>
+#import <MUKMediaGallery/MUKMediaVideoAsset.h>
+
 #import <MUKMediaGallery/MUKMediaThumbnailsView.h>

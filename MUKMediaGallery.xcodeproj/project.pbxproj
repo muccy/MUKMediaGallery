@@ -33,6 +33,31 @@
 		060049F0154C1781004A3B17 /* MUKMediaAssetProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 060049EF154C1781004A3B17 /* MUKMediaAssetProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		060049FB154C18FC004A3B17 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060049FA154C18FC004A3B17 /* CoreFoundation.framework */; };
 		06004A01154C18FC004A3B17 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 060049FF154C18FC004A3B17 /* InfoPlist.strings */; };
+		06004A0A154C1CEB004A3B17 /* MUKMediaThumbnailsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A08154C1CEB004A3B17 /* MUKMediaThumbnailsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06004A0B154C1CEB004A3B17 /* MUKMediaThumbnailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06004A09154C1CEB004A3B17 /* MUKMediaThumbnailsView.m */; };
+		06004A36154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A34154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.h */; };
+		06004A37154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06004A35154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.m */; };
+		06004A39154C26CC004A3B17 /* MUKMediaThumbnailsView_MediaAssetsCountView.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A38154C26CC004A3B17 /* MUKMediaThumbnailsView_MediaAssetsCountView.h */; };
+		06004A3E154C2972004A3B17 /* MUKMediaGalleryUtils_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A3C154C2972004A3B17 /* MUKMediaGalleryUtils_.h */; };
+		06004A3F154C2972004A3B17 /* MUKMediaGalleryUtils_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06004A3D154C2972004A3B17 /* MUKMediaGalleryUtils_.m */; };
+		06004A42154C2AB7004A3B17 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 06004A44154C2AB7004A3B17 /* Localizable.strings */; };
+		06004A47154C3420004A3B17 /* MUKMediaImageAssetProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A46154C3420004A3B17 /* MUKMediaImageAssetProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06004A49154C3446004A3B17 /* MUKMediaVideoAssetProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A48154C3446004A3B17 /* MUKMediaVideoAssetProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06004A4B154C345F004A3B17 /* MUKMediaAudioAssetProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A4A154C345F004A3B17 /* MUKMediaAudioAssetProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06004A4D154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A4C154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h */; };
+		06004A51154C3B56004A3B17 /* MUKMediaThumbnailView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A4F154C3B56004A3B17 /* MUKMediaThumbnailView_.h */; };
+		06004A52154C3B56004A3B17 /* MUKMediaThumbnailView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06004A50154C3B56004A3B17 /* MUKMediaThumbnailView_.m */; };
+		06004A54154C3C1A004A3B17 /* MUKMediaThumbnailView_.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06004A53154C3C1A004A3B17 /* MUKMediaThumbnailView_.xib */; };
+		06004A56154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A55154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h */; };
+		060B1AB91551428200454D72 /* MUKMediaThumbnailsView_Thumbnails.h in Headers */ = {isa = PBXBuildFile; fileRef = 060B1AB81551428200454D72 /* MUKMediaThumbnailsView_Thumbnails.h */; };
+		060B1B3C1551611900454D72 /* MUKMediaImageAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 060B1B3A1551611900454D72 /* MUKMediaImageAsset.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		060B1B3D1551611900454D72 /* MUKMediaImageAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1B3B1551611900454D72 /* MUKMediaImageAsset.m */; };
+		060B1B41155161F700454D72 /* MUKMediaAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 060B1B3F155161F700454D72 /* MUKMediaAsset.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		060B1B42155161F700454D72 /* MUKMediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1B40155161F700454D72 /* MUKMediaAsset.m */; };
+		060B1B471551813D00454D72 /* MUKMediaAudioAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 060B1B451551813D00454D72 /* MUKMediaAudioAsset.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		060B1B481551813D00454D72 /* MUKMediaAudioAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1B461551813D00454D72 /* MUKMediaAudioAsset.m */; };
+		060B1B4C155181D200454D72 /* MUKMediaVideoAsset.h in Headers */ = {isa = PBXBuildFile; fileRef = 060B1B4A155181D200454D72 /* MUKMediaVideoAsset.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		060B1B4D155181D200454D72 /* MUKMediaVideoAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 060B1B4B155181D200454D72 /* MUKMediaVideoAsset.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +67,69 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0600494F154C13BA004A3B17;
 			remoteInfo = MUKMediaGallery;
+		};
+		06004A15154C1F5F004A3B17 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06004A0C154C1F5F004A3B17 /* MUKNetworking.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0656683E1517A85A00DA53AA;
+			remoteInfo = MUKNetworking;
+		};
+		06004A17154C1F5F004A3B17 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06004A0C154C1F5F004A3B17 /* MUKNetworking.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0656684E1517A85A00DA53AA;
+			remoteInfo = MUKNetworkingTests;
+		};
+		06004A26154C1F82004A3B17 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06004A19154C1F82004A3B17 /* MUKScrolling.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06339BC9153584FD00FB07ED;
+			remoteInfo = MUKScrolling;
+		};
+		06004A28154C1F82004A3B17 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06004A19154C1F82004A3B17 /* MUKScrolling.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06339BD9153584FD00FB07ED;
+			remoteInfo = MUKScrollingTests;
+		};
+		06004A2D154C1F8E004A3B17 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06004A0C154C1F5F004A3B17 /* MUKNetworking.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 0656683D1517A85A00DA53AA;
+			remoteInfo = MUKNetworking;
+		};
+		06004A2F154C1F8E004A3B17 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 06004A19154C1F82004A3B17 /* MUKScrolling.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 06339BC8153584FD00FB07ED;
+			remoteInfo = MUKScrolling;
+		};
+		060B1A6D155132E800454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1A60155132E700454D72 /* MUKObjectCache.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 066F8468154ECD6B00704724;
+			remoteInfo = MUKObjectCache;
+		};
+		060B1A6F155132E800454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1A60155132E700454D72 /* MUKObjectCache.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 066F8478154ECD6B00704724;
+			remoteInfo = MUKObjectCacheTests;
+		};
+		060B1A74155132EF00454D72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 060B1A60155132E700454D72 /* MUKObjectCache.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 066F8467154ECD6A00704724;
+			remoteInfo = MUKObjectCache;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -63,6 +151,35 @@
 		060049FE154C18FC004A3B17 /* MUKMediaGalleryResources-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGalleryResources-Info.plist"; sourceTree = "<group>"; };
 		06004A00154C18FC004A3B17 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		06004A02154C18FC004A3B17 /* MUKMediaGalleryResources-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MUKMediaGalleryResources-Prefix.pch"; sourceTree = "<group>"; };
+		06004A08154C1CEB004A3B17 /* MUKMediaThumbnailsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView.h; sourceTree = "<group>"; };
+		06004A09154C1CEB004A3B17 /* MUKMediaThumbnailsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailsView.m; sourceTree = "<group>"; };
+		06004A0C154C1F5F004A3B17 /* MUKNetworking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKNetworking.xcodeproj; path = Submodules/MUKNetworking/MUKNetworking.xcodeproj; sourceTree = "<group>"; };
+		06004A19154C1F82004A3B17 /* MUKScrolling.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKScrolling.xcodeproj; path = Submodules/MUKScrolling/MUKScrolling.xcodeproj; sourceTree = "<group>"; };
+		06004A34154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsCountView_.h; sourceTree = "<group>"; };
+		06004A35154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailsCountView_.m; sourceTree = "<group>"; };
+		06004A38154C26CC004A3B17 /* MUKMediaThumbnailsView_MediaAssetsCountView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_MediaAssetsCountView.h; sourceTree = "<group>"; };
+		06004A3C154C2972004A3B17 /* MUKMediaGalleryUtils_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGalleryUtils_.h; sourceTree = "<group>"; };
+		06004A3D154C2972004A3B17 /* MUKMediaGalleryUtils_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGalleryUtils_.m; sourceTree = "<group>"; };
+		06004A43154C2AB7004A3B17 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		06004A45154C2AC6004A3B17 /* it */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		06004A46154C3420004A3B17 /* MUKMediaImageAssetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaImageAssetProtocol.h; sourceTree = "<group>"; };
+		06004A48154C3446004A3B17 /* MUKMediaVideoAssetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaVideoAssetProtocol.h; sourceTree = "<group>"; };
+		06004A4A154C345F004A3B17 /* MUKMediaAudioAssetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaAudioAssetProtocol.h; sourceTree = "<group>"; };
+		06004A4C154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Layout.h; sourceTree = "<group>"; };
+		06004A4F154C3B56004A3B17 /* MUKMediaThumbnailView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailView_.h; sourceTree = "<group>"; };
+		06004A50154C3B56004A3B17 /* MUKMediaThumbnailView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailView_.m; sourceTree = "<group>"; };
+		06004A53154C3C1A004A3B17 /* MUKMediaThumbnailView_.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MUKMediaThumbnailView_.xib; sourceTree = "<group>"; };
+		06004A55154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Cells.h; sourceTree = "<group>"; };
+		060B1A60155132E700454D72 /* MUKObjectCache.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKObjectCache.xcodeproj; path = Submodules/MUKObjectCache/MUKObjectCache.xcodeproj; sourceTree = "<group>"; };
+		060B1AB81551428200454D72 /* MUKMediaThumbnailsView_Thumbnails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Thumbnails.h; sourceTree = "<group>"; };
+		060B1B3A1551611900454D72 /* MUKMediaImageAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaImageAsset.h; sourceTree = "<group>"; };
+		060B1B3B1551611900454D72 /* MUKMediaImageAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaImageAsset.m; sourceTree = "<group>"; };
+		060B1B3F155161F700454D72 /* MUKMediaAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaAsset.h; sourceTree = "<group>"; };
+		060B1B40155161F700454D72 /* MUKMediaAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaAsset.m; sourceTree = "<group>"; };
+		060B1B451551813D00454D72 /* MUKMediaAudioAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaAudioAsset.h; sourceTree = "<group>"; };
+		060B1B461551813D00454D72 /* MUKMediaAudioAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaAudioAsset.m; sourceTree = "<group>"; };
+		060B1B4A155181D200454D72 /* MUKMediaVideoAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaVideoAsset.h; sourceTree = "<group>"; };
+		060B1B4B155181D200454D72 /* MUKMediaVideoAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaVideoAsset.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +240,9 @@
 		06004952154C13BA004A3B17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				060B1A60155132E700454D72 /* MUKObjectCache.xcodeproj */,
+				06004A19154C1F82004A3B17 /* MUKScrolling.xcodeproj */,
+				06004A0C154C1F5F004A3B17 /* MUKNetworking.xcodeproj */,
 				06004953154C13BA004A3B17 /* Foundation.framework */,
 				06004961154C13BA004A3B17 /* SenTestingKit.framework */,
 				06004963154C13BA004A3B17 /* UIKit.framework */,
@@ -134,6 +254,9 @@
 		060049DC154C1667004A3B17 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				06004A3A154C2958004A3B17 /* Private */,
+				066F8454154E940600704724 /* Models */,
+				06004A06154C1CCF004A3B17 /* Views */,
 				060049ED154C176E004A3B17 /* Protocols */,
 			);
 			name = Classes;
@@ -163,6 +286,9 @@
 			isa = PBXGroup;
 			children = (
 				060049EF154C1781004A3B17 /* MUKMediaAssetProtocol.h */,
+				06004A46154C3420004A3B17 /* MUKMediaImageAssetProtocol.h */,
+				06004A48154C3446004A3B17 /* MUKMediaVideoAssetProtocol.h */,
+				06004A4A154C345F004A3B17 /* MUKMediaAudioAssetProtocol.h */,
 			);
 			path = "Media Asset";
 			sourceTree = "<group>";
@@ -171,6 +297,8 @@
 			isa = PBXGroup;
 			children = (
 				060049FD154C18FC004A3B17 /* Supporting Files */,
+				06004A44154C2AB7004A3B17 /* Localizable.strings */,
+				06004A53154C3C1A004A3B17 /* MUKMediaThumbnailView_.xib */,
 			);
 			path = MUKMediaGalleryResources;
 			sourceTree = "<group>";
@@ -185,6 +313,154 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		06004A06154C1CCF004A3B17 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				06004A07154C1CCF004A3B17 /* Thumbnails */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		06004A07154C1CCF004A3B17 /* Thumbnails */ = {
+			isa = PBXGroup;
+			children = (
+				06004A31154C2487004A3B17 /* Private */,
+				06004A08154C1CEB004A3B17 /* MUKMediaThumbnailsView.h */,
+				06004A09154C1CEB004A3B17 /* MUKMediaThumbnailsView.m */,
+			);
+			path = Thumbnails;
+			sourceTree = "<group>";
+		};
+		06004A0D154C1F5F004A3B17 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				06004A16154C1F5F004A3B17 /* libMUKNetworking.a */,
+				06004A18154C1F5F004A3B17 /* MUKNetworkingTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		06004A1A154C1F82004A3B17 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				06004A27154C1F82004A3B17 /* libMUKScrolling.a */,
+				06004A29154C1F82004A3B17 /* MUKScrollingTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		06004A31154C2487004A3B17 /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				06004A33154C24A1004A3B17 /* Count View */,
+				06004A4E154C3B2B004A3B17 /* Thumbnail View */,
+				06004A38154C26CC004A3B17 /* MUKMediaThumbnailsView_MediaAssetsCountView.h */,
+				06004A4C154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h */,
+				06004A55154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h */,
+				060B1AB81551428200454D72 /* MUKMediaThumbnailsView_Thumbnails.h */,
+			);
+			path = Private;
+			sourceTree = "<group>";
+		};
+		06004A33154C24A1004A3B17 /* Count View */ = {
+			isa = PBXGroup;
+			children = (
+				06004A34154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.h */,
+				06004A35154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.m */,
+			);
+			path = "Count View";
+			sourceTree = "<group>";
+		};
+		06004A3A154C2958004A3B17 /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				06004A3B154C2958004A3B17 /* Utils */,
+			);
+			path = Private;
+			sourceTree = "<group>";
+		};
+		06004A3B154C2958004A3B17 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				06004A3C154C2972004A3B17 /* MUKMediaGalleryUtils_.h */,
+				06004A3D154C2972004A3B17 /* MUKMediaGalleryUtils_.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		06004A4E154C3B2B004A3B17 /* Thumbnail View */ = {
+			isa = PBXGroup;
+			children = (
+				06004A4F154C3B56004A3B17 /* MUKMediaThumbnailView_.h */,
+				06004A50154C3B56004A3B17 /* MUKMediaThumbnailView_.m */,
+			);
+			path = "Thumbnail View";
+			sourceTree = "<group>";
+		};
+		060B1A61155132E700454D72 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				060B1A6E155132E800454D72 /* libMUKObjectCache.a */,
+				060B1A70155132E800454D72 /* MUKObjectCacheTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		060B1B381551610E00454D72 /* Media Assets */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B3E155161E600454D72 /* Base */,
+				060B1B441551812A00454D72 /* Audio */,
+				060B1B391551610E00454D72 /* Image */,
+				060B1B49155181B300454D72 /* Video */,
+			);
+			path = "Media Assets";
+			sourceTree = "<group>";
+		};
+		060B1B391551610E00454D72 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B3A1551611900454D72 /* MUKMediaImageAsset.h */,
+				060B1B3B1551611900454D72 /* MUKMediaImageAsset.m */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		060B1B3E155161E600454D72 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B3F155161F700454D72 /* MUKMediaAsset.h */,
+				060B1B40155161F700454D72 /* MUKMediaAsset.m */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		060B1B441551812A00454D72 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B451551813D00454D72 /* MUKMediaAudioAsset.h */,
+				060B1B461551813D00454D72 /* MUKMediaAudioAsset.m */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		060B1B49155181B300454D72 /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B4A155181D200454D72 /* MUKMediaVideoAsset.h */,
+				060B1B4B155181D200454D72 /* MUKMediaVideoAsset.m */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
+		066F8454154E940600704724 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				060B1B381551610E00454D72 /* Media Assets */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -195,6 +471,21 @@
 				060049DF154C1667004A3B17 /* MUKMediaGallery-Prefix.pch in Headers */,
 				060049E0154C1667004A3B17 /* MUKMediaGallery.h in Headers */,
 				060049F0154C1781004A3B17 /* MUKMediaAssetProtocol.h in Headers */,
+				06004A0A154C1CEB004A3B17 /* MUKMediaThumbnailsView.h in Headers */,
+				06004A36154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.h in Headers */,
+				06004A39154C26CC004A3B17 /* MUKMediaThumbnailsView_MediaAssetsCountView.h in Headers */,
+				06004A3E154C2972004A3B17 /* MUKMediaGalleryUtils_.h in Headers */,
+				06004A47154C3420004A3B17 /* MUKMediaImageAssetProtocol.h in Headers */,
+				06004A49154C3446004A3B17 /* MUKMediaVideoAssetProtocol.h in Headers */,
+				06004A4B154C345F004A3B17 /* MUKMediaAudioAssetProtocol.h in Headers */,
+				06004A4D154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h in Headers */,
+				06004A51154C3B56004A3B17 /* MUKMediaThumbnailView_.h in Headers */,
+				06004A56154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h in Headers */,
+				060B1AB91551428200454D72 /* MUKMediaThumbnailsView_Thumbnails.h in Headers */,
+				060B1B3C1551611900454D72 /* MUKMediaImageAsset.h in Headers */,
+				060B1B41155161F700454D72 /* MUKMediaAsset.h in Headers */,
+				060B1B471551813D00454D72 /* MUKMediaAudioAsset.h in Headers */,
+				060B1B4C155181D200454D72 /* MUKMediaVideoAsset.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,6 +504,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				060B1A75155132EF00454D72 /* PBXTargetDependency */,
+				06004A2E154C1F8E004A3B17 /* PBXTargetDependency */,
+				06004A30154C1F8E004A3B17 /* PBXTargetDependency */,
 			);
 			name = MUKMediaGallery;
 			productName = MUKMediaGallery;
@@ -269,10 +563,25 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				it,
 			);
 			mainGroup = 06004945154C13BA004A3B17;
 			productRefGroup = 06004951154C13BA004A3B17 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 06004A0D154C1F5F004A3B17 /* Products */;
+					ProjectRef = 06004A0C154C1F5F004A3B17 /* MUKNetworking.xcodeproj */;
+				},
+				{
+					ProductGroup = 060B1A61155132E700454D72 /* Products */;
+					ProjectRef = 060B1A60155132E700454D72 /* MUKObjectCache.xcodeproj */;
+				},
+				{
+					ProductGroup = 06004A1A154C1F82004A3B17 /* Products */;
+					ProjectRef = 06004A19154C1F82004A3B17 /* MUKScrolling.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				0600494F154C13BA004A3B17 /* MUKMediaGallery */,
@@ -282,6 +591,51 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		06004A16154C1F5F004A3B17 /* libMUKNetworking.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMUKNetworking.a;
+			remoteRef = 06004A15154C1F5F004A3B17 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		06004A18154C1F5F004A3B17 /* MUKNetworkingTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MUKNetworkingTests.octest;
+			remoteRef = 06004A17154C1F5F004A3B17 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		06004A27154C1F82004A3B17 /* libMUKScrolling.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMUKScrolling.a;
+			remoteRef = 06004A26154C1F82004A3B17 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		06004A29154C1F82004A3B17 /* MUKScrollingTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MUKScrollingTests.octest;
+			remoteRef = 06004A28154C1F82004A3B17 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		060B1A6E155132E800454D72 /* libMUKObjectCache.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMUKObjectCache.a;
+			remoteRef = 060B1A6D155132E800454D72 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		060B1A70155132E800454D72 /* MUKObjectCacheTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MUKObjectCacheTests.octest;
+			remoteRef = 060B1A6F155132E800454D72 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0600495D154C13BA004A3B17 /* Resources */ = {
@@ -297,6 +651,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				06004A01154C18FC004A3B17 /* InfoPlist.strings in Resources */,
+				06004A42154C2AB7004A3B17 /* Localizable.strings in Resources */,
+				06004A54154C3C1A004A3B17 /* MUKMediaThumbnailView_.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,6 +706,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06004A0B154C1CEB004A3B17 /* MUKMediaThumbnailsView.m in Sources */,
+				06004A37154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.m in Sources */,
+				06004A3F154C2972004A3B17 /* MUKMediaGalleryUtils_.m in Sources */,
+				06004A52154C3B56004A3B17 /* MUKMediaThumbnailView_.m in Sources */,
+				060B1B3D1551611900454D72 /* MUKMediaImageAsset.m in Sources */,
+				060B1B42155161F700454D72 /* MUKMediaAsset.m in Sources */,
+				060B1B481551813D00454D72 /* MUKMediaAudioAsset.m in Sources */,
+				060B1B4D155181D200454D72 /* MUKMediaVideoAsset.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,6 +740,21 @@
 			target = 0600494F154C13BA004A3B17 /* MUKMediaGallery */;
 			targetProxy = 06004966154C13BA004A3B17 /* PBXContainerItemProxy */;
 		};
+		06004A2E154C1F8E004A3B17 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MUKNetworking;
+			targetProxy = 06004A2D154C1F8E004A3B17 /* PBXContainerItemProxy */;
+		};
+		06004A30154C1F8E004A3B17 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MUKScrolling;
+			targetProxy = 06004A2F154C1F8E004A3B17 /* PBXContainerItemProxy */;
+		};
+		060B1A75155132EF00454D72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MUKObjectCache;
+			targetProxy = 060B1A74155132EF00454D72 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -385,6 +764,15 @@
 				06004A00154C18FC004A3B17 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		06004A44154C2AB7004A3B17 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				06004A43154C2AB7004A3B17 /* en */,
+				06004A45154C2AC6004A3B17 /* it */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -583,6 +971,7 @@
 				060049EB154C16C9004A3B17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		06004A03154C18FC004A3B17 /* Build configuration list for PBXNativeTarget "MUKMediaGalleryResources" */ = {
 			isa = XCConfigurationList;
@@ -591,6 +980,7 @@
 				06004A05154C18FC004A3B17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
