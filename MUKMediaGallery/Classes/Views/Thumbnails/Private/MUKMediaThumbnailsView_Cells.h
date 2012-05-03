@@ -28,7 +28,7 @@
 
 @interface MUKMediaThumbnailsView ()
 - (MUKMediaThumbnailView_ *)createThumbnailCell_;
-- (void)configureThumbnailCell_:(MUKMediaThumbnailView_ *)cell atIndex_:(NSInteger)index;
+
 - (void)configureThumbnailCell_:(MUKMediaThumbnailView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index;
 - (void)configureThumbnailCellBottomView_:(MUKMediaThumbnailView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index;
 

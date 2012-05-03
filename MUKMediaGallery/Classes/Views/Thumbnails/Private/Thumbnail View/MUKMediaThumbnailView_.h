@@ -11,11 +11,13 @@
 /*
  Load with MUKToolkit
  */
+@protocol MUKMediaAsset;
 @interface MUKMediaThumbnailView_ : MUKRecyclableView
 @property (nonatomic, strong) IBOutlet UIImageView *imageView;
 @property (nonatomic, strong) IBOutlet UIView *bottomView;
 @property (nonatomic, strong) IBOutlet UIImageView *mediaKindImageView;
 @property (nonatomic, strong) IBOutlet UILabel *durationLabel;
 
+@property (nonatomic, strong) id<MUKMediaAsset> mediaAsset;
 @property (nonatomic) CGSize imageOffset;
 @end

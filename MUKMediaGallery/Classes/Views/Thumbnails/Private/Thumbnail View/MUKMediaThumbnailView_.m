@@ -13,21 +13,29 @@
 - (CGRect)imageViewFrame_;
 @end
 
-@implementation MUKMediaThumbnailView_
+@implementation MUKMediaThumbnailView_ {
+    BOOL imageViewSetUp_;
+}
 @synthesize imageView = imageView_, mediaKindImageView = mediaKindImageView_;
 @synthesize bottomView = bottomView_;
 @synthesize durationLabel = durationLabel_;
 @synthesize imageOffset = imageOffset_;
+@synthesize mediaAsset = mediaAsset_;
 
-- (id)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    if (imageViewSetUp_ == NO) {        
         self.imageView.layer.borderWidth = 1.0f;
-        self.imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        self.imageView.layer.borderColor = [UIColor colorWithWhite:0.9f alpha:0.3f].CGColor;
+        
+        self.imageView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
+        
+        imageViewSetUp_ = YES;
     }
-    return self;
 }
+
 
 #pragma mark - Accessors
 

@@ -68,12 +68,6 @@
     self = [super initWithCoder:coder];
     if (self) {
         [self commonInitialization_];
-        
-        double delayInSeconds = 2.0;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            NSLog(@"%@", [self.gridView_ visibleViews]);
-        });
     }
     return self;
 }
@@ -191,6 +185,10 @@
 
 - (void)reloadThumbnails {
     [self.gridView_ reloadData];
+    
+    // Add cells are layed out
+    // Load thumbnails also from file or from network
+    [self loadVisibleThumbnails_];
 }
 
 #pragma mark - Thumbnail Download
@@ -243,9 +241,16 @@
         }
         
         // Configure
-        [weakSelf configureThumbnailCell_:cellView atIndex_:cellIndex];
+        id<MUKMediaAsset> mediaAsset = [self.mediaAssets objectAtIndex:cellIndex];
+        cellView.mediaAsset = mediaAsset;
+        [weakSelf configureThumbnailCell_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
         
         return cellView;
+    };
+    
+    self.gridView_.scrollCompletionHandler = ^(MUKGridScrollKind scrollKind)
+    {
+        [weakSelf loadVisibleThumbnails_];
     };
     
     [self addSubview:self.gridView_];
@@ -304,7 +309,7 @@
     return [[self thumbnailURLForMediaAsset_:mediaAsset] absoluteString];
 }
 
-- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell
+- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell
 {
     BOOL userProvidesThumbnail = NO;
     UIImage *userProvidedThumbnail = [self userProvidedThumbnailForMediaAsset_:mediaAsset provided_:&userProvidesThumbnail];
@@ -325,7 +330,14 @@
     NSURL *thumbnailURL = [self thumbnailURLForMediaAsset_:mediaAsset];
     if (thumbnailURL) {
         NSString *cacheKey = [self cacheKeyForMediaAsset_:mediaAsset];
-        MUKObjectCacheLocation cacheLocations = [self cacheLocationsForMediaAsset_:mediaAsset];
+        MUKObjectCacheLocation cacheLocations;
+        
+        if (onlyFromMemory) {
+            cacheLocations = MUKObjectCacheLocationMemory;
+        }
+        else {
+            cacheLocations = [self cacheLocationsForMediaAsset_:mediaAsset];
+        }
         
         [self.thumbnailImageCache loadObjectForKey:cacheKey locations:cacheLocations completionHandler:^(id object, MUKObjectCacheLocation location)
          {
@@ -338,10 +350,15 @@
                      [self.thumbnailImageCache saveObject:object forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
                      
                      // Insert in right cell at this time
-                     [self setImage:object inCellAtIndex_:index];
-                 }       
+                     if (mediaAsset == cell.mediaAsset) {
+                         [self setImage:object inCell_:cell];
+                     }
+                     else {
+                         [self setImage:object inCellAtIndex_:index];
+                     }
+                 } // MUKObjectCacheLocationFile       
                  
-                 else if (MUKObjectCacheLocationMemory) {
+                 else if (MUKObjectCacheLocationMemory == location) {
                      // Insert synchronously
                      [self setImage:object inCell_:cell];
                  }
@@ -349,32 +366,41 @@
              
              else {
                  // Thumbnail not found
-                 // Get it
                  
-                 if ([self thumbnailIsInFileForMediaAsset_:mediaAsset]) {
-                     // Load from file and save to cache
-                     dispatch_queue_t queue = dispatch_queue_create("it.melive.mukit.MUKMediaThumbnailsView.ImageLoading", NULL);
-                     dispatch_async(queue, ^{
-                         UIImage *image = [[UIImage alloc] initWithContentsOfFile:[thumbnailURL path]];
-                         
-                         dispatch_async(dispatch_get_main_queue(), ^{
-                             // Insert in right cell at this time (on main queue)
-                             [self setImage:image inCellAtIndex_:index];
-                             
-                             // Cache it to memory
-                             [self.thumbnailImageCache saveObject:image forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
-                         });
-                     });
+                 if (!onlyFromMemory) {
+                     // Get it
                      
-                     // Dispose queue
-                     dispatch_release(queue);
-                 }
-                 
-                 else {
-                     // Download
-                     [self downloadThumbnailForMediaAsset_:mediaAsset atIndex_:index];
-                 }
-             }
+                     if ([self thumbnailIsInFileForMediaAsset_:mediaAsset]) {
+                         // Load from file and save to cache
+                         dispatch_queue_t queue = dispatch_queue_create("it.melive.mukit.MUKMediaThumbnailsView.ImageLoading", NULL);
+                         dispatch_async(queue, ^{
+                             UIImage *image = [[UIImage alloc] initWithContentsOfFile:[thumbnailURL path]];
+                             
+                             dispatch_async(dispatch_get_main_queue(), ^{
+                                 // Insert in right cell at this time (on main queue)
+                                 // Insert in right cell at this time
+                                 if (mediaAsset == cell.mediaAsset) {
+                                     [self setImage:image inCell_:cell];
+                                 }
+                                 else {
+                                     [self setImage:image inCellAtIndex_:index];
+                                 }
+                                 
+                                 // Cache it to memory
+                                 [self.thumbnailImageCache saveObject:image forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
+                             });
+                         });
+                         
+                         // Dispose queue
+                         dispatch_release(queue);
+                     }
+                     
+                     else {
+                         // Download
+                         [self downloadThumbnailForMediaAsset_:mediaAsset atIndex_:index inCell_:cell];
+                     } // if thumbnailIsInFileForMediaAsset_
+                 } // if !onlyFromMemory
+             } // if object
          }];
     }
     else {
@@ -383,7 +409,7 @@
     }
 }
 
-- (void)downloadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index
+- (void)downloadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell
 {
     NSString *cacheKey = [self cacheKeyForMediaAsset_:mediaAsset];
     MUKObjectCacheLocation cacheLocations = [self cacheLocationsForMediaAsset_:mediaAsset];
@@ -406,7 +432,13 @@
             // Insert thumbnail
             // Cell at this moment can represent a different index
             // because scrolling has gone on
-            [self setImage:image inCellAtIndex_:index];
+            // Insert in right cell at this time
+            if (mediaAsset == cell.mediaAsset) {
+                [self setImage:image inCell_:cell];
+            }
+            else {
+                [self setImage:image inCellAtIndex_:index];
+            }
         }
         
         // Break cycle
@@ -415,6 +447,29 @@
     
     // Enqueue connection
     [self.thumbnailDownloadQueue addConnection:connection];
+}
+
+- (void)loadVisibleThumbnails_ {
+    [self loadThumbnailsInCells_:[self.gridView_ visibleViews]];
+}
+
+- (void)loadThumbnailsInCells_:(NSSet *)cells {
+    [cells enumerateObjectsUsingBlock:^(id obj, BOOL *stop) 
+     {
+         MUKMediaThumbnailView_ *cell = obj;
+         
+         // Image is cleared in cellCreationHandler
+         // If cell has not an image it should be loaded from any source
+         if (cell.imageView.image == nil) {
+             id<MUKMediaAsset> mediaAsset = cell.mediaAsset;
+             if (mediaAsset) {
+                 NSInteger mediaAssetIndex = [self.mediaAssets indexOfObject:mediaAsset];
+                 if (NSNotFound != mediaAssetIndex) {
+                     [self loadThumbnailForMediaAsset_:mediaAsset onlyFromMemory_:NO atIndex_:mediaAssetIndex inCell_:cell];
+                 } // if media asset index
+             } // if media asset
+         } // if image == nil
+     }];
 }
 
 #pragma mark - Private: Media Assets Count View
@@ -567,19 +622,16 @@
     return cellView;
 }
 
-- (void)configureThumbnailCell_:(MUKMediaThumbnailView_ *)cell atIndex_:(NSInteger)index
-{
-    id<MUKMediaAsset> mediaAsset = [MUK array:self.mediaAssets objectAtIndex:index];
-    [self configureThumbnailCell_:cell withMediaAsset_:mediaAsset atIndex_:index];
-}
-
 - (void)configureThumbnailCell_:(MUKMediaThumbnailView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index
 {
+    cell.imageOffset = self.thumbnailOffset;
+    
     // Clean thumbnail currently displayed
     [self setImage:nil inCell_:cell];
     
     // Search for thumbnail in cache
-    [self loadThumbnailForMediaAsset_:mediaAsset atIndex_:index inCell_:cell];    
+    // Only from memory, because async loading is done when view is idle
+    [self loadThumbnailForMediaAsset_:mediaAsset onlyFromMemory_:YES atIndex_:index inCell_:cell];    
     
     // Bottom bar configuration
     [self configureThumbnailCellBottomView_:cell withMediaAsset_:mediaAsset atIndex_:index];

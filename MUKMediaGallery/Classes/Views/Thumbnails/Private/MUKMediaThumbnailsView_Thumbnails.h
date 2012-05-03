@@ -34,7 +34,10 @@
 - (MUKObjectCacheLocation)cacheLocationsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
 - (NSString *)cacheKeyForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
 
-- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell;
-- (void)downloadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index;
+- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell;
+- (void)downloadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell;
+
+- (void)loadVisibleThumbnails_;
+- (void)loadThumbnailsInCells_:(NSSet *)cells;
 
 @end
