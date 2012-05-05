@@ -25,6 +25,8 @@
 		060B1B511551860800454D72 /* palms-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B4F1551860800454D72 /* palms-thumbnail.jpg */; };
 		060B1B521551860800454D72 /* palms.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B501551860800454D72 /* palms.jpg */; };
 		060B1B55155188BF00454D72 /* MUKMediaGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B071551584400454D72 /* MUKMediaGallery.bundle */; };
+		062448351552848E005CE74D /* sea.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 062448341552848E005CE74D /* sea.mp4 */; };
+		062448371552849A005CE74D /* sea-movie-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 062448361552849A005CE74D /* sea-movie-thumbnail.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +91,9 @@
 		060B1B2A1551592200454D72 /* ThumbnailsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ThumbnailsViewController.xib; sourceTree = "<group>"; };
 		060B1B4F1551860800454D72 /* palms-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "palms-thumbnail.jpg"; sourceTree = "<group>"; };
 		060B1B501551860800454D72 /* palms.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = palms.jpg; sourceTree = "<group>"; };
+		062448341552848E005CE74D /* sea.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sea.mp4; sourceTree = "<group>"; };
+		062448361552849A005CE74D /* sea-movie-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "sea-movie-thumbnail.jpg"; sourceTree = "<group>"; };
+		0624483E15528742005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/Example/MUKMediaGalleryExample/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +161,7 @@
 		060B1AD01551581A00454D72 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				062448331552848E005CE74D /* Movies */,
 				060B1B4E1551860800454D72 /* Images */,
 				060B1AD11551581A00454D72 /* MUKMediaGalleryExample-Info.plist */,
 				060B1AD21551581A00454D72 /* InfoPlist.strings */,
@@ -224,10 +230,19 @@
 		060B1B4E1551860800454D72 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				062448361552849A005CE74D /* sea-movie-thumbnail.jpg */,
 				060B1B4F1551860800454D72 /* palms-thumbnail.jpg */,
 				060B1B501551860800454D72 /* palms.jpg */,
 			);
 			path = Images;
+			sourceTree = "<group>";
+		};
+		062448331552848E005CE74D /* Movies */ = {
+			isa = PBXGroup;
+			children = (
+				062448341552848E005CE74D /* sea.mp4 */,
+			);
+			path = Movies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,6 +332,8 @@
 				060B1B2C1551592200454D72 /* ThumbnailsViewController.xib in Resources */,
 				060B1B511551860800454D72 /* palms-thumbnail.jpg in Resources */,
 				060B1B521551860800454D72 /* palms.jpg in Resources */,
+				062448351552848E005CE74D /* sea.mp4 in Resources */,
+				062448371552849A005CE74D /* sea-movie-thumbnail.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -354,6 +371,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				060B1AD31551581A00454D72 /* en */,
+				0624483E15528742005CE74D /* it */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

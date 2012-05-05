@@ -118,10 +118,30 @@
     remoteImageAsset.mediaURL = [NSURL URLWithString:@"http://farm5.staticflickr.com/4092/4988725775_23993fbb41_z.jpg"];
     [mediaAssets addObject:remoteImageAsset];
     
+    MUKMediaVideoAsset *localVideoAsset = [[MUKMediaVideoAsset alloc] init];
+    localVideoAsset.thumbnailURL = [MUK URLForImageFileNamed:@"sea-movie-thumbnail.jpg" bundle:nil];
+    localVideoAsset.mediaURL = [[NSBundle mainBundle] URLForResource:@"sea" withExtension:@"mp4"];
+    [mediaAssets addObject:localVideoAsset];
+    
     MUKMediaImageAsset *localImageAsset = [[MUKMediaImageAsset alloc] init];
     localImageAsset.thumbnailURL = [MUK URLForImageFileNamed:@"palms-thumbnail.jpg" bundle:nil];
     localImageAsset.mediaURL = [MUK URLForImageFileNamed:@"palms.jpg" bundle:nil];
     [mediaAssets addObject:localImageAsset];
+    
+    MUKMediaAudioAsset *localAudioAsset = [[MUKMediaAudioAsset alloc] init];
+    localAudioAsset.thumbnailURL = [NSURL URLWithString:@"http://farm6.staticflickr.com/5178/5500963965_2776bf6a98_t.jpg"];
+    localAudioAsset.mediaURL = [[NSBundle mainBundle] URLForResource:@"SexForModerns-StopTheClock_64kb" withExtension:@"mp3"];
+    [mediaAssets addObject:localAudioAsset];
+    
+    MUKMediaVideoAsset *youTubeVideoAsset = [[MUKMediaVideoAsset alloc] init];
+    youTubeVideoAsset.source = MUKMediaVideoAssetSourceYouTube;
+    youTubeVideoAsset.thumbnailURL = [NSURL URLWithString:@"http://i2.ytimg.com/vi/UF8uR6Z6KLc/default.jpg"];
+    youTubeVideoAsset.mediaURL = [NSURL URLWithString:@"http://www.youtube.com/watch?v=UF8uR6Z6KLc"];
+    [mediaAssets addObject:youTubeVideoAsset];
+    
+    MUKMediaAudioAsset *remoteAudioAsset = [[MUKMediaAudioAsset alloc] init];
+    remoteAudioAsset.mediaURL = [NSURL URLWithString:@"http://ia600201.us.archive.org/21/items/SexForModerns-PenetratingLoveRay/SexForModerns-PenetratingLoveRay.mp3"];
+    [mediaAssets addObject:remoteAudioAsset];
     
     return mediaAssets;
 }
