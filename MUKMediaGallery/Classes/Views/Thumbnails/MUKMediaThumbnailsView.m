@@ -35,7 +35,9 @@
 
 @interface MUKMediaThumbnailsView ()
 @property (nonatomic, strong, readwrite) MUKURLConnectionQueue *thumbnailDownloadQueue;
+
 @property (nonatomic, strong) MUKGridView *gridView_;
+@property (nonatomic, strong) UIImage *videoCellImage_, *audioCellImage_;
 
 - (void)commonInitialization_;
 @end
@@ -54,7 +56,7 @@
 
 @synthesize mediaAssetsCountView_ = mediaAssetsCountView__;
 @synthesize gridView_ = gridView__;
-
+@synthesize videoCellImage_ = videoCellImage__, audioCellImage_ = audioCellImage__;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -255,6 +257,26 @@
     
     [self addSubview:self.gridView_];
 
+}
+
+#pragma mark - Private: Accessors
+
+- (UIImage *)videoCellImage_ {
+    if (videoCellImage__ == nil) {
+        NSURL *imageURL = [MUK URLForImageFileNamed:@"MUKMediaThumbnailView_video.png" bundle:[MUKMediaGalleryUtils_ frameworkBundle]];
+        videoCellImage__  = [[UIImage alloc] initWithContentsOfFile:[imageURL path]];
+    }
+    
+    return videoCellImage__;
+}
+
+- (UIImage *)audioCellImage_ {
+    if (audioCellImage__ == nil) {
+        NSURL *imageURL = [MUK URLForImageFileNamed:@"MUKMediaThumbnailView_audio.png" bundle:[MUKMediaGalleryUtils_ frameworkBundle]];
+        audioCellImage__  = [[UIImage alloc] initWithContentsOfFile:[imageURL path]];
+    }
+    
+    return audioCellImage__;
 }
 
 #pragma mark - Private: Thumbnails
@@ -460,7 +482,7 @@
          
          // Image is cleared in cellCreationHandler
          // If cell has not an image it should be loaded from any source
-         if (cell.imageView.image == nil) {
+         if (![self hasThumbnailInCell_:cell]) {
              id<MUKMediaAsset> mediaAsset = cell.mediaAsset;
              if (mediaAsset) {
                  NSInteger mediaAssetIndex = [self.mediaAssets indexOfObject:mediaAsset];
@@ -641,16 +663,20 @@
 {
     switch ([mediaAsset mediaKind]) {
         case MUKMediaAssetKindAudio:
-        case MUKMediaAssetKindVideo:
-        case MUKMediaAssetKindYouTubeVideo: {
+            cell.mediaKindImageView.image = self.audioCellImage_;
             cell.bottomView.hidden = NO;
             break;
-        }
             
-        default: {
+        case MUKMediaAssetKindVideo:
+        case MUKMediaAssetKindYouTubeVideo:
+            cell.mediaKindImageView.image = self.videoCellImage_;
+            cell.bottomView.hidden = NO;
+            break;
+            
+        default:
+            cell.mediaKindImageView.image = nil;
             cell.bottomView.hidden = YES;
             break;
-        }
     }
 }
 
@@ -661,6 +687,10 @@
 
 - (void)setImage:(UIImage *)image inCell_:(MUKMediaThumbnailView_ *)cell {
      cell.imageView.image = image;
+}
+
+- (BOOL)hasThumbnailInCell_:(MUKMediaThumbnailView_ *)cell {
+    return (cell.imageView.image != nil);
 }
 
 @end

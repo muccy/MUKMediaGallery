@@ -34,4 +34,6 @@
 
 - (void)setImage:(UIImage *)image inCellAtIndex_:(NSInteger)index;
 - (void)setImage:(UIImage *)image inCell_:(MUKMediaThumbnailView_ *)cell;
+
+- (BOOL)hasThumbnailInCell_:(MUKMediaThumbnailView_ *)cell;
 @end
