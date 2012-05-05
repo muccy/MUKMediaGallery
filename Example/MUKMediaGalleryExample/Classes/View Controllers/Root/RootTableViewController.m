@@ -135,11 +135,13 @@
     
     MUKMediaVideoAsset *youTubeVideoAsset = [[MUKMediaVideoAsset alloc] init];
     youTubeVideoAsset.source = MUKMediaVideoAssetSourceYouTube;
+    youTubeVideoAsset.duration = 906; // 15:06
     youTubeVideoAsset.thumbnailURL = [NSURL URLWithString:@"http://i2.ytimg.com/vi/UF8uR6Z6KLc/default.jpg"];
     youTubeVideoAsset.mediaURL = [NSURL URLWithString:@"http://www.youtube.com/watch?v=UF8uR6Z6KLc"];
     [mediaAssets addObject:youTubeVideoAsset];
     
     MUKMediaAudioAsset *remoteAudioAsset = [[MUKMediaAudioAsset alloc] init];
+    remoteAudioAsset.duration = 332; // 05:32
     remoteAudioAsset.mediaURL = [NSURL URLWithString:@"http://ia600201.us.archive.org/21/items/SexForModerns-PenetratingLoveRay/SexForModerns-PenetratingLoveRay.mp3"];
     [mediaAssets addObject:remoteAudioAsset];
     

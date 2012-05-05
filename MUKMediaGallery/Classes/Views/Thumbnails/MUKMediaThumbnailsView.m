@@ -32,6 +32,7 @@
 #import <MUKScrolling/MUKScrolling.h>
 #import <MUKToolkit/MUKToolkit.h>
 #import "MUKMediaGalleryUtils_.h"
+#import "MUKMediaVideoAssetProtocol.h"
 
 @interface MUKMediaThumbnailsView ()
 @property (nonatomic, strong, readwrite) MUKURLConnectionQueue *thumbnailDownloadQueue;
@@ -677,6 +678,21 @@
             cell.mediaKindImageView.image = nil;
             cell.bottomView.hidden = YES;
             break;
+    }
+    
+    NSTimeInterval duration = -1.0;
+    if ([mediaAsset respondsToSelector:@selector(mediaDuration)])
+    {
+        // Could also be <MUKMediaAudioAsset>
+        duration = [(id<MUKMediaVideoAsset>)mediaAsset mediaDuration];
+    }
+    
+    // if duration >= 0
+    if (duration > -0.00001) {
+        cell.durationLabel.text = [MUK stringRepresentationOfTimeInterval:duration];
+    }
+    else {
+        cell.durationLabel.text = nil;
     }
 }
 

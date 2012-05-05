@@ -60,7 +60,7 @@
 									<object class="IBUILabel" id="8688347">
 										<reference key="NSNextResponder" ref="838678831"/>
 										<int key="NSvFlags">314</int>
-										<string key="NSFrame">{{29, 0}, {47, 18}}</string>
+										<string key="NSFrame">{{21, 0}, {54, 18}}</string>
 										<reference key="NSSuperview" ref="838678831"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView"/>
@@ -92,11 +92,11 @@
 										<int key="IBUITextAlignment">2</int>
 										<object class="IBUIFontDescription" key="IBUIFontDescription">
 											<int key="type">2</int>
-											<double key="pointSize">13</double>
+											<double key="pointSize">11</double>
 										</object>
 										<object class="NSFont" key="IBUIFont">
 											<string key="NSName">Helvetica-Bold</string>
-											<double key="NSSize">13</double>
+											<double key="NSSize">11</double>
 											<int key="NSfFlags">16</int>
 										</object>
 									</object>
