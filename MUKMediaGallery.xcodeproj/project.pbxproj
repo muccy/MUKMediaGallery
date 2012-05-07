@@ -62,6 +62,7 @@
 		0624483015527F8C005CE74D /* MUKMediaThumbnailView_video.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482A15527F8C005CE74D /* MUKMediaThumbnailView_video.png */; };
 		0624483115527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482B15527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png */; };
 		0624483215527F8C005CE74D /* MUKMediaThumbnailView_.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */; };
+		06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -190,6 +191,7 @@
 		0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MUKMediaThumbnailView_.xib; sourceTree = "<group>"; };
 		0624483815528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/Localizable.strings"; sourceTree = "<absolute>"; };
 		0624483915528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
+		06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Selection.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -369,6 +371,7 @@
 				06004A4C154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h */,
 				06004A55154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h */,
 				060B1AB81551428200454D72 /* MUKMediaThumbnailsView_Thumbnails.h */,
+				06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -516,6 +519,7 @@
 				060B1B41155161F700454D72 /* MUKMediaAsset.h in Headers */,
 				060B1B471551813D00454D72 /* MUKMediaAudioAsset.h in Headers */,
 				060B1B4C155181D200454D72 /* MUKMediaVideoAsset.h in Headers */,
+				06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -14,7 +14,7 @@
 @protocol MUKMediaAsset;
 @interface MUKMediaThumbnailView_ : MUKRecyclableView
 @property (nonatomic, strong) IBOutlet UIImageView *imageView;
-@property (nonatomic, strong) IBOutlet UIView *containerView, *bottomView;
+@property (nonatomic, strong) IBOutlet UIView *containerView, *bottomView, *selectionOverlayView;
 @property (nonatomic, strong) IBOutlet UIImageView *mediaKindImageView;
 @property (nonatomic, strong) IBOutlet UILabel *durationLabel;
 

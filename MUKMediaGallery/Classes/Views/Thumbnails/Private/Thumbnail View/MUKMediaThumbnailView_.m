@@ -34,7 +34,7 @@
     BOOL containerViewSetUp_;
 }
 @synthesize imageView = imageView_, mediaKindImageView = mediaKindImageView_;
-@synthesize containerView = containerView_, bottomView = bottomView_;
+@synthesize containerView = containerView_, bottomView = bottomView_, selectionOverlayView = selectionOverlayView_;
 @synthesize durationLabel = durationLabel_;
 @synthesize imageOffset = imageOffset_;
 @synthesize mediaAsset = mediaAsset_;

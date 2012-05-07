@@ -28,6 +28,7 @@
 #import "MUKMediaThumbnailsView_Layout.h"
 #import "MUKMediaThumbnailsView_Cells.h"
 #import "MUKMediaThumbnailsView_Thumbnails.h"
+#import "MUKMediaThumbnailsView_Selection.h"
 
 #import <MUKScrolling/MUKScrolling.h>
 #import <MUKToolkit/MUKToolkit.h>
@@ -41,6 +42,7 @@
 @property (nonatomic, strong) UIImage *videoCellImage_, *audioCellImage_;
 
 - (void)commonInitialization_;
+- (void)attachGridHandlers_;
 @end
 
 @implementation MUKMediaThumbnailsView
@@ -52,12 +54,15 @@
 @synthesize thumbnailOffset = thumbnailOffset_;
 @synthesize displaysMediaAssetsCount = displaysMediaAssetsCount_;
 @synthesize topPadding = topPadding_;
+@synthesize showsSelection = showsSelection_;
 
 @synthesize thumbnailDownloadRequestHandler = thumbnailDownloadRequestHandler_;
+@synthesize thumbnailSelectionHandler = thumbnailSelectionHandler_;
 
 @synthesize mediaAssetsCountView_ = mediaAssetsCountView__;
 @synthesize gridView_ = gridView__;
 @synthesize videoCellImage_ = videoCellImage__, audioCellImage_ = audioCellImage__;
+@synthesize selectedCellIndex_ = selectedCellIndex__;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -210,9 +215,37 @@
     return request;
 }
 
+#pragma mark - Selection
+
+- (NSInteger)selectedMediaAsset {
+    if (self.selectedCellIndex_ >= 0 && self.selectedCellIndex_ < [self.mediaAssets count])
+    {
+        // In bounds
+        return self.selectedCellIndex_;
+    }
+
+    return NSNotFound;
+}
+
+- (void)deselectSelectedMediaAsset {
+    if (self.selectedCellIndex_ >= 0) {
+        [self deselectCellAtIndex_:self.selectedCellIndex_];
+    }
+}
+
+- (void)didSelectMediaAssetAtIndex:(NSInteger)index {    
+    // Call handler
+    if (self.thumbnailSelectionHandler) {
+        self.thumbnailSelectionHandler(index);
+    }
+}
+
 #pragma mark - Private
 
 - (void)commonInitialization_ {
+    selectedCellIndex__ = -1;
+    showsSelection_ = YES;
+    
     thumbnailSize_ = CGSizeMake(79, 79);
     thumbnailOffset_ = CGSizeMake(4, 4);
     
@@ -223,12 +256,21 @@
     self.gridView_.clipsToBounds = NO;
     self.gridView_.backgroundColor = self.backgroundColor;
     self.gridView_.direction = MUKGridDirectionVertical;
+    self.gridView_.detectsDoubleTapGesture = NO;
+    self.gridView_.detectsLongPressGesture = NO;
     
     self.gridView_.cellSize = [[MUKGridCellFixedSize alloc] initWithSize:thumbnailSize_];
         
     displaysMediaAssetsCount_ = YES;
     // Don't insert here, because we have 0 assets
     
+    [self attachGridHandlers_];
+    
+    [self addSubview:self.gridView_];
+
+}
+
+- (void)attachGridHandlers_ {
     __unsafe_unretained MUKGridView *weakGridView = self.gridView_;
     __unsafe_unretained MUKMediaThumbnailsView *weakSelf = self;
     
@@ -251,13 +293,60 @@
         return cellView;
     };
     
+    self.gridView_.scrollHandler = ^{
+        // No selection during scroll
+        
+        if (weakSelf.selectedCellIndex_ >= 0) {
+            [weakSelf deselectCellAtIndex_:weakSelf.selectedCellIndex_];
+        }
+    };
+    
+    self.gridView_.cellTouchedHandler = ^(NSInteger cellIndex, NSSet *touches)
+    {
+        // Touch began
+        if (weakSelf.showsSelection == NO) return;
+        
+        // If grid is moving abort touch handling immediately
+        if (weakGridView.dragging || weakGridView.decelerating) {
+            // Remove past selection
+            if (weakSelf.selectedCellIndex_ >= 0) {
+                [weakSelf deselectCellAtIndex_:weakSelf.selectedCellIndex_];
+            }
+            
+            return;
+        }
+        
+        // If grid view is not moving, look at grid after a while, to see
+        // if it is a real tap, or if it is a touch in order to move the grid
+        MUKGridView *strongGridView = weakGridView;
+        MUKMediaThumbnailsView *strongSelf = weakSelf;
+        
+        double delayInSeconds = 0.1;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            if (strongGridView.dragging == NO && strongGridView.decelerating == NO)
+            {
+                // Grid is not moving again
+                
+                // Remove past selection
+                if (strongSelf.selectedCellIndex_ >= 0) {
+                    [strongSelf deselectCellAtIndex_:strongSelf.selectedCellIndex_];
+                }
+                
+                // Show selection
+                [strongSelf selectCellAtIndex_:cellIndex];
+            }
+        });
+    };
+    
+    self.gridView_.cellTappedHandler = ^(NSInteger cellIndex) {
+        [weakSelf didSelectMediaAssetAtIndex:cellIndex];
+    };
+    
     self.gridView_.scrollCompletionHandler = ^(MUKGridScrollKind scrollKind)
     {
         [weakSelf loadVisibleThumbnails_];
     };
-    
-    [self addSubview:self.gridView_];
-
 }
 
 #pragma mark - Private: Accessors
@@ -638,7 +727,23 @@
     return frame;
 }
 
-#pragma mark - Cells
+#pragma mark - Private: Selection
+
+- (void)selectCellAtIndex_:(NSInteger)index {
+    MUKMediaThumbnailView_ *cell = (MUKMediaThumbnailView_ *)[self.gridView_ cellViewAtIndex:index];
+    cell.selectionOverlayView.hidden = NO;
+    
+    self.selectedCellIndex_ = index;
+}
+
+- (void)deselectCellAtIndex_:(NSInteger)index {
+    MUKMediaThumbnailView_ *cell = (MUKMediaThumbnailView_ *)[self.gridView_ cellViewAtIndex:index];
+    cell.selectionOverlayView.hidden = YES;
+    
+    self.selectedCellIndex_ = -1;
+}
+
+#pragma mark - Private: Cells
 
 - (MUKMediaThumbnailView_ *)createThumbnailCell_ {
     MUKMediaThumbnailView_ *cellView = [MUK objectOfClass:[MUKMediaThumbnailView_ class] instantiatedFromNibNamed:nil bundle:[MUKMediaGalleryUtils_ frameworkBundle] owner:nil options:nil atIndex:0];
@@ -648,6 +753,9 @@
 - (void)configureThumbnailCell_:(MUKMediaThumbnailView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index
 {
     cell.imageOffset = self.thumbnailOffset;
+    
+    // Don't preserve selection
+    cell.selectionOverlayView.hidden = YES;
     
     // Clean thumbnail currently displayed
     [self setImage:nil inCell_:cell];

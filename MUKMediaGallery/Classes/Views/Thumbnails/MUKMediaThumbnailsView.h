@@ -99,11 +99,20 @@
  Default is `YES`.
  */
 @property (nonatomic) BOOL displaysMediaAssetsCount;
+/**
+ Shows selection on touch.
+ 
+ Default is `YES`.
+ */
+@property (nonatomic) BOOL showsSelection;
 
 /** @name Handlers */
 /**
  */
 @property (nonatomic, copy) NSURLRequest* (^thumbnailDownloadRequestHandler)(id<MUKMediaAsset> mediaAsset);
+/**
+ */
+@property (nonatomic, copy) void (^thumbnailSelectionHandler)(NSInteger index);
 
 /** @name Methods */
 /**
@@ -124,3 +133,32 @@
 - (NSURLRequest *)requestForMediaAsset:(id<MUKMediaAsset>)mediaAsset;
 @end
 
+@interface MUKMediaThumbnailsView (Selection)
+/**
+ Selected media asset index.
+ 
+ If no media asset is selected, it returns `NSNotFound`.
+ 
+ @return Selected media asset index or `NSNotFound`.
+ */
+- (NSInteger)selectedMediaAssetIndex;
+/**
+ Deselects selected media asset (if any).
+ */
+- (void)deselectSelectedMediaAsset;
+/**
+ Media asset selection callback.
+ 
+ This callback is invoked when a tap is detected on a media asset cell.
+ 
+ Default implementation calls thumbnailSelectionHandler.
+ 
+ @param Media asset index.
+ @warning It is not safe to deselect media asset here synchronously because
+ of internal tap handling (touches began handling is postponed because of
+ grid's scrolling, so tap gesture could arrive before cell selection).
+ Please deselect media asset as you do with `UITableView` instances (e.g. in 
+ `viewWillAppear:` method).
+ */
+- (void)didSelectMediaAssetAtIndex:(NSInteger)index;
+@end

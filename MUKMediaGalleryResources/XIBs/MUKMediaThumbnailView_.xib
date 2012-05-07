@@ -46,7 +46,7 @@
 								<string key="NSFrameSize">{79, 79}</string>
 								<reference key="NSSuperview" ref="783338634"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="838678831"/>
+								<reference key="NSNextKeyView" ref="177597854"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">2</int>
@@ -112,10 +112,6 @@
 										<int key="IBUIContentMode">7</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-										<object class="NSCustomResource" key="IBUIImage">
-											<string key="NSClassName">NSImage</string>
-											<string key="NSResourceName">MUKMediaThumbnailView_video.png</string>
-										</object>
 									</object>
 								</array>
 								<string key="NSFrame">{{0, 61}, {79, 18}}</string>
@@ -129,6 +125,22 @@
 									<reference key="NSCustomColorSpace" ref="644130282"/>
 								</object>
 								<bool key="IBUIOpaque">NO</bool>
+								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+							</object>
+							<object class="IBUIView" id="177597854">
+								<reference key="NSNextResponder" ref="783338634"/>
+								<int key="NSvFlags">-2147483374</int>
+								<string key="NSFrameSize">{79, 79}</string>
+								<reference key="NSSuperview" ref="783338634"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="838678831"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<object class="NSColor" key="IBUIBackgroundColor">
+									<int key="NSColorSpace">3</int>
+									<bytes key="NSWhite">MAA</bytes>
+								</object>
+								<float key="IBUIAlpha">0.40000000596046448</float>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 						</array>
@@ -200,6 +212,14 @@
 					</object>
 					<int key="connectionID">12</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">selectionOverlayView</string>
+						<reference key="source" ref="129451064"/>
+						<reference key="destination" ref="177597854"/>
+					</object>
+					<int key="connectionID">14</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -234,6 +254,7 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="838678831"/>
 							<reference ref="896532059"/>
+							<reference ref="177597854"/>
 						</array>
 						<reference key="parent" ref="129451064"/>
 						<string key="objectName">Container</string>
@@ -265,6 +286,12 @@
 						<reference key="parent" ref="838678831"/>
 						<string key="objectName">Duration</string>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">13</int>
+						<reference key="object" ref="177597854"/>
+						<reference key="parent" ref="783338634"/>
+						<string key="objectName">Selection Overlay</string>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -272,6 +299,7 @@
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="11.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="13.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="2.CustomClassName">MUKMediaThumbnailView_</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -283,7 +311,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">12</int>
+			<int key="maxID">14</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -296,6 +324,7 @@
 						<string key="durationLabel">UILabel</string>
 						<string key="imageView">UIImageView</string>
 						<string key="mediaKindImageView">UIImageView</string>
+						<string key="selectionOverlayView">UIView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="bottomView">
@@ -317,6 +346,10 @@
 						<object class="IBToOneOutletInfo" key="mediaKindImageView">
 							<string key="name">mediaKindImageView</string>
 							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="selectionOverlayView">
+							<string key="name">selectionOverlayView</string>
+							<string key="candidateClassName">UIView</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -342,10 +375,6 @@
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="NS.key.0">MUKMediaThumbnailView_video.png</string>
-			<string key="NS.object.0">{13, 8}</string>
-		</object>
 		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>
 </archive>
