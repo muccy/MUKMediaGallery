@@ -60,7 +60,7 @@
 									<object class="IBUILabel" id="8688347">
 										<reference key="NSNextResponder" ref="838678831"/>
 										<int key="NSvFlags">314</int>
-										<string key="NSFrame">{{21, 0}, {54, 18}}</string>
+										<string key="NSFrame">{{26, 0}, {49, 18}}</string>
 										<reference key="NSSuperview" ref="838678831"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView"/>
@@ -102,16 +102,20 @@
 									</object>
 									<object class="IBUIImageView" id="742158045">
 										<reference key="NSNextResponder" ref="838678831"/>
-										<int key="NSvFlags">316</int>
-										<string key="NSFrame">{{3, 3}, {14, 12}}</string>
+										<int key="NSvFlags">276</int>
+										<string key="NSFrame">{{5, 0}, {18, 18}}</string>
 										<reference key="NSSuperview" ref="838678831"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="8688347"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIClipsSubviews">YES</bool>
-										<int key="IBUIContentMode">1</int>
+										<int key="IBUIContentMode">7</int>
 										<bool key="IBUIUserInteractionEnabled">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+										<object class="NSCustomResource" key="IBUIImage">
+											<string key="NSClassName">NSImage</string>
+											<string key="NSResourceName">MUKMediaThumbnailView_video.png</string>
+										</object>
 									</object>
 								</array>
 								<string key="NSFrame">{{0, 61}, {79, 18}}</string>
@@ -338,6 +342,10 @@
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NS.key.0">MUKMediaThumbnailView_video.png</string>
+			<string key="NS.object.0">{13, 8}</string>
+		</object>
 		<string key="IBCocoaTouchPluginVersion">1181</string>
 	</data>
 </archive>
