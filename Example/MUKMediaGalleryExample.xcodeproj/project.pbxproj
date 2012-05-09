@@ -27,6 +27,7 @@
 		060B1B55155188BF00454D72 /* MUKMediaGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B071551584400454D72 /* MUKMediaGallery.bundle */; };
 		062448351552848E005CE74D /* sea.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 062448341552848E005CE74D /* sea.mp4 */; };
 		062448371552849A005CE74D /* sea-movie-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 062448361552849A005CE74D /* sea-movie-thumbnail.jpg */; };
+		06A93C5D155A67E90083CFE4 /* ImageFetcherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C5C155A67E90083CFE4 /* ImageFetcherViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,6 +95,8 @@
 		062448341552848E005CE74D /* sea.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sea.mp4; sourceTree = "<group>"; };
 		062448361552849A005CE74D /* sea-movie-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "sea-movie-thumbnail.jpg"; sourceTree = "<group>"; };
 		0624483E15528742005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/Example/MUKMediaGalleryExample/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
+		06A93C5B155A67E90083CFE4 /* ImageFetcherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageFetcherViewController.h; sourceTree = "<group>"; };
+		06A93C5C155A67E90083CFE4 /* ImageFetcherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageFetcherViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				060B1B22155158CD00454D72 /* Root */,
+				06A93C5A155A67CE0083CFE4 /* Image Fetcher */,
 				060B1B23155158CD00454D72 /* Thumbnails View */,
 			);
 			path = "View Controllers";
@@ -243,6 +247,15 @@
 				062448341552848E005CE74D /* sea.mp4 */,
 			);
 			path = Movies;
+			sourceTree = "<group>";
+		};
+		06A93C5A155A67CE0083CFE4 /* Image Fetcher */ = {
+			isa = PBXGroup;
+			children = (
+				06A93C5B155A67E90083CFE4 /* ImageFetcherViewController.h */,
+				06A93C5C155A67E90083CFE4 /* ImageFetcherViewController.m */,
+			);
+			path = "Image Fetcher";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,6 +361,7 @@
 				060B1B24155158CD00454D72 /* AppDelegate.m in Sources */,
 				060B1B27155158E400454D72 /* RootTableViewController.m in Sources */,
 				060B1B2B1551592200454D72 /* ThumbnailsViewController.m in Sources */,
+				06A93C5D155A67E90083CFE4 /* ImageFetcherViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

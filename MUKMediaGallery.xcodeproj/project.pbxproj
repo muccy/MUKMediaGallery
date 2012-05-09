@@ -63,6 +63,10 @@
 		0624483115527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482B15527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png */; };
 		0624483215527F8C005CE74D /* MUKMediaThumbnailView_.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */; };
 		06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */; };
+		06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */; };
+		06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */; };
+		06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -192,6 +196,10 @@
 		0624483815528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/Localizable.strings"; sourceTree = "<absolute>"; };
 		0624483915528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
 		06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Selection.h; sourceTree = "<group>"; };
+		06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcher.h; sourceTree = "<group>"; };
+		06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcher.m; sourceTree = "<group>"; };
+		06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcherURLConnectionQueue_.h; sourceTree = "<group>"; };
+		06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcherURLConnectionQueue_.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -489,9 +497,29 @@
 		066F8454154E940600704724 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				06A93C55155A5BAD0083CFE4 /* Image Fetcher */,
 				060B1B381551610E00454D72 /* Media Assets */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		06A93C55155A5BAD0083CFE4 /* Image Fetcher */ = {
+			isa = PBXGroup;
+			children = (
+				06A93C5E155A6E970083CFE4 /* Private */,
+				06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */,
+				06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */,
+			);
+			path = "Image Fetcher";
+			sourceTree = "<group>";
+		};
+		06A93C5E155A6E970083CFE4 /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */,
+				06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */,
+			);
+			path = Private;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -520,6 +548,8 @@
 				060B1B471551813D00454D72 /* MUKMediaAudioAsset.h in Headers */,
 				060B1B4C155181D200454D72 /* MUKMediaVideoAsset.h in Headers */,
 				06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */,
+				06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */,
+				06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -752,6 +782,8 @@
 				060B1B42155161F700454D72 /* MUKMediaAsset.m in Sources */,
 				060B1B481551813D00454D72 /* MUKMediaAudioAsset.m in Sources */,
 				060B1B4D155181D200454D72 /* MUKMediaVideoAsset.m in Sources */,
+				06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */,
+				06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

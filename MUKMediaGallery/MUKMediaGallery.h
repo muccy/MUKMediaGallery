@@ -1,5 +1,7 @@
 #import <Foundation/Foundation.h>
 
+#import <MUKMediaGallery/MUKImageFetcher.h>
+
 #import <MUKMediaGallery/MUKMediaAssetProtocol.h>
 #import <MUKMediaGallery/MUKMediaImageAssetProtocol.h>
 #import <MUKMediaGallery/MUKMediaVideoAssetProtocol.h>

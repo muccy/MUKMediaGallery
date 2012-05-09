@@ -8,6 +8,7 @@
 
 #import "RootTableViewController.h"
 #import "ThumbnailsViewController.h"
+#import "ImageFetcherViewController.h"
 #import <MUKToolkit/MUKToolkit.h>
 
 @interface Row_ : NSObject 
@@ -53,6 +54,15 @@
         __unsafe_unretained RootTableViewController *weakSelf = self;
         
         Row_ *row = [[Row_ alloc] init];
+        row.title = @"Image Fetcher";
+        row.subtitle = @"MUKImageFetch in a UITableViewController";
+        row.selectionHandler = ^{
+            ImageFetcherViewController *viewController = [[ImageFetcherViewController alloc] initWithStyle:UITableViewStylePlain];
+            [weakSelf.navigationController pushViewController:viewController animated:YES];
+        };
+        [rows addObject:row];  
+        
+        row = [[Row_ alloc] init];
         row.title = @"Thumbnails View";
         row.subtitle = @"MUKMediaThumbnailsView";
         row.selectionHandler = ^{
