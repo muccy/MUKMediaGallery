@@ -236,7 +236,7 @@
 #pragma mark - Private
 
 - (id<NSCopying>)cacheKeyForImageURL_:(NSURL *)imageURL {
-    return [imageURL absoluteString];
+    return imageURL;
 }
 
 - (MUKObjectCacheLocation)cacheLocationsForSearchDomains_:(MUKImageFetcherSearchDomain)searchDomains imageURL_:(NSURL *)imageURL
@@ -270,6 +270,7 @@
             
         case MUKObjectCacheLocationFile:
             searchDomain = MUKImageFetcherSearchDomainFileCache;
+            break;
             
         default:
             searchDomain = MUKImageFetcherSearchDomainNone;
