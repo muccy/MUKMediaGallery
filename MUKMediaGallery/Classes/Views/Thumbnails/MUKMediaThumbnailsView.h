@@ -44,7 +44,8 @@
  This object is lazy loaded, but you can customize its behaviour.
  
  @warning You should set file cache handlers (on `thumbnailsFetcher.cache`)
- if you decide to cache thumbnails to file.
+ if you decide to cache thumbnails to file. Mind that cache key is 
+ [MUKMediaAsset mediaThumbnailURL].
  @warning You can not set [MUKImageFetcher shouldStartConnectionHandler] 
  because it is used internally not to load invisible thumbnails.
  */
@@ -55,7 +56,8 @@
  Default is `NO`. If `YES`, thumbnails are searched/saved in file cache too.
  
  @warning You should set file cache handlers (on `thumbnailsFetcher.cache`)
- if you decide to cache thumbnails to file.
+ if you decide to cache thumbnails to file. Mind that cache key is 
+ [MUKMediaAsset mediaThumbnailURL].
  */
 @property (nonatomic) BOOL usesThumbnailImageFileCache;
 /**
@@ -136,7 +138,7 @@
  
  Default implementation calls thumbnailSelectionHandler.
  
- @param Media asset index.
+ @param index Media asset index.
  @warning It is not safe to deselect media asset here synchronously because
  of internal tap handling (touches began handling is postponed because of
  grid's scrolling, so tap gesture could arrive before cell selection).
