@@ -7,6 +7,7 @@
 //
 
 #import "ThumbnailsViewController.h"
+#import <MUKToolkit/MUKToolkit.h>
 
 @interface ThumbnailsViewController ()
 
@@ -16,6 +17,7 @@
 @synthesize thumbnailsView = thumbnailsView_;
 @synthesize mediaAssets = mediaAssets_;
 
+/*
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -24,11 +26,23 @@
     }
     return self;
 }
+*/
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    NSURL *containerURL = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"ThumbnailsViewExampleCache"];
+    
+    self.thumbnailsView.usesThumbnailImageFileCache = YES;
+    self.thumbnailsView.thumbnailsFetcher.cache.fileCacheURLHandler = ^(id key) 
+    {
+        NSString *URLString = [key absoluteString];
+        NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:URLString containerURL:containerURL];
+        
+        return cacheURL;
+    };
     
     self.thumbnailsView.mediaAssets = self.mediaAssets;
     

@@ -8,6 +8,7 @@
 
 #import "ImageFetcherViewController.h"
 #import <MUKMediaGallery/MUKMediaGallery.h>
+#import <MUKToolkit/MUKToolkit.h>
 
 @interface ImageFetcherPhoto_ : NSObject 
 @property (nonatomic, strong) NSURL *URL;
@@ -97,6 +98,15 @@
             }];
             
             return photoIsVisible;
+        };
+        
+        NSURL *containerURL = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"ImageFetcherExampleCache"];
+        
+        imageFetcher__.cache.fileCacheURLHandler = ^(id key) {
+            NSString *URLString = [key absoluteString];
+            NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:URLString containerURL:containerURL];
+            
+            return cacheURL;
         };
         
         cellsPerURL__ = [[NSMutableDictionary alloc] init];
