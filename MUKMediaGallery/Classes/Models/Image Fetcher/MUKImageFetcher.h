@@ -95,13 +95,6 @@ typedef enum {
 
 /** @name Handlers */
 /**
- Handler which returns a connection given image URL.
- 
- If you return `nil` or you do not implement this handler, a standard
- connection is enqueued.
- */
-@property (nonatomic, copy) MUKURLConnection* (^downloadConnectionHandler)(NSURL *imageURL);
-/**
  Handler which gives you a chance to stop a connection before is started.
  
  You could you this handler in order to stop downloads for hidden images.
@@ -114,9 +107,8 @@ typedef enum {
 /**
  Load image given its URL.
  
- This method search for image and calls a completion handler on main queue. This handler is
- called synchrounously only if result domain is 
- `MUKImageFetcherSearchDomainMemoryCache`.
+ This method is a shortend for 
+ loadImageForURL:searchDomains:cacheToLocations:connection:completionHandler:.
  
  @param imageURL Image URL. Could be also a file URL.
  @param searchDomains Where fetcher should look in order to load image. 
@@ -128,8 +120,39 @@ typedef enum {
  If image comes from a file URL, it will not be cached to file.
  @param completionHandler An handler called to signal loading completion.
  First parameter is loaded `image`, second one is where `image` has been found. This handler could be invoked with `nil` if image could not be found.
+ @see loadImageForURL:searchDomains:cacheToLocations:connection:completionHandler:
  */
 - (void)loadImageForURL:(NSURL *)imageURL searchDomains:(MUKImageFetcherSearchDomain)searchDomains cacheToLocations:(MUKObjectCacheLocation)cacheLocations completionHandler:(void (^)(UIImage *image, MUKImageFetcherSearchDomain resultDomains))completionHandler;
+/**
+ Load image given its URL.
+ 
+ This method search for image and calls a completion handler on main queue. 
+ This handler is called synchrounously only if result domain is 
+ `MUKImageFetcherSearchDomainMemoryCache`.
+ 
+ @param imageURL Image URL. Could be also a file URL.
+ @param searchDomains Where fetcher should look in order to load image. 
+ Remember to set `MUKImageFetcherSearchDomainFile` if you feed file URLs and
+ you want an image back: otherwise completion handler will be called with 
+ `nil` image.
+ @param cacheLocations Where fetcher should cache found image. Remember to
+ set [MUKObjectCache fileCacheURLHandler] properly for `cache` property.
+ If image comes from a file URL, it will not be cached to file.
+ @param connection Connection which will be enqueued if image has to be
+ downloaded from network. If you leave this parameter `nil` a standard
+ connection is fired (see standardConnectionForImageAtURL:).
+ @param completionHandler An handler called to signal loading completion.
+ First parameter is loaded `image`, second one is where `image` has been 
+ found. This handler could be invoked with `nil` if image could not be found.
+ */
+- (void)loadImageForURL:(NSURL *)imageURL searchDomains:(MUKImageFetcherSearchDomain)searchDomains cacheToLocations:(MUKObjectCacheLocation)cacheLocations connection:(MUKURLConnection *)connection completionHandler:(void (^)(UIImage *image, MUKImageFetcherSearchDomain resultDomains))completionHandler;
+/**
+ Default connection to download an image.
+ 
+ @param imageURL Image URL. It should be a remote URL.
+ @return Connection to download the image.
+ */
++ (MUKURLConnection *)standardConnectionForImageAtURL:(NSURL *)imageURL;
 /**
  Cancels download of an image.
  

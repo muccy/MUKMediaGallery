@@ -32,14 +32,12 @@
 - (MUKObjectCacheLocation)cacheLocationsForSearchDomains_:(MUKImageFetcherSearchDomain)searchDomains imageURL_:(NSURL *)imageURL;
 - (MUKImageFetcherSearchDomain)searchDomainForCacheLocation_:(MUKObjectCacheLocation)cacheLocation;
 
-- (MUKURLConnection *)newConnectionForImageURL_:(NSURL *)imageURL;
 - (BOOL)shouldStartConnection_:(MUKURLConnection *)connection;
 @end
 
 @implementation MUKImageFetcher
 @synthesize connectionQueue = connectionQueue_;
 @synthesize cache = cache_;
-@synthesize downloadConnectionHandler = downloadConnectionHandler_;
 @synthesize shouldStartConnectionHandler = shouldStartConnectionHandler_;
 
 - (void)dealloc {
@@ -97,6 +95,11 @@
 
 - (void)loadImageForURL:(NSURL *)imageURL searchDomains:(MUKImageFetcherSearchDomain)searchDomains cacheToLocations:(MUKObjectCacheLocation)cacheLocations completionHandler:(void (^)(UIImage *, MUKImageFetcherSearchDomain))completionHandler
 {
+    [self loadImageForURL:imageURL searchDomains:searchDomains cacheToLocations:cacheLocations connection:nil completionHandler:completionHandler];
+}
+
+- (void)loadImageForURL:(NSURL *)imageURL searchDomains:(MUKImageFetcherSearchDomain)searchDomains cacheToLocations:(MUKObjectCacheLocation)cacheLocations connection:(MUKURLConnection *)userConnection completionHandler:(void (^)(UIImage *image, MUKImageFetcherSearchDomain resultDomains))completionHandler
+{
     // Don't know how to notify
     if (!completionHandler) {
         return;
@@ -114,86 +117,99 @@
     MUKObjectCacheLocation searchCacheLocations = [self cacheLocationsForSearchDomains_:searchDomains imageURL_:imageURL];
     
     [self.cache loadObjectForKey:cacheKey locations:searchCacheLocations completionHandler:^(id object, MUKObjectCacheLocation location) 
-    {
-        if ([object isKindOfClass:[UIImage class]]) {
-            // Image found
-            
-            // If image is on disk
-            // Cache to memory (if requested)
-            if (MUKObjectCacheLocationFile == location) {
-                if ([MUK bitmask:cacheLocations containsFlag:MUKObjectCacheLocationMemory])
-                {
-                    [self.cache saveObject:object forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
-                }
-            }
-            
-            // Notify success
-            MUKImageFetcherSearchDomain resultDomain = [self searchDomainForCacheLocation_:location];
-            completionHandler(object, resultDomain);
-        }
-        
-        else {
-            // Image not found
-            
-            // Load from disk (if requested)
-            if ([imageURL isFileURL]) {
-                if ([MUK bitmask:searchDomains containsFlag:MUKImageFetcherSearchDomainFile])
-                {
-                    dispatch_queue_t queue = dispatch_queue_create("it.melive.mukit.MUKImageFetcher.FileImageLoading", NULL);
-                    dispatch_async(queue, ^{
-                        UIImage *image = [[UIImage alloc] initWithContentsOfFile:[imageURL path]];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            // Cache it to memory (if requested)
-                            if ([MUK bitmask:cacheLocations containsFlag:MUKObjectCacheLocationMemory])
-                            {
-                                [self.cache saveObject:image forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
-                            }
-                            
-                            // Notify loading completion
-                            completionHandler(image, MUKImageFetcherSearchDomainFile);
-                        }); // dispatch_async on main queue
-                    }); // dispatch_async in image loading queue
-                    
-                    // Dispose queue
-                    dispatch_release(queue);
-                }
-            } // if image URL is file URL
-            
-            // Download from remote (if requested)
-            else if ([MUK bitmask:searchDomains containsFlag:MUKImageFetcherSearchDomainRemote])
-            {
-                MUKURLConnection *connection = [self newConnectionForImageURL_:imageURL];
-                
-                MUKURLConnection *strongConnection = connection;
-                connection.completionHandler = ^(BOOL success, NSError *error)
-                {
-                    if (success) {
-                        NSData *data = [strongConnection bufferedData];
-                        UIImage *image = [[UIImage alloc] initWithData:data];
-                        
-                        // Cache image (if requested)
-                        [self.cache saveObject:image forKey:cacheKey locations:cacheLocations completionHandler:nil];
-                        
-                        // Notify completion
-                        completionHandler(image, MUKImageFetcherSearchDomainRemote);
-                    }
-                    
-                    // Break cycle
-                    strongConnection.completionHandler = nil;
-                }; // connection's completionHandler
-                
-                // Enqueue connection
-                [self.connectionQueue addConnection:connection];
-            }
-            
-            else {
-                // Image is not found, could not be loaded from file URL
-                // and could not be loaded from network
-                completionHandler(nil, searchDomains);
-            }
-        } // if object is UIImage instance
-    }]; // loadObjectForKey:...
+     {
+         if ([object isKindOfClass:[UIImage class]]) {
+             // Image found
+             
+             // If image is on disk
+             // Cache to memory (if requested)
+             if (MUKObjectCacheLocationFile == location) {
+                 if ([MUK bitmask:cacheLocations containsFlag:MUKObjectCacheLocationMemory])
+                 {
+                     [self.cache saveObject:object forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
+                 }
+             }
+             
+             // Notify success
+             MUKImageFetcherSearchDomain resultDomain = [self searchDomainForCacheLocation_:location];
+             completionHandler(object, resultDomain);
+         }
+         
+         else {
+             // Image not found
+             
+             // Load from disk (if requested)
+             if ([imageURL isFileURL]) {
+                 if ([MUK bitmask:searchDomains containsFlag:MUKImageFetcherSearchDomainFile])
+                 {
+                     dispatch_queue_t queue = dispatch_queue_create("it.melive.mukit.MUKImageFetcher.FileImageLoading", NULL);
+                     dispatch_async(queue, ^{
+                         UIImage *image = [[UIImage alloc] initWithContentsOfFile:[imageURL path]];
+                         
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             // Cache it to memory (if requested)
+                             if ([MUK bitmask:cacheLocations containsFlag:MUKObjectCacheLocationMemory])
+                             {
+                                 [self.cache saveObject:image forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
+                             }
+                             
+                             // Notify loading completion
+                             completionHandler(image, MUKImageFetcherSearchDomainFile);
+                         }); // dispatch_async on main queue
+                     }); // dispatch_async in image loading queue
+                     
+                     // Dispose queue
+                     dispatch_release(queue);
+                 }
+             } // if image URL is file URL
+             
+             // Download from remote (if requested)
+             else if ([MUK bitmask:searchDomains containsFlag:MUKImageFetcherSearchDomainRemote])
+             {
+                 MUKURLConnection *connection = userConnection;
+                 
+                 if (connection == nil) {
+                     connection = [[self class] standardConnectionForImageAtURL:imageURL];
+                 }
+                 
+                 MUKURLConnection *strongConnection = connection;
+                 connection.completionHandler = ^(BOOL success, NSError *error)
+                 {
+                     if (success) {
+                         NSData *data = [strongConnection bufferedData];
+                         UIImage *image = [[UIImage alloc] initWithData:data];
+                         
+                         // Cache image (if requested)
+                         [self.cache saveObject:image forKey:cacheKey locations:cacheLocations completionHandler:nil];
+                         
+                         // Notify completion
+                         completionHandler(image, MUKImageFetcherSearchDomainRemote);
+                     }
+                     
+                     // Break cycle
+                     strongConnection.completionHandler = nil;
+                 }; // connection's completionHandler
+                 
+                 // Enqueue connection
+                 [self.connectionQueue addConnection:connection];
+             }
+             
+             else {
+                 // Image is not found, could not be loaded from file URL
+                 // and could not be loaded from network
+                 completionHandler(nil, searchDomains);
+             }
+         } // if object is UIImage instance
+     }]; // loadObjectForKey:...
+}
+
++ (MUKURLConnection *)standardConnectionForImageAtURL:(NSURL *)imageURL
+{
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
+    MUKURLConnection *connection = [[MUKURLConnection alloc] initWithRequest:request];
+    connection.runsInBackground = YES;
+    
+    return connection;
 }
 
 - (void)cancelImageDownloadForURL:(NSURL *)imageURL {
@@ -261,22 +277,6 @@
     }
     
     return searchDomain;
-}
-
-- (MUKURLConnection *)newConnectionForImageURL_:(NSURL *)imageURL {
-    MUKURLConnection *connection = nil;
-    
-    if (self.downloadConnectionHandler) {
-        connection = self.downloadConnectionHandler(imageURL);
-    }
-    
-    if (connection == nil) {
-        NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
-        connection = [[MUKURLConnection alloc] initWithRequest:request];
-        connection.runsInBackground = YES;
-    }
-    
-    return connection;
 }
 
 - (BOOL)shouldStartConnection_:(MUKURLConnection *)connection {
