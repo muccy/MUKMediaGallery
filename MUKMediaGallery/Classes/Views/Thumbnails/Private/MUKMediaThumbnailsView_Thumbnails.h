@@ -27,6 +27,7 @@
 
 @interface MUKMediaThumbnailsView ()
 - (UIImage *)userProvidedThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset provided_:(BOOL *)provided;
+
 - (NSURL *)thumbnailURLForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
 - (BOOL)thumbnailIsInFileForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
 /*
@@ -41,8 +42,6 @@
  How thumbanail dowloaded
  */
 - (MUKURLConnection *)connectionForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
-
-- (NSString *)cacheKeyForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
 
 - (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell;
 

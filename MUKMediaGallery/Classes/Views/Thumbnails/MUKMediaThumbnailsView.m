@@ -419,10 +419,6 @@
     return connection;
 }
 
-- (NSString *)cacheKeyForMediaAsset_:(id<MUKMediaAsset>)mediaAsset {
-    return [[self thumbnailURLForMediaAsset_:mediaAsset] absoluteString];
-}
-
 - (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell
 {
     BOOL userProvidesThumbnail = NO;
