@@ -32,13 +32,6 @@
     
     self.thumbnailsView.mediaAssets = self.mediaAssets;
     
-    __unsafe_unretained ThumbnailsViewController *weakSelf = self;
-    self.thumbnailsView.thumbnailDownloadRequestHandler = ^ NSURLRequest* (id<MUKMediaAsset> mediaAsset)
-    {
-        NSLog(@"Requesting media asset at index %i", [weakSelf.mediaAssets indexOfObject:mediaAsset]);
-        return nil; // Use default
-    };
-    
     self.thumbnailsView.thumbnailSelectionHandler = ^(NSInteger index) {
         NSLog(@"Selected media asset at index %i", index);
     };

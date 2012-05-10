@@ -67,6 +67,8 @@
 		06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */; };
 		06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */; };
 		06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */; };
+		06A93C66155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C64155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h */; };
+		06A93C67155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C65155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,6 +202,8 @@
 		06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcher.m; sourceTree = "<group>"; };
 		06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcherURLConnectionQueue_.h; sourceTree = "<group>"; };
 		06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcherURLConnectionQueue_.m; sourceTree = "<group>"; };
+		06A93C64155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsViewFetcher_.h; sourceTree = "<group>"; };
+		06A93C65155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailsViewFetcher_.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -375,6 +379,7 @@
 			children = (
 				06004A33154C24A1004A3B17 /* Count View */,
 				06004A4E154C3B2B004A3B17 /* Thumbnail View */,
+				06A93C63155C24F70083CFE4 /* Thumbnails Fetcher */,
 				06004A38154C26CC004A3B17 /* MUKMediaThumbnailsView_MediaAssetsCountView.h */,
 				06004A4C154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h */,
 				06004A55154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h */,
@@ -522,6 +527,15 @@
 			path = Private;
 			sourceTree = "<group>";
 		};
+		06A93C63155C24F70083CFE4 /* Thumbnails Fetcher */ = {
+			isa = PBXGroup;
+			children = (
+				06A93C64155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h */,
+				06A93C65155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m */,
+			);
+			path = "Thumbnails Fetcher";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -550,6 +564,7 @@
 				06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */,
 				06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */,
 				06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */,
+				06A93C66155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -784,6 +799,7 @@
 				060B1B4D155181D200454D72 /* MUKMediaVideoAsset.m in Sources */,
 				06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */,
 				06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */,
+				06A93C67155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

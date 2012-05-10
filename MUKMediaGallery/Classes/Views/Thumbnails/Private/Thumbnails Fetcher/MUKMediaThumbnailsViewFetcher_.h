@@ -23,30 +23,8 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "MUKMediaThumbnailsView.h"
+#import <MUKMediaGallery/MUKMediaGallery.h>
 
-@interface MUKMediaThumbnailsView ()
-- (UIImage *)userProvidedThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset provided_:(BOOL *)provided;
-- (NSURL *)thumbnailURLForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
-- (BOOL)thumbnailIsInFileForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
-/*
- Where thumbnail is searched
- */
-- (MUKImageFetcherSearchDomain)searchDomainsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory;
-/*
- Where thumbnail is cached
- */
-- (MUKObjectCacheLocation)cacheLocationsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
-/*
- How thumbanail dowloaded
- */
-- (MUKURLConnection *)connectionForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
-
-- (NSString *)cacheKeyForMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
-
-- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell;
-
-- (void)loadVisibleThumbnails_;
-- (void)loadThumbnailsInCells_:(NSSet *)cells;
-
+@interface MUKMediaThumbnailsViewFetcher_ : MUKImageFetcher
+@property (nonatomic) BOOL blockHandlers;
 @end

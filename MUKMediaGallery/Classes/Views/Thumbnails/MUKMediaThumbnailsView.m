@@ -34,10 +34,9 @@
 #import <MUKToolkit/MUKToolkit.h>
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaVideoAssetProtocol.h"
+#import "MUKMediaThumbnailsViewFetcher_.h"
 
 @interface MUKMediaThumbnailsView ()
-@property (nonatomic, strong, readwrite) MUKURLConnectionQueue *thumbnailDownloadQueue;
-
 @property (nonatomic, strong) MUKGridView *gridView_;
 @property (nonatomic, strong) UIImage *videoCellImage_, *audioCellImage_;
 
@@ -47,16 +46,14 @@
 
 @implementation MUKMediaThumbnailsView
 @synthesize mediaAssets = mediaAssets_;
-@synthesize thumbnailImageCache = thumbnailImageCache_;
+@synthesize thumbnailsFetcher = thumbnailsFetcher_;
 @synthesize usesThumbnailImageFileCache = usesThumbnailImageFileCache_;
-@synthesize thumbnailDownloadQueue = thumbnailDownloadQueue_;
 @synthesize thumbnailSize = thumbnailSize_;
 @synthesize thumbnailOffset = thumbnailOffset_;
 @synthesize displaysMediaAssetsCount = displaysMediaAssetsCount_;
 @synthesize topPadding = topPadding_;
 @synthesize showsSelection = showsSelection_;
 
-@synthesize thumbnailDownloadRequestHandler = thumbnailDownloadRequestHandler_;
 @synthesize thumbnailSelectionHandler = thumbnailSelectionHandler_;
 
 @synthesize mediaAssetsCountView_ = mediaAssetsCountView__;
@@ -81,11 +78,8 @@
 }
 
 - (void)dealloc {
-    thumbnailImageCache_.fileCacheURLHandler = nil;
-    thumbnailImageCache_.fileCachedDataTransformer = nil;
-    thumbnailImageCache_.fileCachedObjectTransformer = nil;
-    
-    thumbnailDownloadQueue_.connectionWillStartHandler = nil;
+    [(MUKMediaThumbnailsViewFetcher_ *)thumbnailsFetcher_ setBlockHandlers:NO];
+    thumbnailsFetcher_.shouldStartConnectionHandler = nil;
     
     [self.gridView_ removeAllHandlers];
 }
@@ -99,22 +93,14 @@
 
 #pragma mark - Accessors
 
-- (MUKObjectCache *)thumbnailImageCache {
-    if (thumbnailImageCache_ == nil) {
-        thumbnailImageCache_ = [[MUKObjectCache alloc] init];
-    }
-    
-    return thumbnailImageCache_;
-}
-
-- (MUKURLConnectionQueue *)thumbnailDownloadQueue {
-    if (thumbnailDownloadQueue_ == nil) {
-        thumbnailDownloadQueue_ = [[MUKURLConnectionQueue alloc] init];
-        thumbnailDownloadQueue_.maximumConcurrentConnections = 2;
+- (MUKImageFetcher *)thumbnailsFetcher {
+    if (thumbnailsFetcher_ == nil) {
+        thumbnailsFetcher_ = [[MUKMediaThumbnailsViewFetcher_ alloc] init];
         
         __unsafe_unretained MUKMediaThumbnailsView *weakSelf = self;
-        thumbnailDownloadQueue_.connectionWillStartHandler = ^(MUKURLConnection * connection)
+        thumbnailsFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
         {
+            // Do not start hidden asset
             id<MUKMediaAsset> mediaAsset = connection.userInfo;
             NSInteger assetIndex = [weakSelf.mediaAssets indexOfObject:mediaAsset];
             
@@ -123,20 +109,16 @@
             
             if (!assetVisible) {
                 // If asset is hidden, cancel download
-                [connection cancel];
+                return NO;
             }
+            
+            return YES;
         };
         
-        thumbnailDownloadQueue_.connectionDidFinishHandler = ^(MUKURLConnection *connection, BOOL cancelled)
-        {
-            // Break cycles
-            if (cancelled) {
-                connection.completionHandler = nil;
-            }
-        };
+        [(MUKMediaThumbnailsViewFetcher_ *)thumbnailsFetcher_ setBlockHandlers:YES];
     }
     
-    return thumbnailDownloadQueue_;
+    return thumbnailsFetcher_;
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
@@ -197,22 +179,6 @@
     // Add cells are layed out
     // Load thumbnails also from file or from network
     [self loadVisibleThumbnails_];
-}
-
-#pragma mark - Thumbnail Download
-
-- (NSURLRequest *)requestForMediaAsset:(id<MUKMediaAsset>)mediaAsset {
-    NSURLRequest *request = nil;
-    
-    if (self.thumbnailDownloadRequestHandler) {
-        request = self.thumbnailDownloadRequestHandler(mediaAsset);
-    }
-    
-    if (request == nil) {
-        request = [[NSURLRequest alloc] initWithURL:[mediaAsset mediaThumbnailURL]];
-    }
-    
-    return request;
 }
 
 #pragma mark - Selection
@@ -403,6 +369,31 @@
     return [[self thumbnailURLForMediaAsset_:mediaAsset] isFileURL];
 }
 
+- (MUKImageFetcherSearchDomain)searchDomainsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory
+{
+    // Always search in memory
+    MUKImageFetcherSearchDomain searchDomains = MUKImageFetcherSearchDomainMemoryCache;
+    
+    if (!onlyFromMemory) {
+        // Not only memory
+        
+        if ([self thumbnailIsInFileForMediaAsset_:mediaAsset]) {
+            // Thumbnail already on file
+            searchDomains |= MUKImageFetcherSearchDomainFile;
+        }
+        else {
+            // Remote thumbnail
+            searchDomains |= MUKImageFetcherSearchDomainRemote;
+            
+            if (self.usesThumbnailImageFileCache) {
+                searchDomains |= MUKImageFetcherSearchDomainFileCache;
+            }
+        }
+    }
+    
+    return searchDomains;
+}
+
 - (MUKObjectCacheLocation)cacheLocationsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset
 {
     MUKObjectCacheLocation locations = MUKObjectCacheLocationMemory;
@@ -415,6 +406,17 @@
     }
     
     return locations;
+}
+
+- (MUKURLConnection *)connectionForMediaAsset_:(id<MUKMediaAsset>)mediaAsset
+{
+    NSURL *thumbnailURL = [self thumbnailURLForMediaAsset_:mediaAsset];
+    if (!thumbnailURL) return nil;
+    
+    MUKURLConnection *connection = [MUKImageFetcher standardConnectionForImageAtURL:thumbnailURL];
+    connection.userInfo = mediaAsset;
+    
+    return connection;
 }
 
 - (NSString *)cacheKeyForMediaAsset_:(id<MUKMediaAsset>)mediaAsset {
@@ -441,124 +443,31 @@
      */
     NSURL *thumbnailURL = [self thumbnailURLForMediaAsset_:mediaAsset];
     if (thumbnailURL) {
-        NSString *cacheKey = [self cacheKeyForMediaAsset_:mediaAsset];
-        MUKObjectCacheLocation cacheLocations;
+        MUKImageFetcherSearchDomain searchDomains = [self searchDomainsForMediaAsset_:mediaAsset onlyFromMemory_:onlyFromMemory];
+        MUKObjectCacheLocation cacheLocations = [self cacheLocationsForMediaAsset_:mediaAsset];
         
-        if (onlyFromMemory) {
-            cacheLocations = MUKObjectCacheLocationMemory;
-        }
-        else {
-            cacheLocations = [self cacheLocationsForMediaAsset_:mediaAsset];
+        MUKURLConnection *connection = nil;
+        if (!onlyFromMemory) {
+            connection = [self connectionForMediaAsset_:mediaAsset];
         }
         
-        [self.thumbnailImageCache loadObjectForKey:cacheKey locations:cacheLocations completionHandler:^(id object, MUKObjectCacheLocation location)
-         {
-             if (object) {
-                 // Thumbnail found
-                 
-                 if (MUKObjectCacheLocationFile == location) {
-                     // Thumbnail found on file
-                     // Cache to memory to speed up access next time
-                     [self.thumbnailImageCache saveObject:object forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
-                     
-                     // Insert in right cell at this time
-                     if (mediaAsset == cell.mediaAsset) {
-                         [self setImage:object inCell_:cell];
-                     }
-                     else {
-                         [self setImage:object inCellAtIndex_:index];
-                     }
-                 } // MUKObjectCacheLocationFile       
-                 
-                 else if (MUKObjectCacheLocationMemory == location) {
-                     // Insert synchronously
-                     [self setImage:object inCell_:cell];
-                 }
-             }
-             
-             else {
-                 // Thumbnail not found
-                 
-                 if (!onlyFromMemory) {
-                     // Get it
-                     
-                     if ([self thumbnailIsInFileForMediaAsset_:mediaAsset]) {
-                         // Load from file and save to cache
-                         dispatch_queue_t queue = dispatch_queue_create("it.melive.mukit.MUKMediaThumbnailsView.ImageLoading", NULL);
-                         dispatch_async(queue, ^{
-                             UIImage *image = [[UIImage alloc] initWithContentsOfFile:[thumbnailURL path]];
-                             
-                             dispatch_async(dispatch_get_main_queue(), ^{
-                                 // Insert in right cell at this time (on main queue)
-                                 // Insert in right cell at this time
-                                 if (mediaAsset == cell.mediaAsset) {
-                                     [self setImage:image inCell_:cell];
-                                 }
-                                 else {
-                                     [self setImage:image inCellAtIndex_:index];
-                                 }
-                                 
-                                 // Cache it to memory
-                                 [self.thumbnailImageCache saveObject:image forKey:cacheKey locations:MUKObjectCacheLocationMemory completionHandler:nil];
-                             });
-                         });
-                         
-                         // Dispose queue
-                         dispatch_release(queue);
-                     }
-                     
-                     else {
-                         // Download
-                         [self downloadThumbnailForMediaAsset_:mediaAsset atIndex_:index inCell_:cell];
-                     } // if thumbnailIsInFileForMediaAsset_
-                 } // if !onlyFromMemory
-             } // if object
-         }];
-    }
-    else {
-        // No URL
-        [self setImage:nil inCell_:cell];
-    }
-}
-
-- (void)downloadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell
-{
-    NSString *cacheKey = [self cacheKeyForMediaAsset_:mediaAsset];
-    MUKObjectCacheLocation cacheLocations = [self cacheLocationsForMediaAsset_:mediaAsset];
-    
-    NSURLRequest *request = [self requestForMediaAsset:mediaAsset];
-    MUKURLConnection *connection = [[MUKURLConnection alloc] initWithRequest:request];
-    connection.runsInBackground = YES;
-    connection.userInfo = mediaAsset;
-    
-    MUKURLConnection *strongConnection = connection;
-    connection.completionHandler = ^(BOOL success, NSError *error)
-    {
-        if (success) {
-            NSData *data = [strongConnection bufferedData];
-            UIImage *image = [[UIImage alloc] initWithData:data];
-            
-            // Cache image
-            [self.thumbnailImageCache saveObject:image forKey:cacheKey locations:cacheLocations completionHandler:nil];
-            
-            // Insert thumbnail
-            // Cell at this moment can represent a different index
-            // because scrolling has gone on
-            // Insert in right cell at this time
-            if (mediaAsset == cell.mediaAsset) {
-                [self setImage:image inCell_:cell];
+        [self.thumbnailsFetcher loadImageForURL:thumbnailURL searchDomains:searchDomains cacheToLocations:cacheLocations connection:connection completionHandler:^(UIImage *image, MUKImageFetcherSearchDomain resultDomains) 
+        {
+            if (image) {
+                // Thumbnail found
+                // Insert in right cell at this time
+                if (mediaAsset == cell.mediaAsset) {
+                    [self setImage:image inCell_:cell];
+                }
+                else {
+                    [self setImage:image inCellAtIndex_:index];
+                }
             }
             else {
-                [self setImage:image inCellAtIndex_:index];
+                [self setImage:nil inCell_:cell];
             }
-        }
-        
-        // Break cycle
-        strongConnection.completionHandler = nil;
-    }; // connection's completionHandler
-    
-    // Enqueue connection
-    [self.thumbnailDownloadQueue addConnection:connection];
+        }];
+    }
 }
 
 - (void)loadVisibleThumbnails_ {

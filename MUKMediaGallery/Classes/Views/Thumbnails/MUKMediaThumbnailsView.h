@@ -24,9 +24,8 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <UIKit/UIKit.h>
+#import <MUKMediaGallery/MUKImageFetcher.h>
 #import <MUKMediaGallery/MUKMediaAssetProtocol.h>
-#import <MUKObjectCache/MUKObjectCache.h>
-#import <MUKNetworking/MUKNetworking.h>
 
 /**
  A view which displays a grid of thumbnails.
@@ -40,27 +39,25 @@
  */
 @property (nonatomic, strong) NSArray *mediaAssets;
 /**
- Cache where images are stored.
- 
+ Image fetcher which loads and stores thumbnails.
+  
  This object is lazy loaded, but you can customize its behaviour.
  
- @warning You should set file cache handlers if you decide to cache thumbnails
- to file.
+ @warning You should set file cache handlers (on `thumbnailsFetcher.cache`)
+ if you decide to cache thumbnails to file.
+ @warning You can not set [MUKImageFetcher shouldStartConnectionHandler] 
+ because it is used internally not to load invisible thumbnails.
  */
-@property (nonatomic, strong) MUKObjectCache *thumbnailImageCache;
+@property (nonatomic, strong, readonly) MUKImageFetcher *thumbnailsFetcher;
 /**
  Cache thumbnail images to file.
  
  Default is `NO`. If `YES`, thumbnails are searched/saved in file cache too.
  
- @warning You should set thumbnailImageCache file cache handlers if you decide
- to cache thumbnails to file.
+ @warning You should set file cache handlers (on `thumbnailsFetcher.cache`)
+ if you decide to cache thumbnails to file.
  */
 @property (nonatomic) BOOL usesThumbnailImageFileCache;
-/**
- Connection queue where thumbnails are downloaded.
- */
-@property (nonatomic, strong, readonly) MUKURLConnectionQueue *thumbnailDownloadQueue;
 /**
  Size of thumbnails.
  
@@ -109,9 +106,6 @@
 /** @name Handlers */
 /**
  */
-@property (nonatomic, copy) NSURLRequest* (^thumbnailDownloadRequestHandler)(id<MUKMediaAsset> mediaAsset);
-/**
- */
 @property (nonatomic, copy) void (^thumbnailSelectionHandler)(NSInteger index);
 
 /** @name Methods */
@@ -121,17 +115,6 @@
 - (void)reloadThumbnails;
 @end
 
-
-@interface MUKMediaThumbnailsView (ThumbnailDownload)
-/**
- Create URL request to download thumbnail image.
- 
- Default implementation calls thumbnailDownloadRequestHandler. If handler is 
- not set or it returns `nil`, this method returns a standard URL request with
- [MUKMediaAsset mediaThumbnailURL].
- */
-- (NSURLRequest *)requestForMediaAsset:(id<MUKMediaAsset>)mediaAsset;
-@end
 
 @interface MUKMediaThumbnailsView (Selection)
 /**
