@@ -61,6 +61,12 @@
  */
 @property (nonatomic) BOOL usesThumbnailImageFileCache;
 /**
+ Cleans thumbnails memory cache when reloadThumbnails is called.
+ 
+ Default is `NO`.
+ */
+@property (nonatomic) BOOL purgesThumbnailsMemoryCacheWhenReloading;
+/**
  Size of thumbnails.
  
  Default is `{79, 79}`.

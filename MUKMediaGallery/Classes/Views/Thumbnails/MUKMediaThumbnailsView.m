@@ -48,6 +48,7 @@
 @synthesize mediaAssets = mediaAssets_;
 @synthesize thumbnailsFetcher = thumbnailsFetcher_;
 @synthesize usesThumbnailImageFileCache = usesThumbnailImageFileCache_;
+@synthesize purgesThumbnailsMemoryCacheWhenReloading = purgesThumbnailsMemoryCacheWhenReloading_;
 @synthesize thumbnailSize = thumbnailSize_;
 @synthesize thumbnailOffset = thumbnailOffset_;
 @synthesize displaysMediaAssetsCount = displaysMediaAssetsCount_;
@@ -174,6 +175,13 @@
 #pragma mark - Methods
 
 - (void)reloadThumbnails {
+    // Clean fetcher
+    if (self.purgesThumbnailsMemoryCacheWhenReloading) {
+        [thumbnailsFetcher_.cache cleanMemoryCache];
+    }
+    [thumbnailsFetcher_.connectionQueue cancelAllConnections];
+    
+    // Reload grid
     [self.gridView_ reloadData];
     
     // Add cells are layed out
