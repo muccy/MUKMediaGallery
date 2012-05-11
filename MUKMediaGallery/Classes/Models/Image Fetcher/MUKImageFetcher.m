@@ -212,27 +212,6 @@
     return connection;
 }
 
-- (void)cancelImageDownloadForURL:(NSURL *)imageURL {
-    [[self.connectionQueue connections] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
-    {
-        MUKURLConnection *connection = obj;
-        if ([connection.request.URL isEqual:imageURL]) {
-            [connection cancel];
-            *stop = YES;
-        }
-    }];
-}
-
-- (void)cancelImageDownloadsForURLs:(NSSet *)imageURLs {
-    [[self.connectionQueue connections] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) 
-    {
-        MUKURLConnection *connection = obj;
-        if ([imageURLs containsObject:connection.request.URL]) {
-            [connection cancel];
-        }
-    }];
-}
-
 #pragma mark - Private
 
 - (id<NSCopying>)cacheKeyForImageURL_:(NSURL *)imageURL {

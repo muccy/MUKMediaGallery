@@ -153,16 +153,4 @@ typedef enum {
  @return Connection to download the image.
  */
 + (MUKURLConnection *)standardConnectionForImageAtURL:(NSURL *)imageURL;
-/**
- Cancels download of an image.
- 
- @param imageURL Download URL of image to cancel.
- */
-- (void)cancelImageDownloadForURL:(NSURL *)imageURL;
-/**
- Cancels download of a group of images.
- 
- @param imageURLs Downloads URLs of images to cancel.
- */
-- (void)cancelImageDownloadsForURLs:(NSSet *)imageURLs;
 @end
