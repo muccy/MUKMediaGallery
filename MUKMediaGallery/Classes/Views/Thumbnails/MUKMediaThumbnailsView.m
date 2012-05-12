@@ -34,7 +34,7 @@
 #import <MUKToolkit/MUKToolkit.h>
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaVideoAssetProtocol.h"
-#import "MUKMediaThumbnailsViewFetcher_.h"
+#import "MUKMediaGalleryImageFetcher_.h"
 
 @interface MUKMediaThumbnailsView ()
 @property (nonatomic, strong) MUKGridView *gridView_;
@@ -79,7 +79,7 @@
 }
 
 - (void)dealloc {
-    [(MUKMediaThumbnailsViewFetcher_ *)thumbnailsFetcher_ setBlockHandlers:NO];
+    [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:NO];
     thumbnailsFetcher_.shouldStartConnectionHandler = nil;
     
     [self.gridView_ removeAllHandlers];
@@ -92,11 +92,16 @@
     [self adjustGridView_];
 }
 
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+    self.gridView_.backgroundColor = backgroundColor;
+}
+
 #pragma mark - Accessors
 
 - (MUKImageFetcher *)thumbnailsFetcher {
     if (thumbnailsFetcher_ == nil) {
-        thumbnailsFetcher_ = [[MUKMediaThumbnailsViewFetcher_ alloc] init];
+        thumbnailsFetcher_ = [[MUKMediaGalleryImageFetcher_ alloc] init];
         
         __unsafe_unretained MUKMediaThumbnailsView *weakSelf = self;
         thumbnailsFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
@@ -116,15 +121,10 @@
             return YES;
         };
         
-        [(MUKMediaThumbnailsViewFetcher_ *)thumbnailsFetcher_ setBlockHandlers:YES];
+        [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:YES];
     }
     
     return thumbnailsFetcher_;
-}
-
-- (void)setBackgroundColor:(UIColor *)backgroundColor {
-    [super setBackgroundColor:backgroundColor];
-    self.gridView_.backgroundColor = backgroundColor;
 }
 
 - (void)setMediaAssets:(NSArray *)mediaAssets {

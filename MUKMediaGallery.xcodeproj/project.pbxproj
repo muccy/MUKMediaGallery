@@ -62,13 +62,15 @@
 		0624483015527F8C005CE74D /* MUKMediaThumbnailView_video.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482A15527F8C005CE74D /* MUKMediaThumbnailView_video.png */; };
 		0624483115527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482B15527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png */; };
 		0624483215527F8C005CE74D /* MUKMediaThumbnailView_.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */; };
+		065BF44E155D07E5008C91BD /* MUKMediaCarouselView.h in Headers */ = {isa = PBXBuildFile; fileRef = 065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */; };
+		065BF44F155D07E5008C91BD /* MUKMediaCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */; };
+		06A26C30155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */; };
+		06A26C31155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */; };
 		06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */; };
 		06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */; };
 		06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */; };
 		06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */; };
-		06A93C66155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C64155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h */; };
-		06A93C67155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C65155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -197,13 +199,15 @@
 		0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MUKMediaThumbnailView_.xib; sourceTree = "<group>"; };
 		0624483815528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/Localizable.strings"; sourceTree = "<absolute>"; };
 		0624483915528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
+		065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView.h; sourceTree = "<group>"; };
+		065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselView.m; sourceTree = "<group>"; };
+		06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGalleryImageFetcher_.h; sourceTree = "<group>"; };
+		06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGalleryImageFetcher_.m; sourceTree = "<group>"; };
 		06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Selection.h; sourceTree = "<group>"; };
 		06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcher.h; sourceTree = "<group>"; };
 		06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcher.m; sourceTree = "<group>"; };
 		06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcherURLConnectionQueue_.h; sourceTree = "<group>"; };
 		06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcherURLConnectionQueue_.m; sourceTree = "<group>"; };
-		06A93C64155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsViewFetcher_.h; sourceTree = "<group>"; };
-		06A93C65155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailsViewFetcher_.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -341,6 +345,7 @@
 		06004A06154C1CCF004A3B17 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				065BF444155D07AE008C91BD /* Carousel */,
 				06004A07154C1CCF004A3B17 /* Thumbnails */,
 			);
 			path = Views;
@@ -379,7 +384,6 @@
 			children = (
 				06004A33154C24A1004A3B17 /* Count View */,
 				06004A4E154C3B2B004A3B17 /* Thumbnail View */,
-				06A93C63155C24F70083CFE4 /* Thumbnails Fetcher */,
 				06004A38154C26CC004A3B17 /* MUKMediaThumbnailsView_MediaAssetsCountView.h */,
 				06004A4C154C36BF004A3B17 /* MUKMediaThumbnailsView_Layout.h */,
 				06004A55154C40A0004A3B17 /* MUKMediaThumbnailsView_Cells.h */,
@@ -401,6 +405,7 @@
 		06004A3A154C2958004A3B17 /* Private */ = {
 			isa = PBXGroup;
 			children = (
+				06A26C26155E5CBC009D36F0 /* Image Fetcher */,
 				06004A3B154C2958004A3B17 /* Utils */,
 			);
 			path = Private;
@@ -499,6 +504,15 @@
 			path = XIBs;
 			sourceTree = "<group>";
 		};
+		065BF444155D07AE008C91BD /* Carousel */ = {
+			isa = PBXGroup;
+			children = (
+				065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */,
+				065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */,
+			);
+			path = Carousel;
+			sourceTree = "<group>";
+		};
 		066F8454154E940600704724 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -506,6 +520,15 @@
 				060B1B381551610E00454D72 /* Media Assets */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		06A26C26155E5CBC009D36F0 /* Image Fetcher */ = {
+			isa = PBXGroup;
+			children = (
+				06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */,
+				06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */,
+			);
+			path = "Image Fetcher";
 			sourceTree = "<group>";
 		};
 		06A93C55155A5BAD0083CFE4 /* Image Fetcher */ = {
@@ -525,15 +548,6 @@
 				06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */,
 			);
 			path = Private;
-			sourceTree = "<group>";
-		};
-		06A93C63155C24F70083CFE4 /* Thumbnails Fetcher */ = {
-			isa = PBXGroup;
-			children = (
-				06A93C64155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h */,
-				06A93C65155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m */,
-			);
-			path = "Thumbnails Fetcher";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -564,7 +578,8 @@
 				06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */,
 				06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */,
 				06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */,
-				06A93C66155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.h in Headers */,
+				065BF44E155D07E5008C91BD /* MUKMediaCarouselView.h in Headers */,
+				06A26C30155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -799,7 +814,8 @@
 				060B1B4D155181D200454D72 /* MUKMediaVideoAsset.m in Sources */,
 				06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */,
 				06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */,
-				06A93C67155C25160083CFE4 /* MUKMediaThumbnailsViewFetcher_.m in Sources */,
+				065BF44F155D07E5008C91BD /* MUKMediaCarouselView.m in Sources */,
+				06A26C31155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
