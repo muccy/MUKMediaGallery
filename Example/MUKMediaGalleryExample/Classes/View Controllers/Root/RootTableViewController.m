@@ -7,8 +7,11 @@
 //
 
 #import "RootTableViewController.h"
+
 #import "ThumbnailsViewController.h"
 #import "ImageFetcherViewController.h"
+#import "CarouselViewController.h"
+
 #import <MUKToolkit/MUKToolkit.h>
 
 @interface Row_ : NSObject 
@@ -70,7 +73,17 @@
             viewController.mediaAssets = [weakSelf standardMediaAssets_];
             [weakSelf.navigationController pushViewController:viewController animated:YES];
         };
-        [rows addObject:row];        
+        [rows addObject:row];  
+        
+        row = [[Row_ alloc] init];
+        row.title = @"Carousel View";
+        row.subtitle = @"MUKMediaCarouselView";
+        row.selectionHandler = ^{
+            CarouselViewController *viewController = [[CarouselViewController alloc] initWithNibName:nil bundle:nil];
+            viewController.mediaAssets = [weakSelf standardMediaAssets_];
+            [weakSelf.navigationController pushViewController:viewController animated:YES];
+        };
+        [rows addObject:row];  
         
         rows__ = rows;
     }

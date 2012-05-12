@@ -17,16 +17,9 @@
 @synthesize thumbnailsView = thumbnailsView_;
 @synthesize mediaAssets = mediaAssets_;
 
-/*
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
+- (void)dealloc {
+    self.thumbnailsView.thumbnailSelectionHandler = nil;
 }
-*/
 
 - (void)viewDidLoad
 {
@@ -58,6 +51,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+    self.thumbnailsView = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
