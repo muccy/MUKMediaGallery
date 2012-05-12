@@ -23,11 +23,40 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "MUKMediaCarouselCellView_.h"
+#import <MUKScrolling/MUKScrolling.h>
+
+@protocol MUKMediaAsset;
+@interface MUKMediaCarouselCellView_ : MUKRecyclableView
+/*
+ Used for thumbnail
+ */
+@property (nonatomic, strong) UIImageView *imageView;
+/*
+ Spinner
+ */
+@property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+
+@property (nonatomic) UIEdgeInsets insets;
+@property (nonatomic, strong) id<MUKMediaAsset> mediaAsset;
 
 /*
- The same of base class
- imageView is reused also for full image
+ Set image and calls setNeedsImageCentering
  */
-@interface MUKMediaCarouselImageCellView_ : MUKMediaCarouselCellView_
+- (void)setCenteredImage:(UIImage *)image;
+
+/*
+ Frame used to center image
+ */
+- (CGRect)centeredImageFrame;
+
+/*
+ Applies centeredImageFrame immediately
+ */
+- (void)centerImage;
+
+/*
+ Centers at next layout
+ */
+- (void)setNeedsImageCentering;
+
 @end

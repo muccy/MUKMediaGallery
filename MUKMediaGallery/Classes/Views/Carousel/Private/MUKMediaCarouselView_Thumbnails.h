@@ -8,15 +8,14 @@
 
 #import "MUKMediaCarouselView.h"
 
-@class MUKMediaCarouselImageCellView_;
+@class MUKMediaCarouselCellView_;
 @protocol MUKMediaAsset;
 @interface MUKMediaCarouselView ()
 
-- (void)configureThumbnailInCell_:(MUKMediaCarouselImageCellView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index;
-
-- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaCarouselImageCellView_ *)cell;
-
-- (void)loadVisibleThumbnails_;
-- (void)loadThumbnailsInCells_:(NSSet *)cells;
+/*
+ Only memory in-memory thumbnails are supported
+ */
+- (void)configureThumbnailInCell_:(MUKMediaCarouselCellView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index;
+- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index inCell_:(MUKMediaCarouselCellView_ *)cell;
 
 @end

@@ -39,36 +39,17 @@
  */
 @property (nonatomic, strong) NSArray *mediaAssets;
 /**
- Image fetcher which loads and stores thumbnails.
+ Image fetcher which loads and stores thumbnails (only in memory).
  
  This object is lazy loaded, but you can customize its behaviour.
  
  You could also reuse a cache (e.g. reusing an already populated 
  MUKMediaThumbnailsView's cache).
  
- @warning You should set file cache handlers (on `thumbnailsFetcher.cache`)
- if you decide to cache thumbnails to file. Mind that cache key is 
- [MUKMediaAsset mediaThumbnailURL].
  @warning You can not set [MUKImageFetcher shouldStartConnectionHandler] 
  because it is used internally not to load invisible thumbnails.
  */
 @property (nonatomic, strong, readonly) MUKImageFetcher *thumbnailsFetcher;
-/**
- Cache thumbnail images to file.
- 
- Default is `NO`. If `YES`, thumbnails are searched/saved in file cache too.
- 
- @warning You should set file cache handlers (on `thumbnailsFetcher.cache`)
- if you decide to cache thumbnails to file. Mind that cache key is 
- [MUKMediaAsset mediaThumbnailURL].
- */
-@property (nonatomic) BOOL usesThumbnailImageFileCache;
-/**
- Cleans thumbnails memory cache when reloadMedias is called.
- 
- Default is `NO`.
- */
-@property (nonatomic) BOOL purgesThumbnailsMemoryCacheWhenReloading;
 /**
  Image fetcher which loads and stores full images.
  

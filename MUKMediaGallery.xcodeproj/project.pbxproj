@@ -69,6 +69,10 @@
 		06A26C37155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C35155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h */; };
 		06A26C38155E613B009D36F0 /* MUKMediaCarouselImageCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C36155E613B009D36F0 /* MUKMediaCarouselImageCellView_.m */; };
 		06A26C3A155E6731009D36F0 /* MUKMediaCarouselView_Thumbnails.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C39155E6731009D36F0 /* MUKMediaCarouselView_Thumbnails.h */; };
+		06A26C74155E8743009D36F0 /* MUKMediaCarouselView_FullImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C73155E8743009D36F0 /* MUKMediaCarouselView_FullImage.h */; };
+		06A26C7C155E8ADE009D36F0 /* MUKMediaCarouselCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C7A155E8ADE009D36F0 /* MUKMediaCarouselCellView_.h */; };
+		06A26C7D155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C7B155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m */; };
+		06A26C7F155E8BC6009D36F0 /* MUKMediaCarouselView_Cells.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C7E155E8BC5009D36F0 /* MUKMediaCarouselView_Cells.h */; };
 		06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */; };
 		06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */; };
@@ -209,6 +213,10 @@
 		06A26C35155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselImageCellView_.h; sourceTree = "<group>"; };
 		06A26C36155E613B009D36F0 /* MUKMediaCarouselImageCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselImageCellView_.m; sourceTree = "<group>"; };
 		06A26C39155E6731009D36F0 /* MUKMediaCarouselView_Thumbnails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView_Thumbnails.h; sourceTree = "<group>"; };
+		06A26C73155E8743009D36F0 /* MUKMediaCarouselView_FullImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView_FullImage.h; sourceTree = "<group>"; };
+		06A26C7A155E8ADE009D36F0 /* MUKMediaCarouselCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselCellView_.h; sourceTree = "<group>"; };
+		06A26C7B155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselCellView_.m; sourceTree = "<group>"; };
+		06A26C7E155E8BC5009D36F0 /* MUKMediaCarouselView_Cells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView_Cells.h; sourceTree = "<group>"; };
 		06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Selection.h; sourceTree = "<group>"; };
 		06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcher.h; sourceTree = "<group>"; };
 		06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcher.m; sourceTree = "<group>"; };
@@ -543,6 +551,8 @@
 			children = (
 				06A26C33155E60F9009D36F0 /* Cells */,
 				06A26C39155E6731009D36F0 /* MUKMediaCarouselView_Thumbnails.h */,
+				06A26C73155E8743009D36F0 /* MUKMediaCarouselView_FullImage.h */,
+				06A26C7E155E8BC5009D36F0 /* MUKMediaCarouselView_Cells.h */,
 			);
 			path = Private;
 			sourceTree = "<group>";
@@ -550,6 +560,7 @@
 		06A26C33155E60F9009D36F0 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				06A26C75155E8A4E009D36F0 /* Base */,
 				06A26C34155E60F9009D36F0 /* Image */,
 			);
 			path = Cells;
@@ -562,6 +573,15 @@
 				06A26C36155E613B009D36F0 /* MUKMediaCarouselImageCellView_.m */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		06A26C75155E8A4E009D36F0 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				06A26C7A155E8ADE009D36F0 /* MUKMediaCarouselCellView_.h */,
+				06A26C7B155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 		06A93C55155A5BAD0083CFE4 /* Image Fetcher */ = {
@@ -615,6 +635,9 @@
 				06A26C30155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h in Headers */,
 				06A26C37155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h in Headers */,
 				06A26C3A155E6731009D36F0 /* MUKMediaCarouselView_Thumbnails.h in Headers */,
+				06A26C74155E8743009D36F0 /* MUKMediaCarouselView_FullImage.h in Headers */,
+				06A26C7C155E8ADE009D36F0 /* MUKMediaCarouselCellView_.h in Headers */,
+				06A26C7F155E8BC6009D36F0 /* MUKMediaCarouselView_Cells.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -852,6 +875,7 @@
 				065BF44F155D07E5008C91BD /* MUKMediaCarouselView.m in Sources */,
 				06A26C31155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m in Sources */,
 				06A26C38155E613B009D36F0 /* MUKMediaCarouselImageCellView_.m in Sources */,
+				06A26C7D155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

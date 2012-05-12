@@ -20,18 +20,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    // Same as ThumbnailsViewController
-    NSURL *thumbnailsContainerURL = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"ThumbnailsViewExampleCache"];
-    self.carouselView.usesThumbnailImageFileCache = YES;
-    
-    self.carouselView.thumbnailsFetcher.cache.fileCacheURLHandler = ^(id key)
-    {
-        NSString *URLString = [key absoluteString];
-        NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:URLString containerURL:thumbnailsContainerURL];
-        
-        return cacheURL;
-    };
     
     self.carouselView.mediaAssets = self.mediaAssets;
     [self.carouselView reloadMedias];

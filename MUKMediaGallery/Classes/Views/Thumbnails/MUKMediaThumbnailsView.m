@@ -367,8 +367,10 @@
      */
     NSURL *thumbnailURL = [MUKMediaGalleryUtils_ thumbnailURLForMediaAsset:mediaAsset];
     if (thumbnailURL) {
-        MUKImageFetcherSearchDomain searchDomains = [MUKMediaGalleryUtils_ thumbnailSearchDomainsForMediaAsset:mediaAsset memoryCache:YES fileCache:!onlyFromMemory file:!onlyFromMemory remote:!onlyFromMemory];
-        MUKObjectCacheLocation cacheLocations = [MUKMediaGalleryUtils_ thumbnailCacheLocationsForMediaAsset_:mediaAsset memoryCache:YES fileCache:self.usesThumbnailImageFileCache];
+        BOOL searchInFileCache = (self.usesThumbnailImageFileCache && !onlyFromMemory);
+        
+        MUKImageFetcherSearchDomain searchDomains = [MUKMediaGalleryUtils_ thumbnailSearchDomainsForMediaAsset:mediaAsset memoryCache:YES fileCache:searchInFileCache file:!onlyFromMemory remote:!onlyFromMemory];
+        MUKObjectCacheLocation cacheLocations = [MUKMediaGalleryUtils_ thumbnailCacheLocationsForMediaAsset:mediaAsset memoryCache:YES fileCache:self.usesThumbnailImageFileCache];
         
         MUKURLConnection *connection = nil;
         if (!onlyFromMemory) {
