@@ -184,7 +184,7 @@
     // Reload grid
     [self.gridView_ reloadData];
     
-    // Add cells are layed out
+    // Cells are layed out
     // Load thumbnails also from file or from network
     [self loadVisibleThumbnails_];
 }
@@ -226,6 +226,7 @@
     CGRect gridFrame = [[self class] gridFrameForBounds_:self.bounds cellSize_:thumbnailSize_ imageOffset_:thumbnailOffset_];
     self.gridView_ = [[MUKGridView alloc] initWithFrame:gridFrame];
     
+    
     self.gridView_.alwaysBounceVertical = YES;
     self.gridView_.clipsToBounds = NO;
     self.gridView_.backgroundColor = self.backgroundColor;
@@ -240,6 +241,7 @@
     
     [self attachGridHandlers_];
     
+    // Autoresizing mask is not necessary because of layoutSubviews
     [self addSubview:self.gridView_];
 
 }
@@ -345,92 +347,10 @@
 
 #pragma mark - Private: Thumbnails
 
-- (UIImage *)userProvidedThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset provided_:(BOOL *)provided
-{
-    UIImage *image = nil;
-    if ([mediaAsset respondsToSelector:@selector(mediaThumbnail)]) {
-        image = [mediaAsset mediaThumbnail];
-        
-        if (provided != NULL) {
-            *provided = YES;
-        }
-    }
-    else {
-        if (provided != NULL) {
-            *provided = NO;
-        }
-    }
-    
-    return image;
-}
-
-- (NSURL *)thumbnailURLForMediaAsset_:(id<MUKMediaAsset>)mediaAsset {
-    NSURL *url = nil;
-    if ([mediaAsset respondsToSelector:@selector(mediaThumbnailURL)]) {
-        url = [mediaAsset mediaThumbnailURL];
-    }
-    
-    return url;
-}
-
-- (BOOL)thumbnailIsInFileForMediaAsset_:(id<MUKMediaAsset>)mediaAsset {
-    return [[self thumbnailURLForMediaAsset_:mediaAsset] isFileURL];
-}
-
-- (MUKImageFetcherSearchDomain)searchDomainsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory
-{
-    // Always search in memory
-    MUKImageFetcherSearchDomain searchDomains = MUKImageFetcherSearchDomainMemoryCache;
-    
-    if (!onlyFromMemory) {
-        // Not only memory
-        
-        if ([self thumbnailIsInFileForMediaAsset_:mediaAsset]) {
-            // Thumbnail already on file
-            searchDomains |= MUKImageFetcherSearchDomainFile;
-        }
-        else {
-            // Remote thumbnail
-            searchDomains |= MUKImageFetcherSearchDomainRemote;
-            
-            if (self.usesThumbnailImageFileCache) {
-                searchDomains |= MUKImageFetcherSearchDomainFileCache;
-            }
-        }
-    }
-    
-    return searchDomains;
-}
-
-- (MUKObjectCacheLocation)cacheLocationsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset
-{
-    MUKObjectCacheLocation locations = MUKObjectCacheLocationMemory;
-    
-    if (self.usesThumbnailImageFileCache) {
-        // Don't cache to file images which are already in a file
-        if (![self thumbnailIsInFileForMediaAsset_:mediaAsset]) {
-            locations = locations|MUKObjectCacheLocationFile;
-        }
-    }
-    
-    return locations;
-}
-
-- (MUKURLConnection *)connectionForMediaAsset_:(id<MUKMediaAsset>)mediaAsset
-{
-    NSURL *thumbnailURL = [self thumbnailURLForMediaAsset_:mediaAsset];
-    if (!thumbnailURL) return nil;
-    
-    MUKURLConnection *connection = [MUKImageFetcher standardConnectionForImageAtURL:thumbnailURL];
-    connection.userInfo = mediaAsset;
-    
-    return connection;
-}
-
 - (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaThumbnailView_ *)cell
 {
     BOOL userProvidesThumbnail = NO;
-    UIImage *userProvidedThumbnail = [self userProvidedThumbnailForMediaAsset_:mediaAsset provided_:&userProvidesThumbnail];
+    UIImage *userProvidedThumbnail = [MUKMediaGalleryUtils_ userProvidedThumbnailForMediaAsset:mediaAsset provided:&userProvidesThumbnail];
     
     /*
      If user provides thumbnails, exclude automatic loading system.
@@ -445,30 +365,24 @@
      
      URL is essential...
      */
-    NSURL *thumbnailURL = [self thumbnailURLForMediaAsset_:mediaAsset];
+    NSURL *thumbnailURL = [MUKMediaGalleryUtils_ thumbnailURLForMediaAsset:mediaAsset];
     if (thumbnailURL) {
-        MUKImageFetcherSearchDomain searchDomains = [self searchDomainsForMediaAsset_:mediaAsset onlyFromMemory_:onlyFromMemory];
-        MUKObjectCacheLocation cacheLocations = [self cacheLocationsForMediaAsset_:mediaAsset];
+        MUKImageFetcherSearchDomain searchDomains = [MUKMediaGalleryUtils_ thumbnailSearchDomainsForMediaAsset:mediaAsset memoryCache:YES fileCache:!onlyFromMemory file:!onlyFromMemory remote:!onlyFromMemory];
+        MUKObjectCacheLocation cacheLocations = [MUKMediaGalleryUtils_ thumbnailCacheLocationsForMediaAsset_:mediaAsset memoryCache:YES fileCache:self.usesThumbnailImageFileCache];
         
         MUKURLConnection *connection = nil;
         if (!onlyFromMemory) {
-            connection = [self connectionForMediaAsset_:mediaAsset];
+            connection = [MUKMediaGalleryUtils_ thumbnailConnectionForMediaAsset:mediaAsset];
         }
         
         [self.thumbnailsFetcher loadImageForURL:thumbnailURL searchDomains:searchDomains cacheToLocations:cacheLocations connection:connection completionHandler:^(UIImage *image, MUKImageFetcherSearchDomain resultDomains) 
         {
-            if (image) {
-                // Thumbnail found
-                // Insert in right cell at this time
-                if (mediaAsset == cell.mediaAsset) {
-                    [self setImage:image inCell_:cell];
-                }
-                else {
-                    [self setImage:image inCellAtIndex_:index];
-                }
+            // Insert in right cell at this time
+            if (mediaAsset == cell.mediaAsset) {
+                [self setImage:image inCell_:cell];
             }
             else {
-                [self setImage:nil inCell_:cell];
+                [self setImage:image inCellAtIndex_:index];
             }
         }];
     }
