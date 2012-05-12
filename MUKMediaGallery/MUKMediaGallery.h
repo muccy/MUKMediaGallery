@@ -13,3 +13,4 @@
 #import <MUKMediaGallery/MUKMediaVideoAsset.h>
 
 #import <MUKMediaGallery/MUKMediaThumbnailsView.h>
+#import <MUKMediaGallery/MUKMediaCarouselView.h>
