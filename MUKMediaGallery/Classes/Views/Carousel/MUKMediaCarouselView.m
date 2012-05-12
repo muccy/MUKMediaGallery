@@ -24,10 +24,12 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "MUKMediaCarouselView.h"
+#import "MUKMediaCarouselView_Thumbnails.h"
 
 #import <MUKScrolling/MUKScrolling.h>
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaGalleryImageFetcher_.h"
+#import "MUKMediaCarouselImageCellView_.h"
 
 @interface MUKMediaCarouselView ()
 @property (nonatomic, strong) MUKGridView *gridView_;
@@ -174,7 +176,10 @@
     // Reload grid
     [self.gridView_ reloadData];
     
-    // TODO: load visible thumbs
+    // Cells are layed out
+    // Load thumbnails also from file
+    [self loadVisibleThumbnails_];
+    
     // TODO: load visible medias
 }
 
@@ -195,6 +200,7 @@
         return containerSize;
     }];
     
+    self.gridView_.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.gridView_.backgroundColor = self.backgroundColor;
     self.gridView_.direction = MUKGridDirectionHorizontal;
     self.gridView_.pagingEnabled = YES;
@@ -212,15 +218,29 @@
     __unsafe_unretained MUKGridView *weakGridView = self.gridView_;
     __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
     
-    self.gridView_.cellCreationHandler = ^UIView<MUKRecyclable>* (NSInteger cellIndex) {
-        // Dequeue and configure a cell
-//        
-//        cellView.backgroundColor = weakSelf.view.backgroundColor;
-//        cellView.insets = UIEdgeInsetsMake(0, kOffset, 0, kOffset);
-//        
-//        UIImage *image = [weakSelf.images_ objectAtIndex:index];
-//        [cellView setCenteredImage:image];
-        return nil;
+    self.gridView_.cellCreationHandler = ^UIView<MUKRecyclable>* (NSInteger cellIndex) 
+    {
+        // TODO: distinguish reuse identifiers
+        MUKMediaCarouselImageCellView_ *cellView = (MUKMediaCarouselImageCellView_ *)[weakGridView dequeueViewWithIdentifier:@"Cell"];
+        
+        if (cellView == nil) {
+            cellView = [[MUKMediaCarouselImageCellView_ alloc] initWithFrame:CGRectMake(0, 0, 200, 200) recycleIdentifier:@"Cell"];
+        }
+        
+        // Set view attributes
+        cellView.backgroundColor = weakSelf.backgroundColor;
+        cellView.insets = UIEdgeInsetsMake(0, weakSelf.mediaOffset/2, 0, weakSelf.mediaOffset/2);
+        
+        // Associate with this media asset
+        id<MUKMediaAsset> mediaAsset = [weakSelf.mediaAssets objectAtIndex:cellIndex];
+        cellView.mediaAsset = mediaAsset;
+        
+        // Configure
+        [cellView.activityIndicator startAnimating];
+        
+        [weakSelf configureThumbnailInCell_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
+
+        return cellView;
     };
     
     self.gridView_.cellOptionsHandler = ^(NSInteger index) {
@@ -238,6 +258,8 @@
     
     self.gridView_.scrollCompletionHandler = ^(MUKGridScrollKind scrollKind)
     {
+        [weakSelf loadVisibleThumbnails_];
+        
         // Update page number
     };
     
@@ -257,13 +279,13 @@
     
     self.gridView_.cellDidLayoutSubviewsHandler = ^(UIView<MUKRecyclable> *cellView, NSInteger index)
     {
-//        ImageCellView *view = (ImageCellView *)cellView;
-//        float scale = [weakGridView zoomScaleOfCellAtIndex:index];
-//        
-//        if (ABS(scale - 1.0f) < 0.00001f) {
-//            // Not zoomed
-//            [view centerImage];
-//        }
+        MUKMediaCarouselImageCellView_ *view = (MUKMediaCarouselImageCellView_ *)cellView;
+        float scale = [weakGridView zoomScaleOfCellAtIndex:index];
+        
+        if (ABS(scale - 1.0f) < 0.00001f) {
+            // Not zoomed
+            [view centerImage];
+        }
     };
 }
 
@@ -272,6 +294,85 @@
     frame.origin.x -= self.mediaOffset/2;
     frame.size.width += self.mediaOffset * 2;
     return frame;
+}
+         
+#pragma mark - Private: Thumbnails
+ 
+- (void)configureThumbnailInCell_:(MUKMediaCarouselImageCellView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index
+{
+    // Clean
+    [cell setCenteredImage:nil];
+    
+    // Search for thumbnail in cache
+    // Only from memory, because async loading is done when view is idle
+    [self loadThumbnailForMediaAsset_:mediaAsset onlyFromMemory_:YES atIndex_:index inCell_:cell]; 
+}
+
+- (void)loadThumbnailForMediaAsset_:(id<MUKMediaAsset>)mediaAsset onlyFromMemory_:(BOOL)onlyFromMemory atIndex_:(NSInteger)index inCell_:(MUKMediaCarouselImageCellView_ *)cell
+{
+    BOOL userProvidesThumbnail = NO;
+    UIImage *userProvidedThumbnail = [MUKMediaGalleryUtils_ userProvidedThumbnailForMediaAsset:mediaAsset provided:&userProvidesThumbnail];
+    
+    /*
+     If user provides thumbnails, exclude automatic loading system.
+     */
+    if (YES == userProvidesThumbnail) {
+        [cell setCenteredImage:userProvidedThumbnail];
+        return;
+    }
+    
+    /*
+     If user does not provide thumbnails, begin with automatic loading.
+     
+     URL is essential...
+     */
+    NSURL *thumbnailURL = [MUKMediaGalleryUtils_ thumbnailURLForMediaAsset:mediaAsset];
+    if (thumbnailURL) {
+        MUKImageFetcherSearchDomain searchDomains = [MUKMediaGalleryUtils_ thumbnailSearchDomainsForMediaAsset:mediaAsset memoryCache:YES fileCache:!onlyFromMemory file:!onlyFromMemory remote:NO];
+        MUKObjectCacheLocation cacheLocations = [MUKMediaGalleryUtils_ thumbnailCacheLocationsForMediaAsset_:mediaAsset memoryCache:YES fileCache:self.usesThumbnailImageFileCache];
+        
+        MUKURLConnection *connection = nil;
+        if (!onlyFromMemory) {
+            connection = [MUKMediaGalleryUtils_ thumbnailConnectionForMediaAsset:mediaAsset];
+        }
+        
+        __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+        
+        [self.thumbnailsFetcher loadImageForURL:thumbnailURL searchDomains:searchDomains cacheToLocations:cacheLocations connection:connection completionHandler:^(UIImage *image, MUKImageFetcherSearchDomain resultDomains) 
+         {
+             // Insert in right cell at this time
+             if (mediaAsset == cell.mediaAsset) {
+                 [cell setCenteredImage:image];
+             }
+             else {
+                 MUKMediaCarouselImageCellView_ *rightCell = (MUKMediaCarouselImageCellView_ *)[weakSelf.gridView_ cellViewAtIndex:index];
+                 [rightCell setCenteredImage:image];
+             }
+         }];
+    }
+}
+
+- (void)loadVisibleThumbnails_ {
+    [self loadThumbnailsInCells_:[self.gridView_ visibleViews]];
+}
+
+- (void)loadThumbnailsInCells_:(NSSet *)cells {
+    [cells enumerateObjectsUsingBlock:^(id obj, BOOL *stop) 
+     {
+         MUKMediaCarouselImageCellView_ *cell = obj;
+         
+         // Image is cleared in cellCreationHandler
+         // If cell has not an image it should be loaded from any source
+         if (!cell.imageView.image) {
+             id<MUKMediaAsset> mediaAsset = cell.mediaAsset;
+             if (mediaAsset) {
+                 NSInteger mediaAssetIndex = [self.mediaAssets indexOfObject:mediaAsset];
+                 if (NSNotFound != mediaAssetIndex) {
+                     [self loadThumbnailForMediaAsset_:mediaAsset onlyFromMemory_:NO atIndex_:mediaAssetIndex inCell_:cell];
+                 } // if media asset index
+             } // if media asset
+         } // if image == nil
+     }];
 }
 
 @end
