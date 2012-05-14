@@ -29,7 +29,9 @@
 #import <MUKScrolling/MUKScrolling.h>
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaGalleryImageFetcher_.h"
+
 #import "MUKMediaCarouselImageCellView_.h"
+#import "MUKMediaCarouselPlayerCellView_.h"
 
 #import "MUKMediaImageAssetProtocol.h"
 
@@ -52,6 +54,7 @@
 @synthesize purgesImagesMemoryCacheWhenReloading = purgesImagesMemoryCacheWhenReloading_;
 @synthesize mediaOffset = mediaOffset_;
 @synthesize imageMinimumZoomScale = imageMinimumZoomScale_, imageMaximumZoomScale = imageMaximumZoomScale_;
+@synthesize autoplaysMedias = autoplaysMedias_;
 
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
@@ -239,6 +242,14 @@
         MUKMediaCarouselCellView_ *view = (MUKMediaCarouselCellView_ *)cellView;
         view.imageView.image = nil;
         
+        if ([view isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]])
+        {
+            // Clean movie player
+            MUKMediaCarouselPlayerCellView_ *mpCell = (MUKMediaCarouselPlayerCellView_ *)view;
+            [mpCell.moviePlayer.view removeFromSuperview];
+            mpCell.moviePlayer = nil;
+        }
+        
         // Set media as unloaded
         [weakSelf.loadedMediaIndexes_ removeIndex:index];
     };
@@ -338,6 +349,12 @@
             cellClass = [MUKMediaCarouselImageCellView_ class];
             break;
             
+        case MUKMediaAssetKindVideo:
+        case MUKMediaAssetKindAudio:
+            identifier = @"MUKMediaCarouselPlayerCellView_";
+            cellClass = [MUKMediaCarouselPlayerCellView_ class];
+            break;
+            
         default:
             identifier = @"MUKMediaCarouselCellView_";
             cellClass = [MUKMediaCarouselCellView_ class];
@@ -388,7 +405,34 @@
         
         // Load full image
         [self loadFullImageForMediaImageAsset_:mediaImageAsset onlyFromMemory_:onlyFromMemory atIndex_:index inCell_:imageCell];
-    } // if isImageMediaAsset_
+    } // if image
+    
+    if (MUKMediaAssetKindAudio == [mediaAsset mediaKind] ||
+        MUKMediaAssetKindVideo == [mediaAsset mediaKind])
+    {
+        // It's an audio
+        // It's a video
+        if (onlyFromMemory == NO) {
+            if ([mediaAsset respondsToSelector:@selector(mediaURL)])
+            {
+                NSURL *mediaURL = [mediaAsset mediaURL];
+                
+                if (mediaURL) {
+                    MUKMediaCarouselPlayerCellView_ *mpCell = (MUKMediaCarouselPlayerCellView_ *)cellView;
+                    
+                    // Clean thumbnail
+                    mpCell.imageView.image = nil;
+                    
+                    // Load media
+                    [mpCell setMediaURL:mediaURL kind:[mediaAsset mediaKind]];
+                    mpCell.moviePlayer.shouldAutoplay = self.autoplaysMedias;
+                    
+                    [self didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:mpCell];
+                }
+            }
+        }
+        
+    } // if video or audio
 }
 
 - (BOOL)isLoadedMediaAssetAtIndex_:(NSInteger)index {

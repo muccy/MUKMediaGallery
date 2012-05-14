@@ -64,6 +64,8 @@
 		0624483215527F8C005CE74D /* MUKMediaThumbnailView_.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */; };
 		065BF44E155D07E5008C91BD /* MUKMediaCarouselView.h in Headers */ = {isa = PBXBuildFile; fileRef = 065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		065BF44F155D07E5008C91BD /* MUKMediaCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */; };
+		0671974A1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */; };
+		0671974B1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 067197491560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m */; };
 		06A26C30155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */; };
 		06A26C31155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */; };
 		06A26C37155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C35155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h */; };
@@ -208,6 +210,8 @@
 		0624483915528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
 		065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView.h; sourceTree = "<group>"; };
 		065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselView.m; sourceTree = "<group>"; };
+		067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselPlayerCellView_.h; sourceTree = "<group>"; };
+		067197491560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselPlayerCellView_.m; sourceTree = "<group>"; };
 		06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGalleryImageFetcher_.h; sourceTree = "<group>"; };
 		06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGalleryImageFetcher_.m; sourceTree = "<group>"; };
 		06A26C35155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselImageCellView_.h; sourceTree = "<group>"; };
@@ -537,6 +541,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		067197401560F6CE0017EAC0 /* Media Player */ = {
+			isa = PBXGroup;
+			children = (
+				067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */,
+				067197491560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m */,
+			);
+			path = "Media Player";
+			sourceTree = "<group>";
+		};
 		06A26C26155E5CBC009D36F0 /* Image Fetcher */ = {
 			isa = PBXGroup;
 			children = (
@@ -562,6 +575,7 @@
 			children = (
 				06A26C75155E8A4E009D36F0 /* Base */,
 				06A26C34155E60F9009D36F0 /* Image */,
+				067197401560F6CE0017EAC0 /* Media Player */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -638,6 +652,7 @@
 				06A26C74155E8743009D36F0 /* MUKMediaCarouselView_FullImage.h in Headers */,
 				06A26C7C155E8ADE009D36F0 /* MUKMediaCarouselCellView_.h in Headers */,
 				06A26C7F155E8BC6009D36F0 /* MUKMediaCarouselView_Cells.h in Headers */,
+				0671974A1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -876,6 +891,7 @@
 				06A26C31155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m in Sources */,
 				06A26C38155E613B009D36F0 /* MUKMediaCarouselImageCellView_.m in Sources */,
 				06A26C7D155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m in Sources */,
+				0671974B1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

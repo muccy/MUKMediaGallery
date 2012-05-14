@@ -108,6 +108,12 @@
  Default is `3.0f`
  */
 @property (nonatomic) float imageMaximumZoomScale;
+/**
+ Autoplays audio and video medias.
+ 
+ Default is `NO`.
+ */
+@property (nonatomic) BOOL autoplaysMedias;
 
 /** @name Methods */
 /**
