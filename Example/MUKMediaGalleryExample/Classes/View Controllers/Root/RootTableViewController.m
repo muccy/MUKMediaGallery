@@ -147,6 +147,10 @@
         localVideoAsset.mediaURL = [[NSBundle mainBundle] URLForResource:@"sea" withExtension:@"mp4"];
         [mediaAssets addObject:localVideoAsset];
         
+        MUKMediaVideoAsset *remoteVideoAsset = [[MUKMediaVideoAsset alloc] init];
+        remoteVideoAsset.mediaURL = [NSURL URLWithString:@"http://mirrors.creativecommons.org/movingimages/Building_on_the_Past.mp4"];
+        [mediaAssets addObject:remoteVideoAsset];
+        
         MUKMediaImageAsset *localImageAsset = [[MUKMediaImageAsset alloc] init];
         localImageAsset.thumbnailURL = [MUK URLForImageFileNamed:@"palms-thumbnail.jpg" bundle:nil];
         localImageAsset.mediaURL = [MUK URLForImageFileNamed:@"palms.jpg" bundle:nil];
