@@ -23,14 +23,11 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#import "MUKMediaCarouselCellView_.h"
-#import <MediaPlayer/MediaPlayer.h>
-#import "MUKMediaAssetProtocol.h"
+#import "MUKMediaCarouselPlayerCellView_.h"
 
-@interface MUKMediaCarouselPlayerCellView_ : MUKMediaCarouselCellView_
-@property (nonatomic, strong) MPMoviePlayerController *moviePlayer;
+@interface MUKMediaCarouselYouTubeCellView_ : MUKMediaCarouselPlayerCellView_
+@property (nonatomic, strong) UIWebView *webView;
 
-- (void)setMediaURL:(NSURL *)mediaURL kind:(MUKMediaAssetKind)kind;
-- (void)cleanup;
+- (void)setMediaURL:(NSURL *)mediaURL inWebView:(BOOL)useWebView;
 
 @end

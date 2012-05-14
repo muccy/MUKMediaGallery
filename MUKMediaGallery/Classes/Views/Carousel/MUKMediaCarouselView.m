@@ -29,15 +29,20 @@
 #import <MUKScrolling/MUKScrolling.h>
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaGalleryImageFetcher_.h"
+#import "PSYouTubeExtractor.h"
 
 #import "MUKMediaCarouselImageCellView_.h"
 #import "MUKMediaCarouselPlayerCellView_.h"
+#import "MUKMediaCarouselYouTubeCellView_.h"
 
 #import "MUKMediaImageAssetProtocol.h"
+
+#define DEBUG_FAKE_NO_NATIVE_YT     0
 
 @interface MUKMediaCarouselView ()
 @property (nonatomic, strong) MUKGridView *gridView_;
 @property (nonatomic, strong) NSMutableIndexSet *loadedMediaIndexes_;
+@property (nonatomic, strong) PSYouTubeExtractor *youTubeExtractor_;
 
 - (void)commonInitialization_;
 - (void)attachGridHandlers_;
@@ -58,6 +63,7 @@
 
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
+@synthesize youTubeExtractor_ = youTubeExtractor__;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -83,6 +89,19 @@
     imagesFetcher_.shouldStartConnectionHandler = nil;
     
     [self.gridView_ removeAllHandlers];
+    
+    [self.youTubeExtractor_ cancel];
+    
+    // Clean all cells for prudence
+    [[self.gridView_ visibleViews] enumerateObjectsUsingBlock:^(id obj, BOOL *stop) 
+    {
+        [self cleanHiddenCell_:obj];
+    }];
+    
+    [[self.gridView_ enqueuedViews] enumerateObjectsUsingBlock:^(id obj, BOOL *stop) 
+    {
+        [self cleanHiddenCell_:obj];
+    }];
 }
 
 #pragma mark - Overrides
@@ -239,16 +258,7 @@
     self.gridView_.cellEnqueuedHandler = ^(UIView<MUKRecyclable> *cellView, NSInteger index)
     {
         // Clean hidden cells
-        MUKMediaCarouselCellView_ *view = (MUKMediaCarouselCellView_ *)cellView;
-        view.imageView.image = nil;
-        
-        if ([view isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]])
-        {
-            // Clean movie player
-            MUKMediaCarouselPlayerCellView_ *mpCell = (MUKMediaCarouselPlayerCellView_ *)view;
-            [mpCell.moviePlayer.view removeFromSuperview];
-            mpCell.moviePlayer = nil;
-        }
+        [weakSelf cleanHiddenCell_:(MUKMediaCarouselCellView_ *)cellView];
         
         // Set media as unloaded
         [weakSelf.loadedMediaIndexes_ removeIndex:index];
@@ -355,6 +365,11 @@
             cellClass = [MUKMediaCarouselPlayerCellView_ class];
             break;
             
+        case MUKMediaAssetKindYouTubeVideo:
+            identifier = @"MUKMediaCarouselYouTubeCellView_";
+            cellClass = [MUKMediaCarouselYouTubeCellView_ class];
+            break;
+            
         default:
             identifier = @"MUKMediaCarouselCellView_";
             cellClass = [MUKMediaCarouselCellView_ class];
@@ -407,7 +422,7 @@
         [self loadFullImageForMediaImageAsset_:mediaImageAsset onlyFromMemory_:onlyFromMemory atIndex_:index inCell_:imageCell];
     } // if image
     
-    if (MUKMediaAssetKindAudio == [mediaAsset mediaKind] ||
+    else if (MUKMediaAssetKindAudio == [mediaAsset mediaKind] ||
         MUKMediaAssetKindVideo == [mediaAsset mediaKind])
     {
         // It's an audio
@@ -431,8 +446,55 @@
                 }
             }
         }
-        
     } // if video or audio
+    
+    else if (MUKMediaAssetKindYouTubeVideo == [mediaAsset mediaKind])
+    {
+        // It's YouTube
+        if (onlyFromMemory == NO) {
+            if ([mediaAsset respondsToSelector:@selector(mediaURL)])
+            {
+                NSURL *mediaURL = [mediaAsset mediaURL];
+                
+                if (mediaURL) {
+                    if (![mediaURL isEqual:self.youTubeExtractor_.youTubeURL])
+                    {
+                        // Not processing same YouTube URL
+
+                        // Clean past extraction
+                        [self.youTubeExtractor_ cancel];
+
+                        // Execute new extraction
+                        MUKMediaCarouselYouTubeCellView_ *ytCell = (MUKMediaCarouselYouTubeCellView_ *)cellView;
+                        
+                        self.youTubeExtractor_ = [PSYouTubeExtractor extractorForYouTubeURL:mediaURL success:^(NSURL *URL) 
+                        {
+                            // Found movie URL
+                            // Load in movie player
+                            if (ytCell.mediaAsset == mediaAsset) {
+#if DEBUG_FAKE_NO_NATIVE_YT
+                                [ytCell setMediaURL:mediaURL inWebView:YES];
+#else
+                                [ytCell setMediaURL:URL inWebView:NO];
+#endif
+                                
+                                [self didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                            }
+
+                        } failure:^(NSError *error) {
+                            // Not found movie URL
+                            // Load in web view
+                            if (ytCell.mediaAsset == mediaAsset) {
+                                [ytCell setMediaURL:mediaURL inWebView:YES];
+                                
+                                [self didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                            }
+                        }]; // extractor
+                    } // if different URL
+                } // if mediaURL
+            }
+        } // if !onlyFromMemory
+    } // if MUKMediaAssetKindYouTubeVideo
 }
 
 - (BOOL)isLoadedMediaAssetAtIndex_:(NSInteger)index {
@@ -480,6 +542,41 @@
     }
     
     return options;
+}
+
+- (void)cleanHiddenCell_:(MUKMediaCarouselCellView_ *)cellView
+{
+    MUKMediaCarouselCellView_ *view = (MUKMediaCarouselCellView_ *)cellView;
+    view.imageView.image = nil;
+    
+    if ([view isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]])
+    {
+        // Clean movie player
+        MUKMediaCarouselPlayerCellView_ *mpCell = (MUKMediaCarouselPlayerCellView_ *)view;
+        [mpCell cleanup];
+        
+        if ([view isKindOfClass:[MUKMediaCarouselYouTubeCellView_ class]])
+        {
+            // Web view has been cleaned by -cleanup
+            
+            // Clean extractor if there aren't visible YT cells
+            NSSet *set = [[self.gridView_ visibleViews] objectsPassingTest:^BOOL(id obj, BOOL *stop)
+            {
+                if ([obj isKindOfClass:[MUKMediaCarouselYouTubeCellView_ class]])
+                {
+                    *stop = YES;
+                    return YES;
+                }
+              
+                return NO;
+            }];
+            
+            if ([set count] == 0) {
+                [self.youTubeExtractor_ cancel];
+                self.youTubeExtractor_ = nil;
+            }
+        }
+    }
 }
 
 #pragma mark - Private: Thumbnails

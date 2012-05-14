@@ -26,4 +26,6 @@
 
 - (MUKGridCellOptions *)cellOptionsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset permitsZoomIfRequested_:(BOOL)permitsZoom;
 
+- (void)cleanHiddenCell_:(MUKMediaCarouselCellView_ *)cellView;
+
 @end

@@ -26,15 +26,19 @@
 #import "MUKMediaCarouselPlayerCellView_.h"
 
 @interface MUKMediaCarouselPlayerCellView_ ()
+@property (nonatomic) MUKMediaAssetKind lastKind_;
 - (CGRect)playerFrameForKind_:(MUKMediaAssetKind)kind;
 - (MPMovieSourceType)movieSourceTypeFromMediaURL_:(NSURL *)mediaURL;
 @end
 
 @implementation MUKMediaCarouselPlayerCellView_
 @synthesize moviePlayer = moviePlayer_;
+@synthesize lastKind_ = lastKind__;
 
 - (void)setMediaURL:(NSURL *)mediaURL kind:(MUKMediaAssetKind)kind {
     if (mediaURL == nil) return;
+    
+    self.lastKind_ = kind;
     
     if (moviePlayer_ == nil) {
         moviePlayer_ = [[MPMoviePlayerController alloc] initWithContentURL:mediaURL];
@@ -57,12 +61,18 @@
     [self.moviePlayer prepareToPlay];
 }
 
+- (void)cleanup {
+    self.lastKind_ = MUKMediaAssetKindNone;
+    
+    [self.moviePlayer stop];
+    [self.moviePlayer.view removeFromSuperview];
+    self.moviePlayer = nil;
+}
+
 - (void)setInsets:(UIEdgeInsets)insets {
     [super setInsets:insets];
     
-    CGRect bounds = UIEdgeInsetsInsetRect(self.bounds, self.insets);
-    self.moviePlayer.view.frame = bounds;
-    
+    self.moviePlayer.view.frame = [self playerFrameForKind_:self.lastKind_];
 }
 
 #pragma mark - Private
