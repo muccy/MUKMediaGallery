@@ -61,6 +61,10 @@
 @synthesize imageMinimumZoomScale = imageMinimumZoomScale_, imageMaximumZoomScale = imageMaximumZoomScale_;
 @synthesize autoplaysMedias = autoplaysMedias_;
 
+@synthesize scrollHandler = scrollHandler_;
+@synthesize scrollCompletionHandler = scrollCompletionHandler_;
+@synthesize mediaAssetTappedHandler = mediaAssetTappedHandler_;
+
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
 @synthesize youTubeExtractor_ = youTubeExtractor__;
@@ -205,6 +209,24 @@
     [self loadVisibleMedias_];
 }
 
+- (NSInteger)currentMediaAssetIndex {
+    float f = self.gridView_.contentOffset.x/self.gridView_.bounds.size.width;
+    NSInteger index = floorf(f);
+    
+    if (index >= 0 && index < [self.mediaAssets count]) {
+        return index;
+    }
+    
+    return NSNotFound;
+}
+
+- (void)scrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated
+{
+    if (index >= 0 && index < [self.mediaAssets count]) {
+        [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead animated:animated];
+    }
+}
+
 #pragma mark - Private
 
 - (void)commonInitialization_ {
@@ -275,7 +297,9 @@
     };
     
     self.gridView_.scrollHandler = ^{
-        // Hide nav bar when scrolling starts
+        if (weakSelf.scrollHandler) {
+            weakSelf.scrollHandler();
+        }
     };
     
     self.gridView_.scrollCompletionHandler = ^(MUKGridScrollKind scrollKind)
@@ -283,17 +307,17 @@
         // Thumbnails already loaded from memory
         [weakSelf loadVisibleMedias_];
         
-        // Update page number
+        if (weakSelf.scrollCompletionHandler) {
+            weakSelf.scrollCompletionHandler();
+        }
     };
     
     self.gridView_.cellTappedHandler = ^(NSInteger cellIndex) {
-        // Hide nav bar
+        if (weakSelf.mediaAssetTappedHandler) {
+            weakSelf.mediaAssetTappedHandler(cellIndex);
+        }
     };
-    
-    self.gridView_.cellDoubleTappedHandler = ^(NSInteger cellIndex) {
-        // Zoom in
-    };
-    
+ 
     self.gridView_.cellZoomViewHandler = ^UIView* (UIView<MUKRecyclable> *cellView, NSInteger index)
     {
         MUKMediaCarouselCellView_ *view = (MUKMediaCarouselCellView_ *)cellView;

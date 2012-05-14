@@ -115,9 +115,37 @@
  */
 @property (nonatomic) BOOL autoplaysMedias;
 
+/** @name Handlers */
+/**
+ Handler called at every scroll step.
+ */
+@property (nonatomic, copy) void (^scrollHandler)(void);
+/**
+ Handler called as scroll finishes.
+ */
+@property (nonatomic, copy) void (^scrollCompletionHandler)(void);
+/**
+ Handler called when a media is tapped once.
+ */
+@property (nonatomic, copy) void (^mediaAssetTappedHandler)(NSInteger index);
+
 /** @name Methods */
 /**
  Reload media views.
  */
 - (void)reloadMedias;
+/**
+ Currently displayed media index.
+ 
+ @return Index of displayed media. If there aren't media assets,
+ it returns `NSNotFound`.
+ */
+- (NSInteger)currentMediaAssetIndex;
+/**
+ Scrolls to media asset.
+ 
+ @param index Index of media asset to show.
+ @param animated `YES` if you want to animate transition.
+ */
+- (void)scrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated;
 @end

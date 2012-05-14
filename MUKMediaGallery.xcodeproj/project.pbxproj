@@ -81,7 +81,6 @@
 		06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */; };
 		06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */; };
 		06D0729215610C42000296C3 /* PSYouTubeExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D0728E15610C42000296C3 /* PSYouTubeExtractor.h */; };
-		06D0729415610C42000296C3 /* PSYouTubeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D0729015610C42000296C3 /* PSYouTubeView.h */; };
 		06D072A015610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D0729E15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h */; };
 		06D072A115610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D0729F15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m */; };
 /* End PBXBuildFile section */
@@ -232,8 +231,6 @@
 		06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcherURLConnectionQueue_.m; sourceTree = "<group>"; };
 		06D0728E15610C42000296C3 /* PSYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSYouTubeExtractor.h; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.h; sourceTree = "<group>"; };
 		06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSYouTubeExtractor.m; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.m; sourceTree = "<group>"; };
-		06D0729015610C42000296C3 /* PSYouTubeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSYouTubeView.h; path = Submodules/PSYouTubeExtractor/PSYouTubeView.h; sourceTree = "<group>"; };
-		06D0729115610C42000296C3 /* PSYouTubeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSYouTubeView.m; path = Submodules/PSYouTubeExtractor/PSYouTubeView.m; sourceTree = "<group>"; };
 		06D0729E15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselYouTubeCellView_.h; sourceTree = "<group>"; };
 		06D0729F15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselYouTubeCellView_.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -634,8 +631,6 @@
 			children = (
 				06D0728E15610C42000296C3 /* PSYouTubeExtractor.h */,
 				06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */,
-				06D0729015610C42000296C3 /* PSYouTubeView.h */,
-				06D0729115610C42000296C3 /* PSYouTubeView.m */,
 			);
 			name = PSYouTubeExtractor;
 			sourceTree = "<group>";
@@ -686,7 +681,6 @@
 				06A26C7F155E8BC6009D36F0 /* MUKMediaCarouselView_Cells.h in Headers */,
 				0671974A1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h in Headers */,
 				06D0729215610C42000296C3 /* PSYouTubeExtractor.h in Headers */,
-				06D0729415610C42000296C3 /* PSYouTubeView.h in Headers */,
 				06D072A015610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
