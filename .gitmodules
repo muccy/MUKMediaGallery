@@ -7,3 +7,6 @@
 [submodule "Submodules/MUKObjectCache"]
 	path = Submodules/MUKObjectCache
 	url = git://github.com/muccy/MUKObjectCache.git
+[submodule "Submodules/PSYouTubeExtractor"]
+	path = Submodules/PSYouTubeExtractor
+	url = git://github.com/steipete/PSYouTubeExtractor.git
