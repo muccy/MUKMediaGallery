@@ -121,6 +121,22 @@
  Reload thumbnail cells.
  */
 - (void)reloadThumbnails;
+/**
+ Scrolls to media asset thumbnail.
+ 
+ @param index Media asset index.
+ @param animated `YES` if you want an animated transition.
+*/
+- (void)scrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated;
+/**
+ Scroll to top.
+ 
+ This is different to scrollToMediaAssetAtIndex:animated: if you
+ set topPadding.
+ 
+ @param animated `YES` if you want an animated transition.
+ */
+- (void)scrollToTopAnimated:(BOOL)animated;
 @end
 
 

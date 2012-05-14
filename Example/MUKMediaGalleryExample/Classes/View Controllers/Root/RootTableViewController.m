@@ -11,6 +11,7 @@
 #import "ThumbnailsViewController.h"
 #import "ImageFetcherViewController.h"
 #import "CarouselViewController.h"
+#import "ChainedViewController.h"
 
 #import <MUKToolkit/MUKToolkit.h>
 
@@ -81,6 +82,20 @@
         row.selectionHandler = ^{
             CarouselViewController *viewController = [[CarouselViewController alloc] initWithNibName:nil bundle:nil];
             viewController.mediaAssets = [weakSelf standardMediaAssets_];
+            [weakSelf.navigationController pushViewController:viewController animated:YES];
+        };
+        [rows addObject:row];  
+        
+        row = [[Row_ alloc] init];
+        row.title = @"Auto-Chained";
+        row.subtitle = @"MUKMediaThumbnailsViewController";
+        row.selectionHandler = ^{
+            ChainedViewController *viewController = [[ChainedViewController alloc] initWithNibName:nil bundle:nil completion:^(MUKMediaThumbnailsViewController *vc)
+            {
+                vc.thumbnailsView.mediaAssets = [weakSelf standardMediaAssets_];
+                [vc.thumbnailsView reloadThumbnails];
+            }];
+            
             [weakSelf.navigationController pushViewController:viewController animated:YES];
         };
         [rows addObject:row];  

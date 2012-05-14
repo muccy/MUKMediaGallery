@@ -34,6 +34,7 @@
 		06D07285156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 06D07284156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 */; };
 		06D0729B15610C67000296C3 /* PSYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D0729815610C67000296C3 /* PSYouTubeExtractor.m */; };
 		06D0729C15610C67000296C3 /* PSYouTubeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D0729A15610C67000296C3 /* PSYouTubeView.m */; };
+		06D072DB15618E91000296C3 /* ChainedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D072D915618E91000296C3 /* ChainedViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +113,8 @@
 		06D0729815610C67000296C3 /* PSYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSYouTubeExtractor.m; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.m; sourceTree = "<group>"; };
 		06D0729915610C67000296C3 /* PSYouTubeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSYouTubeView.h; path = Submodules/PSYouTubeExtractor/PSYouTubeView.h; sourceTree = "<group>"; };
 		06D0729A15610C67000296C3 /* PSYouTubeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSYouTubeView.m; path = Submodules/PSYouTubeExtractor/PSYouTubeView.m; sourceTree = "<group>"; };
+		06D072D815618E91000296C3 /* ChainedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChainedViewController.h; sourceTree = "<group>"; };
+		06D072D915618E91000296C3 /* ChainedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChainedViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +231,7 @@
 				06A93C5A155A67CE0083CFE4 /* Image Fetcher */,
 				060B1B23155158CD00454D72 /* Thumbnails View */,
 				06A26C3B155E6F7F009D36F0 /* Carousel View */,
+				06D072D715618E47000296C3 /* Chained View Controllers */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -306,6 +310,15 @@
 			);
 			name = PSYouTubeExtractor;
 			path = ../..;
+			sourceTree = "<group>";
+		};
+		06D072D715618E47000296C3 /* Chained View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				06D072D815618E91000296C3 /* ChainedViewController.h */,
+				06D072D915618E91000296C3 /* ChainedViewController.m */,
+			);
+			path = "Chained View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -417,6 +430,7 @@
 				06A26C3F155E6F92009D36F0 /* CarouselViewController.m in Sources */,
 				06D0729B15610C67000296C3 /* PSYouTubeExtractor.m in Sources */,
 				06D0729C15610C67000296C3 /* PSYouTubeView.m in Sources */,
+				06D072DB15618E91000296C3 /* ChainedViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

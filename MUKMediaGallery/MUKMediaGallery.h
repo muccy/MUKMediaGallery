@@ -1,4 +1,7 @@
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <MUKObjectCache/MUKObjectCache.h>
+#include <MUKNetworking/MUKNetworking.h>
 
 #import <MUKMediaGallery/MUKImageFetcher.h>
 
@@ -14,3 +17,5 @@
 
 #import <MUKMediaGallery/MUKMediaThumbnailsView.h>
 #import <MUKMediaGallery/MUKMediaCarouselView.h>
+
+#import <MUKMediaGallery/MUKMediaThumbnailsViewController.h>

@@ -189,6 +189,25 @@
     [self loadVisibleThumbnails_];
 }
 
+- (void)scrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated
+{
+    if (index >= 0 && index < [self.mediaAssets count]) {
+        [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead animated:animated];
+        
+        if (!animated) {
+            [self loadVisibleThumbnails_];
+        }
+    }
+}
+
+- (void)scrollToTopAnimated:(BOOL)animated {
+    [self.gridView_ scrollToCellAtIndex:0 position:MUKGridScrollPositionTail animated:animated];
+    
+    if (!animated) {
+        [self loadVisibleThumbnails_];
+    }
+}
+
 #pragma mark - Selection
 
 - (NSInteger)selectedMediaAsset {
@@ -225,7 +244,6 @@
     
     CGRect gridFrame = [[self class] gridFrameForBounds_:self.bounds cellSize_:thumbnailSize_ imageOffset_:thumbnailOffset_];
     self.gridView_ = [[MUKGridView alloc] initWithFrame:gridFrame];
-    
     
     self.gridView_.alwaysBounceVertical = YES;
     self.gridView_.clipsToBounds = NO;

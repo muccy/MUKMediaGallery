@@ -83,6 +83,8 @@
 		06D0729215610C42000296C3 /* PSYouTubeExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D0728E15610C42000296C3 /* PSYouTubeExtractor.h */; };
 		06D072A015610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D0729E15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h */; };
 		06D072A115610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D0729F15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m */; };
+		06D072D5156189A8000296C3 /* MUKMediaThumbnailsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D072D3156189A8000296C3 /* MUKMediaThumbnailsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06D072D6156189A8000296C3 /* MUKMediaThumbnailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D072D4156189A8000296C3 /* MUKMediaThumbnailsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -233,6 +235,8 @@
 		06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSYouTubeExtractor.m; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.m; sourceTree = "<group>"; };
 		06D0729E15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselYouTubeCellView_.h; sourceTree = "<group>"; };
 		06D0729F15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselYouTubeCellView_.m; sourceTree = "<group>"; };
+		06D072D3156189A8000296C3 /* MUKMediaThumbnailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsViewController.h; sourceTree = "<group>"; };
+		06D072D4156189A8000296C3 /* MUKMediaThumbnailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +314,7 @@
 			children = (
 				06004A3A154C2958004A3B17 /* Private */,
 				066F8454154E940600704724 /* Models */,
+				06D072D01561898D000296C3 /* Controllers */,
 				06004A06154C1CCF004A3B17 /* Views */,
 				060049ED154C176E004A3B17 /* Protocols */,
 			);
@@ -644,6 +649,31 @@
 			path = YouTube;
 			sourceTree = "<group>";
 		};
+		06D072D01561898D000296C3 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				06D072D11561898D000296C3 /* Carousel */,
+				06D072D21561898D000296C3 /* Thumbnails */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		06D072D11561898D000296C3 /* Carousel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Carousel;
+			sourceTree = "<group>";
+		};
+		06D072D21561898D000296C3 /* Thumbnails */ = {
+			isa = PBXGroup;
+			children = (
+				06D072D3156189A8000296C3 /* MUKMediaThumbnailsViewController.h */,
+				06D072D4156189A8000296C3 /* MUKMediaThumbnailsViewController.m */,
+			);
+			path = Thumbnails;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -682,6 +712,7 @@
 				0671974A1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h in Headers */,
 				06D0729215610C42000296C3 /* PSYouTubeExtractor.h in Headers */,
 				06D072A015610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h in Headers */,
+				06D072D5156189A8000296C3 /* MUKMediaThumbnailsViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -922,6 +953,7 @@
 				06A26C7D155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m in Sources */,
 				0671974B1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m in Sources */,
 				06D072A115610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m in Sources */,
+				06D072D6156189A8000296C3 /* MUKMediaThumbnailsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

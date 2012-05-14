@@ -224,6 +224,11 @@
 {
     if (index >= 0 && index < [self.mediaAssets count]) {
         [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead animated:animated];
+        
+        if (!animated) {
+            // Thumbnails already loaded from memory
+            [self loadVisibleMedias_];
+        }
     }
 }
 
