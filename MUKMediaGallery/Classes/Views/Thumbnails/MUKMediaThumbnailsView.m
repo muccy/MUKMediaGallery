@@ -2,8 +2,7 @@
 // All rights reserved.
 // 
 // Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-// * Redistributions of source code must retain the above copyright
+// modification, are permitted provided that the following conditions are met:// * Redistributions of source code must retain the above copyright
 // notice, this list of conditions and the following disclaimer.
 // * Redistributions in binary form must reproduce the above copyright
 // notice, this list of conditions and the following disclaimer in the
@@ -36,12 +35,18 @@
 #import "MUKMediaVideoAssetProtocol.h"
 #import "MUKMediaGalleryImageFetcher_.h"
 
+#define DEBUG_LOAD_THUMBNAIL    0
+#define DEBUG_SET_NIL_THUMBNAIL 0
+#define DEBUG_SET_THUMBNAIL     0
+
 @interface MUKMediaThumbnailsView ()
 @property (nonatomic, strong) MUKGridView *gridView_;
 @property (nonatomic, strong) UIImage *videoCellImage_, *audioCellImage_;
+@property (nonatomic) BOOL needsLoadingVisibleThumbnails_;
 
 - (void)commonInitialization_;
 - (void)attachGridHandlers_;
+- (NSIndexSet *)indexesOfMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
 @end
 
 @implementation MUKMediaThumbnailsView
@@ -61,6 +66,7 @@
 @synthesize gridView_ = gridView__;
 @synthesize videoCellImage_ = videoCellImage__, audioCellImage_ = audioCellImage__;
 @synthesize selectedCellIndex_ = selectedCellIndex__;
+@synthesize needsLoadingVisibleThumbnails_ = needsLoadingVisibleThumbnails__;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -105,13 +111,27 @@
         
         __unsafe_unretained MUKMediaThumbnailsView *weakSelf = self;
         thumbnailsFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
-        {
+        {            
             // Do not start hidden asset
             id<MUKMediaAsset> mediaAsset = connection.userInfo;
-            NSInteger assetIndex = [weakSelf.mediaAssets indexOfObject:mediaAsset];
-            
-            NSIndexSet *visibleAssetsIndexes = [weakSelf.gridView_ indexesOfVisibleCells];
-            BOOL assetVisible = [visibleAssetsIndexes containsIndex:assetIndex];
+
+            BOOL assetVisible;
+            @autoreleasepool {
+                // mediaAssets is an array, so it could contain duplicates
+                NSIndexSet *assetIndexes = [weakSelf indexesOfMediaAsset_:mediaAsset];
+                
+                NSIndexSet *visibleAssetsIndexes = [weakSelf.gridView_ indexesOfVisibleCells];
+                
+                // I want visible indexes to contain any of asset indexes
+                NSInteger containedIndex = [assetIndexes indexPassingTest:^BOOL(NSUInteger idx, BOOL *stop) 
+                {
+                    BOOL contained = [visibleAssetsIndexes containsIndex:idx];
+                    *stop = contained;
+                    return contained;
+                }];
+                
+                assetVisible = (containedIndex != NSNotFound);
+            }
             
             if (!assetVisible) {
                 // If asset is hidden, cancel download
@@ -195,7 +215,8 @@
         [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead shiftBackByHeadContentInset:YES animated:animated];
         
         if (!animated) {
-            [self loadVisibleThumbnails_];
+            self.needsLoadingVisibleThumbnails_ = YES;
+            [self setNeedsLayout];
         }
     }
 }
@@ -204,7 +225,8 @@
     [self.gridView_ scrollToHeadShiftingBackByHeadContentInset:YES animated:animated];
     
     if (!animated) {
-        [self loadVisibleThumbnails_];
+        self.needsLoadingVisibleThumbnails_ = YES;
+        [self setNeedsLayout];
     }
 }
 
@@ -267,6 +289,13 @@
 - (void)attachGridHandlers_ {
     __unsafe_unretained MUKGridView *weakGridView = self.gridView_;
     __unsafe_unretained MUKMediaThumbnailsView *weakSelf = self;
+    
+    self.gridView_.didLayoutSubviewsHandler = ^{
+        if (weakSelf.needsLoadingVisibleThumbnails_) {
+            weakSelf.needsLoadingVisibleThumbnails_ = NO;
+            [weakSelf loadVisibleThumbnails_];
+        }
+    };
     
     self.gridView_.cellCreationHandler = ^(NSInteger cellIndex) {
         static NSString *const kIdentifier = @"MUKMediaThumbnailView_";
@@ -343,6 +372,24 @@
     };
 }
 
+- (NSIndexSet *)indexesOfMediaAsset_:(id<MUKMediaAsset>)mediaAsset {
+    return [self.mediaAssets indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) 
+    {
+        BOOL equals;
+        
+        if ([obj respondsToSelector:@selector(isEqualToMediaAsset:)])
+        {
+            equals = [obj isEqualToMediaAsset:mediaAsset];
+        }
+        else {
+            // Fallback
+            equals = (obj == mediaAsset);
+        }
+        
+        return equals;
+    }];
+}
+
 #pragma mark - Private: Accessors
 
 - (UIImage *)videoCellImage_ {
@@ -395,13 +442,26 @@
             connection = [MUKMediaGalleryUtils_ thumbnailConnectionForMediaAsset:mediaAsset];
         }
         
+#if DEBUG_LOAD_THUMBNAIL
+        NSLog(@"\n\nLoading thumbnail for media asset %i at URL: %@", index, [thumbnailURL absoluteString]);
+#endif
+        
         [self.thumbnailsFetcher loadImageForURL:thumbnailURL searchDomains:searchDomains cacheToLocations:cacheLocations connection:connection completionHandler:^(UIImage *image, MUKImageFetcherSearchDomain resultDomains) 
         {
+#if DEBUG_LOAD_THUMBNAIL
+            NSLog(@"\n\nDid load thumbnail from search domains %i for media asset %i at URL: %@", resultDomains, index, [thumbnailURL absoluteString]);
+#endif
             // Insert in right cell at this time
             if (mediaAsset == cell.mediaAsset) {
+#if DEBUG_LOAD_THUMBNAIL
+                NSLog(@"Inserted in same cell!");
+#endif
                 [self setImage:image inCell_:cell];
             }
             else {
+#if DEBUG_LOAD_THUMBNAIL
+                NSLog(@"Inserted in different cell!");
+#endif
                 [self setImage:image inCellAtIndex_:index];
             }
         }];
@@ -409,26 +469,13 @@
 }
 
 - (void)loadVisibleThumbnails_ {
-    [self loadThumbnailsInCells_:[self.gridView_ visibleViews]];
-}
-
-- (void)loadThumbnailsInCells_:(NSSet *)cells {
-    [cells enumerateObjectsUsingBlock:^(id obj, BOOL *stop) 
-     {
-         MUKMediaThumbnailView_ *cell = obj;
-         
-         // Image is cleared in cellCreationHandler
-         // If cell has not an image it should be loaded from any source
-         if (![self hasThumbnailInCell_:cell]) {
-             id<MUKMediaAsset> mediaAsset = cell.mediaAsset;
-             if (mediaAsset) {
-                 NSInteger mediaAssetIndex = [self.mediaAssets indexOfObject:mediaAsset];
-                 if (NSNotFound != mediaAssetIndex) {
-                     [self loadThumbnailForMediaAsset_:mediaAsset onlyFromMemory_:NO atIndex_:mediaAssetIndex inCell_:cell];
-                 } // if media asset index
-             } // if media asset
-         } // if image == nil
-     }];
+    [[self.gridView_ indexesOfVisibleCells] enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) 
+    {
+        MUKMediaThumbnailView_ *cell = (MUKMediaThumbnailView_ *)[self.gridView_ cellViewAtIndex:idx];
+        id<MUKMediaAsset> mediaAsset = cell.mediaAsset;
+        
+        [self loadThumbnailForMediaAsset_:mediaAsset onlyFromMemory_:NO atIndex_:idx inCell_:cell];
+    }]; // enumerate indexesOfVisibleCells
 }
 
 #pragma mark - Private: Media Assets Count View
@@ -657,7 +704,18 @@
 }
 
 - (void)setImage:(UIImage *)image inCell_:(MUKMediaThumbnailView_ *)cell {
-     cell.imageView.image = image;
+#if DEBUG_SET_NIL_THUMBNAIL
+    if (image == nil) {
+        NSLog(@"Setting nil thumbail in cell for media asset at URL %@", [[cell.mediaAsset mediaThumbnailURL] absoluteString]);
+    }
+#endif
+#if DEBUG_SET_THUMBNAIL
+    if (image) {
+        NSLog(@"Setting thumbnail in cell for media asset at URL %@", [[cell.mediaAsset mediaThumbnailURL] absoluteString]);
+    }
+#endif
+    
+    cell.imageView.image = image;
 }
 
 - (BOOL)hasThumbnailInCell_:(MUKMediaThumbnailView_ *)cell {
