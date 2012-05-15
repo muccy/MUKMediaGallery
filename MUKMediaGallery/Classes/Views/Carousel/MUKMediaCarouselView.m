@@ -43,6 +43,7 @@
 @property (nonatomic, strong) MUKGridView *gridView_;
 @property (nonatomic, strong) NSMutableIndexSet *loadedMediaIndexes_;
 @property (nonatomic, strong) PSYouTubeExtractor *youTubeExtractor_;
+@property (nonatomic) BOOL needsLoadingVisibleMedias_;
 
 - (void)commonInitialization_;
 - (void)attachGridHandlers_;
@@ -68,6 +69,7 @@
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
 @synthesize youTubeExtractor_ = youTubeExtractor__;
+@synthesize needsLoadingVisibleMedias_ = needsLoadingVisibleMedias__;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -226,8 +228,8 @@
         [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead animated:animated];
         
         if (!animated) {
-            // Thumbnails already loaded from memory
-            [self loadVisibleMedias_];
+            self.needsLoadingVisibleMedias_ = YES;
+            [self setNeedsLayout];
         }
     }
 }
@@ -267,6 +269,13 @@
 - (void)attachGridHandlers_ {
     __unsafe_unretained MUKGridView *weakGridView = self.gridView_;
     __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+    
+    self.gridView_.didLayoutSubviewsHandler = ^{
+        if (weakSelf.needsLoadingVisibleMedias_) {
+            weakSelf.needsLoadingVisibleMedias_ = NO;
+            [weakSelf loadVisibleMedias_];
+        }
+    };
     
     self.gridView_.cellCreationHandler = ^UIView<MUKRecyclable>* (NSInteger cellIndex) 
     {
