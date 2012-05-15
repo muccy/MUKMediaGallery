@@ -192,4 +192,48 @@
     return [self assetResourceURLForSelector:@selector(mediaURL) connectionForMediaAsset:mediaImageAsset];
 }
 
+#pragma mark - Media Assets
+
++ (NSIndexSet *)indexesOfMediaAsset:(id<MUKMediaAsset>)mediaAsset inMediaAssets:(NSArray *)mediaAssets
+{
+    return [mediaAssets indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) 
+    {
+        BOOL equals;
+        
+        if ([obj respondsToSelector:@selector(isEqualToMediaAsset:)])
+        {
+            equals = [obj isEqualToMediaAsset:mediaAsset];
+        }
+        else {
+            // Fallback
+            equals = (obj == mediaAsset);
+        }
+        
+        return equals;
+    }];
+}
+
++ (BOOL)isVisibleMediaAsset:(id<MUKMediaAsset>)mediaAsset fromMediaAssets:(NSArray *)mediaAssets inGridView:(MUKGridView *)gridView
+{
+    BOOL assetVisible;
+    @autoreleasepool {
+        // mediaAssets is an array, so it could contain duplicates
+        NSIndexSet *assetIndexes = [self indexesOfMediaAsset:mediaAsset inMediaAssets:mediaAssets];
+        
+        NSIndexSet *visibleAssetsIndexes = [gridView indexesOfVisibleCells];
+        
+        // I want visible indexes to contain any of asset indexes
+        NSInteger containedIndex = [assetIndexes indexPassingTest:^BOOL(NSUInteger idx, BOOL *stop) 
+        {
+            BOOL contained = [visibleAssetsIndexes containsIndex:idx];
+            *stop = contained;
+            return contained;
+        }];
+        
+        assetVisible = (containedIndex != NSNotFound);
+    }
+    
+    return assetVisible;
+}
+
 @end

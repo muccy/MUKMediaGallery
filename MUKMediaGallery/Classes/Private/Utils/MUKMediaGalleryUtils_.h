@@ -10,6 +10,7 @@
 #import "MUKMediaAssetProtocol.h"
 #import "MUKMediaImageAssetProtocol.h"
 #import "MUKImageFetcher.h"
+#import <MUKScrolling/MUKScrolling.h>
 
 @interface MUKMediaGalleryUtils_ : NSObject
 + (NSBundle *)frameworkBundle;
@@ -50,4 +51,9 @@
 + (MUKObjectCacheLocation)fullImageCacheLocationsForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache;
 
 + (MUKURLConnection *)fullImageConnectionForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset;
+@end
+
+@interface MUKMediaGalleryUtils_ (MediaAssets)
++ (NSIndexSet *)indexesOfMediaAsset:(id<MUKMediaAsset>)mediaAsset inMediaAssets:(NSArray *)mediaAssets;
++ (BOOL)isVisibleMediaAsset:(id<MUKMediaAsset>)mediaAsset fromMediaAssets:(NSArray *)mediaAssets inGridView:(MUKGridView *)gridView;
 @end

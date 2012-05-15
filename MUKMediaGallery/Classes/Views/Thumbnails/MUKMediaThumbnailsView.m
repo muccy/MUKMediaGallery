@@ -46,7 +46,6 @@
 
 - (void)commonInitialization_;
 - (void)attachGridHandlers_;
-- (NSIndexSet *)indexesOfMediaAsset_:(id<MUKMediaAsset>)mediaAsset;
 @end
 
 @implementation MUKMediaThumbnailsView
@@ -113,32 +112,10 @@
         thumbnailsFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
         {            
             // Do not start hidden asset
+            
             id<MUKMediaAsset> mediaAsset = connection.userInfo;
-
-            BOOL assetVisible;
-            @autoreleasepool {
-                // mediaAssets is an array, so it could contain duplicates
-                NSIndexSet *assetIndexes = [weakSelf indexesOfMediaAsset_:mediaAsset];
-                
-                NSIndexSet *visibleAssetsIndexes = [weakSelf.gridView_ indexesOfVisibleCells];
-                
-                // I want visible indexes to contain any of asset indexes
-                NSInteger containedIndex = [assetIndexes indexPassingTest:^BOOL(NSUInteger idx, BOOL *stop) 
-                {
-                    BOOL contained = [visibleAssetsIndexes containsIndex:idx];
-                    *stop = contained;
-                    return contained;
-                }];
-                
-                assetVisible = (containedIndex != NSNotFound);
-            }
-            
-            if (!assetVisible) {
-                // If asset is hidden, cancel download
-                return NO;
-            }
-            
-            return YES;
+            BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:weakSelf.mediaAssets inGridView:weakSelf.gridView_];
+            return assetVisible;
         };
         
         [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:YES];
@@ -370,24 +347,6 @@
     {
         [weakSelf loadVisibleThumbnails_];
     };
-}
-
-- (NSIndexSet *)indexesOfMediaAsset_:(id<MUKMediaAsset>)mediaAsset {
-    return [self.mediaAssets indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) 
-    {
-        BOOL equals;
-        
-        if ([obj respondsToSelector:@selector(isEqualToMediaAsset:)])
-        {
-            equals = [obj isEqualToMediaAsset:mediaAsset];
-        }
-        else {
-            // Fallback
-            equals = (obj == mediaAsset);
-        }
-        
-        return equals;
-    }];
 }
 
 #pragma mark - Private: Accessors

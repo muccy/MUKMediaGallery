@@ -127,18 +127,10 @@
         thumbnailsFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
         {
             // Do not start hidden asset
+                        
             id<MUKMediaAsset> mediaAsset = connection.userInfo;
-            NSInteger assetIndex = [weakSelf.mediaAssets indexOfObject:mediaAsset];
-            
-            NSIndexSet *visibleAssetsIndexes = [weakSelf.gridView_ indexesOfVisibleCells];
-            BOOL assetVisible = [visibleAssetsIndexes containsIndex:assetIndex];
-            
-            if (!assetVisible) {
-                // If asset is hidden, cancel download
-                return NO;
-            }
-            
-            return YES;
+            BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:weakSelf.mediaAssets inGridView:weakSelf.gridView_];
+            return assetVisible;
         };
         
         [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:YES];
@@ -155,18 +147,10 @@
         imagesFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
         {
             // Do not start hidden asset
+            
             id<MUKMediaAsset> mediaAsset = connection.userInfo;
-            NSInteger assetIndex = [weakSelf.mediaAssets indexOfObject:mediaAsset];
-            
-            NSIndexSet *visibleAssetsIndexes = [weakSelf.gridView_ indexesOfVisibleCells];
-            BOOL assetVisible = [visibleAssetsIndexes containsIndex:assetIndex];
-            
-            if (!assetVisible) {
-                // If asset is hidden, cancel download
-                return NO;
-            }
-            
-            return YES;
+            BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:weakSelf.mediaAssets inGridView:weakSelf.gridView_];
+            return assetVisible;
         };
         
         [(MUKMediaGalleryImageFetcher_ *)imagesFetcher_ setBlockHandlers:YES];
@@ -552,17 +536,13 @@
 }
 
 - (void)loadVisibleMedias_ {
-    [[self.gridView_ visibleViews] enumerateObjectsUsingBlock:^(id obj, BOOL *stop) 
-    {
-        [self loadMediaInCell_:obj];
-    }];
-}
-
-- (void)loadMediaInCell_:(MUKMediaCarouselCellView_ *)cellView {
-    id<MUKMediaAsset> mediaAsset = cellView.mediaAsset;
-    NSInteger index = [self.mediaAssets indexOfObject:mediaAsset];
-    
-    [self loadMediaForMediaAsset_:mediaAsset atIndex_:index onlyFromMemory_:NO inCell_:cellView whichHadMediaAsset_:mediaAsset];
+    [[self.gridView_ indexesOfVisibleCells] enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop) 
+     {
+         MUKMediaCarouselCellView_ *cell = (MUKMediaCarouselCellView_ *)[self.gridView_ cellViewAtIndex:idx];
+         id<MUKMediaAsset> mediaAsset = cell.mediaAsset;
+         
+         [self loadMediaForMediaAsset_:mediaAsset atIndex_:idx onlyFromMemory_:NO inCell_:cell whichHadMediaAsset_:mediaAsset];
+     }]; // enumerate indexesOfVisibleCells
 }
 
 - (MUKGridCellOptions *)cellOptionsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset permitsZoomIfRequested_:(BOOL)permitsZoom
