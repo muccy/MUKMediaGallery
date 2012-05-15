@@ -192,7 +192,7 @@
 - (void)scrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated
 {
     if (index >= 0 && index < [self.mediaAssets count]) {
-        [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead animated:animated];
+        [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead shiftBackByHeadContentInset:YES animated:animated];
         
         if (!animated) {
             [self loadVisibleThumbnails_];
@@ -201,7 +201,7 @@
 }
 
 - (void)scrollToTopAnimated:(BOOL)animated {
-    [self.gridView_ scrollToCellAtIndex:0 position:MUKGridScrollPositionTail animated:animated];
+    [self.gridView_ scrollToHeadShiftingBackByHeadContentInset:YES animated:animated];
     
     if (!animated) {
         [self loadVisibleThumbnails_];
