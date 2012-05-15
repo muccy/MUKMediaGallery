@@ -62,6 +62,8 @@
 		0624483015527F8C005CE74D /* MUKMediaThumbnailView_video.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482A15527F8C005CE74D /* MUKMediaThumbnailView_video.png */; };
 		0624483115527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482B15527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png */; };
 		0624483215527F8C005CE74D /* MUKMediaThumbnailView_.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */; };
+		06499740156239F100B9A254 /* MUKMediaCarouselViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0649973E156239F100B9A254 /* MUKMediaCarouselViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		06499741156239F100B9A254 /* MUKMediaCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0649973F156239F100B9A254 /* MUKMediaCarouselViewController.m */; };
 		065BF44E155D07E5008C91BD /* MUKMediaCarouselView.h in Headers */ = {isa = PBXBuildFile; fileRef = 065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		065BF44F155D07E5008C91BD /* MUKMediaCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */; };
 		0671974A1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */; };
@@ -213,6 +215,8 @@
 		0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MUKMediaThumbnailView_.xib; sourceTree = "<group>"; };
 		0624483815528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/Localizable.strings"; sourceTree = "<absolute>"; };
 		0624483915528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
+		0649973E156239F100B9A254 /* MUKMediaCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselViewController.h; sourceTree = "<group>"; };
+		0649973F156239F100B9A254 /* MUKMediaCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselViewController.m; sourceTree = "<group>"; };
 		065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView.h; sourceTree = "<group>"; };
 		065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselView.m; sourceTree = "<group>"; };
 		067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselPlayerCellView_.h; sourceTree = "<group>"; };
@@ -661,6 +665,8 @@
 		06D072D11561898D000296C3 /* Carousel */ = {
 			isa = PBXGroup;
 			children = (
+				0649973E156239F100B9A254 /* MUKMediaCarouselViewController.h */,
+				0649973F156239F100B9A254 /* MUKMediaCarouselViewController.m */,
 			);
 			path = Carousel;
 			sourceTree = "<group>";
@@ -713,6 +719,7 @@
 				06D0729215610C42000296C3 /* PSYouTubeExtractor.h in Headers */,
 				06D072A015610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h in Headers */,
 				06D072D5156189A8000296C3 /* MUKMediaThumbnailsViewController.h in Headers */,
+				06499740156239F100B9A254 /* MUKMediaCarouselViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -954,6 +961,7 @@
 				0671974B1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m in Sources */,
 				06D072A115610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m in Sources */,
 				06D072D6156189A8000296C3 /* MUKMediaThumbnailsViewController.m in Sources */,
+				06499741156239F100B9A254 /* MUKMediaCarouselViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

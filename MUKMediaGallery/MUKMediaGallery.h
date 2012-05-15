@@ -19,3 +19,4 @@
 #import <MUKMediaGallery/MUKMediaCarouselView.h>
 
 #import <MUKMediaGallery/MUKMediaThumbnailsViewController.h>
+#import <MUKMediaGallery/MUKMediaCarouselViewController.h>

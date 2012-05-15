@@ -56,6 +56,12 @@
     return [self initWithNibName:nibNameOrNil bundle:nibBundleOrNil completion:nil];
 }
 
+- (void)dealloc {
+    [self detachHandlersFromThumbnailsView:self.thumbnailsView];
+}
+
+#pragma mark - 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -121,6 +127,8 @@
             [self.thumbnailsView scrollToTopAnimated:NO];
         }        
     }
+    
+    [self.thumbnailsView deselectSelectedMediaAsset];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -141,14 +149,41 @@
 
 - (void)attachHandlersToThumbnailsView:(MUKMediaThumbnailsView *)thumbnailsView
 {
+    __unsafe_unretained MUKMediaThumbnailsViewController *weakSelf = self;
+    
     thumbnailsView.thumbnailSelectionHandler = ^(NSInteger index)
     {
         // Push carousel
         isPushingCarousel_ = YES;
         
-        UIViewController *viewController = [[UIViewController alloc] init];
-        [self.navigationController pushViewController:viewController animated:YES];
+        MUKMediaCarouselViewController *viewController = [weakSelf newCarouselViewControllerToShowMediaAssetAtIndex:index];
+        
+        [weakSelf.navigationController pushViewController:viewController animated:YES];
     };
+}
+
+- (void)detachHandlersFromThumbnailsView:(MUKMediaThumbnailsView *)thumbnailsView
+{
+    thumbnailsView.thumbnailSelectionHandler = nil;
+}
+
+- (MUKMediaCarouselViewController *)newCarouselViewControllerToShowMediaAssetAtIndex:(NSInteger)index
+{
+    MUKMediaCarouselViewController *viewController = [[MUKMediaCarouselViewController alloc] initWithNibName:nil bundle:nil completion:^(MUKMediaCarouselViewController *vc) 
+    {
+        [self configureCarouselViewController:vc toShowMediaAssetAtIndex:index]; 
+    }];
+    
+    return viewController;
+}
+
+- (void)configureCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController toShowMediaAssetAtIndex:(NSInteger)index
+{
+    carouselViewController.carouselView.mediaAssets = self.thumbnailsView.mediaAssets;
+    carouselViewController.carouselView.thumbnailsFetcher.cache = self.thumbnailsView.thumbnailsFetcher.cache;
+    
+    [carouselViewController.carouselView scrollToMediaAssetAtIndex:index animated:NO];
+    [carouselViewController updateTitle];
 }
 
 #pragma mark - Private

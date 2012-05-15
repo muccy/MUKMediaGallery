@@ -158,9 +158,9 @@
 		060B1AC81551581A00454D72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0671974C1560FC730017EAC0 /* MediaPlayer.framework */,
 				060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */,
 				060B1B1B1551587C00454D72 /* Security.framework */,
+				0671974C1560FC730017EAC0 /* MediaPlayer.framework */,
 				060B1B131551587500454D72 /* libMUKNetworking.a */,
 				060B1B141551587500454D72 /* libMUKObjectCache.a */,
 				060B1B151551587500454D72 /* libMUKScrolling.a */,

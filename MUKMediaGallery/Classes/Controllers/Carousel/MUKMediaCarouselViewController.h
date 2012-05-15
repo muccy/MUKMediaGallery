@@ -24,25 +24,22 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <UIKit/UIKit.h>
-#import <MUKMediaGallery/MUKMediaThumbnailsView.h>
-#import <MUKMediaGallery/MUKMediaCarouselViewController.h>
+#import <MUKMediaGallery/MUKMediaCarouselView.h>
 
 /**
  View controller configured to play nicely with a 
- MUKMediaThumbnailsView instance.
+ MUKMediaCarouselView instance.
  
- This view controller is configured to request `fullScreenLayout`
- and automatically pushes a MUKMediaCarouselViewController instance
- onto navigation stack when a thumbnail is selected.
+ This view controller is configured to request `fullScreenLayout`.
  */
-@interface MUKMediaThumbnailsViewController : UIViewController
+@interface MUKMediaCarouselViewController : UIViewController
 /** @name Properties */
 /**
- Thumbnails view.
+ Carousel view.
  
  It is created in `viewDidLoad` implementation if it is still `nil`.
  */
-@property (nonatomic, strong) IBOutlet MUKMediaThumbnailsView *thumbnailsView;
+@property (nonatomic, strong) IBOutlet MUKMediaCarouselView *carouselView;
 /**
  Manages status bar and navigation bar transparency automatically.
  
@@ -55,7 +52,7 @@
  Designated initializer.
  
  This initializer is particulary useful if you want to customize
- an automatically loaded thumbnailsView, because completionHandler is
+ an automatically loaded carouselView, because completionHandler is
  invoked at bottom of `viewDidLoad` implementation.
  
  @param nibNameOrNil The name of the nib file to associate with the view 
@@ -69,48 +66,30 @@
  @param completionHandler Completion handler called when view is loaded.
  This handler is released after call, so don't mind to break retain cycles 
  in block.
- This handler is released after call, so don't mind retain cycles in block.
- @return A newly initialized MUKMediaThumbnailsViewController object.
+ @return A newly initialized MUKMediaCarouselViewController object.
  */
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil completion:(void (^)(MUKMediaThumbnailsViewController *viewController))completionHandler;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil completion:(void (^)(MUKMediaCarouselViewController *viewController))completionHandler;
 /**
- Attaches handlers to thumbnailsView.
+ Attaches handlers to carouselView.
  
  This method is called in `viewDidLoad`.
  
- @param thumbnailsView Affected thumbnails view.
+ @param carouselView Affected carousel view.
  */
-- (void)attachHandlersToThumbnailsView:(MUKMediaThumbnailsView *)thumbnailsView;
+- (void)attachHandlersToCarouselView:(MUKMediaCarouselView *)carouselView;
 /**
- Detaches handlers from thumbnailsView.
+ Detaches handlers from carouselView.
  
  This method is called in `dealloc`.
  
  You should use this method to clear every handler which has an
  unsafe unretained reference to `self`.
  
- @param thumbnailsView Affected thumbnails view.
+ @param carouselView Affected carousel view.
  */
-- (void)detachHandlersFromThumbnailsView:(MUKMediaThumbnailsView *)thumbnailsView;
+- (void)detachHandlersFromCarouselView:(MUKMediaCarouselView *)carouselView;
 /**
- Creates the carousel view controller to push onto navigation
- stack.
- 
- Default implementation creates a standard 
- MUKMediaCarouselViewController, calling 
- configureCarouselViewController:toShowMediaAssetAtIndex: in
- completion handler of default initalizer.
- 
- @param index Tapped media asset index.
- @return A newly initialized carousel view controller.
+ Updates title with current displayed media asset.
  */
-- (MUKMediaCarouselViewController *)newCarouselViewControllerToShowMediaAssetAtIndex:(NSInteger)index;
-/**
- Method which configures a carousel which will be pushed onto 
- navigation stack after a thumbanail has been tapped.
- 
- @param carouselViewController Carousel which will be pushed.
- @param index Tapped media asset index.
- */
-- (void)configureCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController toShowMediaAssetAtIndex:(NSInteger)index;
+- (void)updateTitle;
 @end
