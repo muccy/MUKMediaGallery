@@ -52,6 +52,7 @@ typedef enum {
  */
 - (MUKMediaAssetKind)mediaKind;
 
+
 @optional
 /**
  Thumbnail image for media.
@@ -67,5 +68,12 @@ typedef enum {
  @return URL of media.
  */
 - (NSURL *)mediaURL;
+/**
+ Compares recevier with mediaAsset.
+ 
+ @param mediaAsset Object to compare with receiver.
+ @return `YES` if two objects represent the same asset.
+ */
+- (BOOL)isEqualToMediaAsset:(id<MUKMediaAsset>)mediaAsset;
 
 @end

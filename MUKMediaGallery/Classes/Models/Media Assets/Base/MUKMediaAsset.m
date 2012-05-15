@@ -36,4 +36,22 @@
     return self.thumbnailURL;
 }
 
+- (BOOL)isEqualToMediaAsset:(id<MUKMediaAsset>)mediaAsset {
+    if ([self isEqual:mediaAsset]) return YES;
+    
+    // Check kinds
+    if ([self mediaKind] != [mediaAsset mediaKind]) return NO;
+    
+    // Compare mediaURLs
+    if ([self respondsToSelector:@selector(mediaURL)] &&
+        [mediaAsset respondsToSelector:@selector(mediaURL)])
+    {
+        if ([[self mediaURL] isEqual:[mediaAsset mediaURL]]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
 @end

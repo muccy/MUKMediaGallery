@@ -28,6 +28,9 @@
 /**
  A base class which implements MUKMediaAsset protocol.
  
+ It overrides [MUKMediaAsset isEqualToMediaAsset:] comparing
+ kinds and [MUKMediaAsset mediaURL] objects.
+ 
  @warning Instances return `MUKMediaAssetKindNone` responding to mediaKind
  invocation.
  */
