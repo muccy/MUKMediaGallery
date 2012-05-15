@@ -22,6 +22,7 @@
 - (BOOL)isLoadedMediaAssetAtIndex_:(NSInteger)index;
 
 - (void)loadVisibleMedias_;
+- (void)loadCurrentMedia_;
 
 - (MUKGridCellOptions *)cellOptionsForMediaAsset_:(id<MUKMediaAsset>)mediaAsset permitsZoomIfRequested_:(BOOL)permitsZoom;
 
