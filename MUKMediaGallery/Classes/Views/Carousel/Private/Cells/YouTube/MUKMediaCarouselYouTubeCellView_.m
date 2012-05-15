@@ -108,6 +108,7 @@
     
     if (!useWebView) {
         // Play asset in movie player
+        self.hacksTouchesManagement = YES;
         [super setMediaURL:mediaURL kind:MUKMediaAssetKindYouTubeVideo];
         
         [self.webView removeFromSuperview];
@@ -115,6 +116,7 @@
     }
     else {
         // Play asset in web view
+        self.hacksTouchesManagement = NO;
         
         if (![lastURL_ isEqual:mediaURL]) {
             // Prevent reloading

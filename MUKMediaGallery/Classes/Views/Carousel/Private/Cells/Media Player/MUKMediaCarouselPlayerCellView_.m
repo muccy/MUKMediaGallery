@@ -24,16 +24,41 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "MUKMediaCarouselPlayerCellView_.h"
+#import <MUKToolkit/MUKToolkit.h>
 
 @interface MUKMediaCarouselPlayerCellView_ ()
+@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGestureRecognizer_;
+
 @property (nonatomic) MUKMediaAssetKind lastKind_;
+
 - (CGRect)playerFrameForKind_:(MUKMediaAssetKind)kind;
 - (MPMovieSourceType)movieSourceTypeFromMediaURL_:(NSURL *)mediaURL;
 @end
 
-@implementation MUKMediaCarouselPlayerCellView_
+@interface MUKMediaCarouselPlayerCellView_ (LocalGestures_)
+- (void)handlePinch_:(UIPinchGestureRecognizer *)recognizer;
+@end
+
+@implementation MUKMediaCarouselPlayerCellView_ {
+    BOOL replicatingTouch_;
+}
 @synthesize moviePlayer = moviePlayer_;
 @synthesize lastKind_ = lastKind__;
+@synthesize pinchGestureRecognizer_ = pinchGestureRecognizer__;
+@synthesize hacksTouchesManagement = hacksTouchesManagement_;
+
+- (id)initWithFrame:(CGRect)frame recycleIdentifier:(NSString *)recycleIdentifier
+{
+    self = [super initWithFrame:frame recycleIdentifier:recycleIdentifier];
+    
+    if (self) {
+        hacksTouchesManagement_ = YES;
+        self.pinchGestureRecognizer_ = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch_:)];
+        [self addGestureRecognizer:self.pinchGestureRecognizer_];
+    }
+    
+    return self;
+}
 
 - (void)setMediaURL:(NSURL *)mediaURL kind:(MUKMediaAssetKind)kind {
     if (mediaURL == nil) return;
@@ -43,6 +68,7 @@
     if (moviePlayer_ == nil) {
         moviePlayer_ = [[MPMoviePlayerController alloc] initWithContentURL:mediaURL];
         moviePlayer_.shouldAutoplay = NO;
+        moviePlayer_.controlStyle = MPMovieControlStyleEmbedded;
         
         moviePlayer_.view.clipsToBounds = NO;
         moviePlayer_.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
@@ -75,6 +101,49 @@
     self.moviePlayer.view.frame = [self playerFrameForKind_:self.lastKind_];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    UIView *view;
+    
+    if (self.hacksTouchesManagement) {
+        if (self.lastKind_ == MUKMediaAssetKindAudio) {
+            view = [super hitTest:point withEvent:event];
+        }
+        else {
+            // Pass touches to movie player only on the bottom
+            static CGFloat const kControlsHeight = 40.0f;
+            
+            if (point.y > self.bounds.size.height - kControlsHeight)
+            {
+                view = [super hitTest:point withEvent:event];
+            }
+            else {
+                view = self;
+            }
+        }
+    }
+    else {
+        view = [super hitTest:point withEvent:event];
+    }
+    
+    return view;
+}
+
+//  Can't toggle programmatically commands
+//
+//- (void)reactToCellTap {
+//    MPMovieControlStyle mode = self.moviePlayer.controlStyle;
+//    
+//    // Toggle embedded <--> none
+//    if (mode == MPMovieControlStyleNone) {
+//        mode = MPMovieControlStyleEmbedded;
+//    }
+//    else {
+//        mode = MPMovieControlStyleNone;
+//    }
+//    
+//    self.moviePlayer.controlStyle = mode;
+//}
+
 #pragma mark - Private
 
 - (CGRect)playerFrameForKind_:(MUKMediaAssetKind)kind {
@@ -101,5 +170,15 @@
     
     return MPMovieSourceTypeUnknown; // downloadable or streaming?
 }  
+
+#pragma mark - Private: Local Gestures
+
+- (void)handlePinch_:(UIPinchGestureRecognizer *)recognizer {
+    if (self.hacksTouchesManagement) {
+        if (self.lastKind_ != MUKMediaAssetKindAudio) {
+            [self.moviePlayer setFullscreen:YES animated:YES];
+        }
+    }
+}
 
 @end
