@@ -44,6 +44,7 @@
 @property (nonatomic, strong) NSMutableIndexSet *loadedMediaIndexes_;
 @property (nonatomic, strong) PSYouTubeExtractor *youTubeExtractor_;
 @property (nonatomic) BOOL needsLoadingVisibleMedias_, notAnimatedScrolling_, overlayViewHidden_;
+@property (nonatomic) UIEdgeInsets overlayViewInsets_;
 
 - (void)commonInitialization_;
 - (void)attachGridHandlers_;
@@ -66,11 +67,13 @@
 @synthesize scrollHandler = scrollHandler_;
 @synthesize scrollCompletionHandler = scrollCompletionHandler_;
 @synthesize mediaAssetTappedHandler = mediaAssetTappedHandler_;
+@synthesize mediaAssetZoomedHandler = mediaAssetZoomedHandler_;
 
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
 @synthesize youTubeExtractor_ = youTubeExtractor__;
 @synthesize needsLoadingVisibleMedias_ = needsLoadingVisibleMedias__, notAnimatedScrolling_ = notAnimatedScrolling__, overlayViewHidden_ = overlayViewHidden__;
+@synthesize overlayViewInsets_ = overlayViewInsets__;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -234,6 +237,21 @@
     [cellView setOverlayViewHidden:hidden animated:animated];
 }
 
+- (UIEdgeInsets)overlayViewInsets {
+    return self.overlayViewInsets_;
+}
+
+- (void)setOverlayViewInsets:(UIEdgeInsets)insets animated:(BOOL)animated
+{
+    if (!UIEdgeInsetsEqualToEdgeInsets(self.overlayViewInsets_, insets))
+    {
+        self.overlayViewInsets_ = insets;
+        
+        MUKMediaCarouselCellView_ *cellView = (MUKMediaCarouselCellView_ *)[self.gridView_ cellViewAtIndex:[self currentMediaAssetIndex]];
+        [cellView setOverlayViewInsets:[self cellOverlayViewInsets_] animated:animated];
+    }
+}
+
 #pragma mark - Private
 
 - (void)commonInitialization_ {
@@ -246,6 +264,7 @@
     
     loadedMediaIndexes__ = [[NSMutableIndexSet alloc] init];
     gridView__ = [[MUKGridView alloc] initWithFrame:[self gridFrame_]];
+    overlayViewInsets__ = UIEdgeInsetsZero;
     
     self.gridView_.cellSize = [[MUKGridCellSize alloc] initWithSizeHandler:^ (CGSize containerSize)
     {
@@ -348,6 +367,10 @@
     
     self.gridView_.cellZoomHandler = ^(UIView<MUKRecyclable> *cellView, UIView *zoomedView, NSInteger cellIndex, float scale)
     {
+        if (weakSelf.mediaAssetZoomedHandler) {
+            weakSelf.mediaAssetZoomedHandler(cellIndex, scale);
+        }
+        
         if (weakSelf.togglesOverlayViewOnUserTouch) {
             if (ABS(scale - 1.0f) > 0.00001f) {
                 // Zoomed
@@ -453,15 +476,15 @@
 {
     // Clean cell
     cellView.backgroundColor = self.backgroundColor;
-    cellView.insets = UIEdgeInsetsMake(0, self.mediaOffset/2, 0, self.mediaOffset/2); 
-    [cellView setOverlayViewInsets:cellView.insets animated:NO];
+    cellView.insets = [self cellViewInsets_];
     
     // Associate with this media asset
     id<MUKMediaAsset> prevMediaAsset = cellView.mediaAsset;
     cellView.mediaAsset = mediaAsset;
     
-    // Adjust overlay view visibility
+    // Adjust overlay view
     [cellView setOverlayViewHidden:[self isOverlayViewHidden] animated:NO];
+    [cellView setOverlayViewInsets:[self cellOverlayViewInsets_] animated:NO];
     
     if (![self isLoadedMediaAssetAtIndex_:index]) {
         // Media is not loaded
@@ -652,6 +675,22 @@
             }
         }
     }
+}
+
+- (UIEdgeInsets)cellViewInsets_ {
+    return UIEdgeInsetsMake(0, self.mediaOffset/2, 0, self.mediaOffset/2);
+}
+
+- (UIEdgeInsets)cellOverlayViewInsets_ {
+    UIEdgeInsets cellInsets = [self cellViewInsets_];
+    
+    UIEdgeInsets cellOverlayInsets = self.overlayViewInsets_;
+    cellOverlayInsets.left += cellInsets.left;
+    cellOverlayInsets.top += cellInsets.top;
+    cellOverlayInsets.right += cellInsets.right;
+    cellOverlayInsets.bottom += cellInsets.bottom;
+    
+    return cellOverlayInsets;
 }
 
 #pragma mark - Private: Thumbnails

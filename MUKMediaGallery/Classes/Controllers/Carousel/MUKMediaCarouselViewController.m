@@ -34,6 +34,9 @@
 - (void)setBarsHidden_:(BOOL)hidden animated_:(BOOL)animated;
 - (BOOL)areBarsHidden_;
 
+- (UIEdgeInsets)carouselInset_;
+- (UIEdgeInsets)carouselInsetWithHiddenBars_:(BOOL)hiddenBars;
+
 - (void)registerToMoviePlayerNotifications_;
 - (void)unregisterFromMoviePlayerNotifications_;
 - (void)moviePlayerWillEnterFullscreenNotification_:(NSNotification *)notification;
@@ -83,6 +86,8 @@
         self.carouselView = [[MUKMediaCarouselView alloc] initWithFrame:self.view.bounds];
         self.carouselView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         self.carouselView.backgroundColor = self.view.backgroundColor;
+        self.carouselView.togglesOverlayViewOnUserTouch = NO;
+        
         [self.view addSubview:self.carouselView];
     }
     
@@ -125,6 +130,9 @@
             self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         }      
         
+        // Adjust inset
+        [self.carouselView setOverlayViewInsets:[self carouselInset_] animated:NO];
+        
         // Scroll again, if not portrait
         // Landscape is not detected in viewDidLoad
         [self.carouselView scrollToMediaAssetAtIndex:mediaAssetIndexAfterCompletion_ animated:NO];
@@ -144,7 +152,15 @@
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
     isRotating_ = YES;
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
+    
+    [self.carouselView setOverlayViewInsets:[self carouselInset_] animated:YES];
 }
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -179,6 +195,24 @@
         BOOL barsHidden = [weakSelf areBarsHidden_];
         [weakSelf setBarsHidden_:!barsHidden animated_:YES];
     };
+    
+    carouselView.mediaAssetZoomedHandler = ^(NSInteger index, float scale)
+    {
+        if (ABS(scale - 1.0f) > 0.00001f) {
+            // Zoomed
+            if ([weakSelf.carouselView isOverlayViewHidden] == NO) {
+                // Hide overlay
+                [weakSelf.carouselView setOverlayViewHidden:YES animated:YES];
+            }
+        }
+        else {
+            // Not zoomed
+            if ([weakSelf areBarsHidden_] == NO) {
+                // Show overlay if bars are visible
+                [weakSelf.carouselView setOverlayViewHidden:NO animated:YES];
+            }
+        }
+    };
 }
 
 - (void)detachHandlersFromCarouselView:(MUKMediaCarouselView *)carouselView
@@ -186,6 +220,7 @@
     carouselView.scrollCompletionHandler = nil;
     carouselView.scrollHandler = nil;
     carouselView.mediaAssetTappedHandler = nil;
+    carouselView.mediaAssetZoomedHandler = nil;
 }
 
 - (void)updateTitle {
@@ -215,6 +250,9 @@
     } completion:^(BOOL finished) {
         self.navigationController.navigationBarHidden = hidden;
     }];
+    
+    // Hide/Show overlay view
+    [self.carouselView setOverlayViewHidden:hidden animated:animated];
 }
 
 - (BOOL)areBarsHidden_ {
@@ -222,6 +260,30 @@
     BOOL statusBarHidden = [[UIApplication sharedApplication] isStatusBarHidden];
     
     return (navBarHidden && statusBarHidden);
+}
+
+- (UIEdgeInsets)carouselInset_ {
+    return [self carouselInsetWithHiddenBars_:[self areBarsHidden_]];
+}
+
+- (UIEdgeInsets)carouselInsetWithHiddenBars_:(BOOL)hiddenBars
+{
+    UIEdgeInsets inset = UIEdgeInsetsZero;
+    
+    if (!hiddenBars) {
+        CGFloat statusBarHeight;
+        if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation])) 
+        {
+            statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+        }
+        else {
+            statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.width;
+        }
+        
+        inset.top = statusBarHeight + self.navigationController.navigationBar.frame.size.height;
+    }
+    
+    return inset;
 }
 
 - (void)registerToMoviePlayerNotifications_ {

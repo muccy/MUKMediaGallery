@@ -28,4 +28,7 @@
 
 - (void)cleanHiddenCell_:(MUKMediaCarouselCellView_ *)cellView;
 
+- (UIEdgeInsets)cellViewInsets_;
+- (UIEdgeInsets)cellOverlayViewInsets_;
+
 @end

@@ -137,6 +137,10 @@
  Handler called when a media is tapped once.
  */
 @property (nonatomic, copy) void (^mediaAssetTappedHandler)(NSInteger index);
+/**
+ Handler called when a media is zoomed (at every zoom step).
+ */
+@property (nonatomic, copy) void (^mediaAssetZoomedHandler)(NSInteger index, float scale);
 
 /** @name Methods */
 /**
@@ -176,4 +180,10 @@
  @param animated `YES` if you want the transition to be animated.
  */
 - (void)setOverlayViewHidden:(BOOL)hidden animated:(BOOL)animated;
+/**
+ */
+- (UIEdgeInsets)overlayViewInsets;
+/**
+ */
+- (void)setOverlayViewInsets:(UIEdgeInsets)insets animated:(BOOL)animated;
 @end
