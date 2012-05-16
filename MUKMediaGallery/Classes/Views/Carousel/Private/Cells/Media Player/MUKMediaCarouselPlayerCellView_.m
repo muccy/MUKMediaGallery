@@ -128,6 +128,20 @@
     return view;
 }
 
+- (CGRect)captionLabelContainerFrameWithText:(NSString *)text
+{
+    CGRect frame = [super captionLabelContainerFrameWithText:text];
+    
+    // Put on top not to cover movie player commands
+    frame.origin = CGPointZero;
+    
+    return frame;
+}
+
+- (UIViewAutoresizing)captionLabelContainerAutoresizingMask {
+    return UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
+}
+
 //  Can't toggle programmatically commands
 //
 //- (void)reactToCellTap {

@@ -61,7 +61,7 @@
         CGRect captionContainerRect = [self captionLabelContainerFrameWithText:nil];
         self.captionLabelContainer = [[UIView alloc] initWithFrame:captionContainerRect];
         self.captionLabelContainer.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
-        self.captionLabelContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
+        self.captionLabelContainer.autoresizingMask = [self captionLabelContainerAutoresizingMask];
         [self.overlayView addSubview:self.captionLabelContainer];
         
         self.captionLabel = [[UILabel alloc] initWithFrame:CGRectInset(captionContainerRect, kCaptionLabelHPadding, kCaptionLabelVPadding)];
@@ -196,6 +196,7 @@
     CGSize size = [text sizeWithFont:[self captionFont] constrainedToSize:constrainSize lineBreakMode:[self captionLineBreakMode]];
     
     frame.size.height = size.height + kCaptionLabelVPadding * 2.0f;
+    frame.origin.y = self.overlayView.bounds.size.height - frame.size.height;
     
     return frame;
 }
@@ -219,6 +220,10 @@
 
 - (UILineBreakMode)captionLineBreakMode {
     return UILineBreakModeWordWrap;
+}
+
+- (UIViewAutoresizing)captionLabelContainerAutoresizingMask {
+    return UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleTopMargin;
 }
 
 @end

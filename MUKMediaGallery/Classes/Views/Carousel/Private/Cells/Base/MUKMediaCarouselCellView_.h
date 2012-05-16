@@ -81,11 +81,14 @@
 - (void)setOverlayViewHidden:(BOOL)hidden animated:(BOOL)animated;
 @end
 
-
+/*
+ On bottom
+ */
 @interface MUKMediaCarouselCellView_ (Caption)
 - (CGRect)captionLabelContainerFrameWithText:(NSString *)text;
 - (void)setCaptionText:(NSString *)text;
 - (UIFont *)captionFont;
 - (UILineBreakMode)captionLineBreakMode;
+- (UIViewAutoresizing)captionLabelContainerAutoresizingMask;
 @end
 
