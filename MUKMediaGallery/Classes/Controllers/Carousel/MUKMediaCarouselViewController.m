@@ -198,18 +198,22 @@
     
     carouselView.mediaAssetZoomedHandler = ^(NSInteger index, float scale)
     {
-        if (ABS(scale - 1.0f) > 0.00001f) {
-            // Zoomed
-            if ([weakSelf.carouselView isOverlayViewHidden] == NO) {
-                // Hide overlay
-                [weakSelf.carouselView setOverlayViewHidden:YES animated:YES];
+        // Adjust overlay view visibility
+        if ([weakSelf.carouselView shouldShowOverlayViewAtIndex:index]) {
+            // Overlay should be visibile
+            if (![weakSelf areBarsHidden_]) {
+                // Show if bar are visible
+                if ([weakSelf.carouselView isOverlayViewHidden]) {
+                    // Show if currently hidden
+                    [weakSelf.carouselView setOverlayViewHidden:NO animated:YES];
+                }
             }
         }
         else {
-            // Not zoomed
-            if ([weakSelf areBarsHidden_] == NO) {
-                // Show overlay if bars are visible
-                [weakSelf.carouselView setOverlayViewHidden:NO animated:YES];
+            // Overlay should be hidden
+            if (![weakSelf.carouselView isOverlayViewHidden]) {
+                // Hide if currently not hidden
+                [weakSelf.carouselView setOverlayViewHidden:YES animated:YES];
             }
         }
     };
@@ -252,7 +256,16 @@
     }];
     
     // Hide/Show overlay view
-    [self.carouselView setOverlayViewHidden:hidden animated:animated];
+    if (hidden) {
+        [self.carouselView setOverlayViewHidden:YES animated:animated];
+    }
+    else {
+        if ([self.carouselView shouldShowOverlayViewAtIndex:[self.carouselView currentMediaAssetIndex]])
+        {
+            [self.carouselView setOverlayViewInsets:[self carouselInsetWithHiddenBars_:NO] animated:NO];
+            [self.carouselView setOverlayViewHidden:NO animated:animated];
+        }
+    }
 }
 
 - (BOOL)areBarsHidden_ {

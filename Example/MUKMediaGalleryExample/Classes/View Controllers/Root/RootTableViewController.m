@@ -155,11 +155,13 @@
         MUKMediaImageAsset *remoteImageAsset = [[MUKMediaImageAsset alloc] init];
         remoteImageAsset.thumbnailURL = [NSURL URLWithString:@"http://farm5.staticflickr.com/4092/4988725775_23993fbb41_t.jpg"];
         remoteImageAsset.mediaURL = [NSURL URLWithString:@"http://farm5.staticflickr.com/4092/4988725775_23993fbb41_z.jpg"];
+        remoteImageAsset.caption = @"Creative Commons Surfing Image";
         [mediaAssets addObject:remoteImageAsset];
         
         MUKMediaVideoAsset *localVideoAsset = [[MUKMediaVideoAsset alloc] init];
         localVideoAsset.thumbnailURL = [MUK URLForImageFileNamed:@"sea-movie-thumbnail.jpg" bundle:nil];
         localVideoAsset.mediaURL = [[NSBundle mainBundle] URLForResource:@"sea" withExtension:@"mp4"];
+        localVideoAsset.caption = @"A local video asset downloaded from Flickr which has been recorded to be relaxing and entertaining";
         [mediaAssets addObject:localVideoAsset];
         
         MUKMediaVideoAsset *remoteVideoAsset = [[MUKMediaVideoAsset alloc] init];
@@ -169,6 +171,7 @@
         MUKMediaImageAsset *localImageAsset = [[MUKMediaImageAsset alloc] init];
         localImageAsset.thumbnailURL = [MUK URLForImageFileNamed:@"palms-thumbnail.jpg" bundle:nil];
         localImageAsset.mediaURL = [MUK URLForImageFileNamed:@"palms.jpg" bundle:nil];
+        localImageAsset.caption = @"A local photo which represents a palm. Palms are a popular tree in many North African countries which is used in many ways.";
         [mediaAssets addObject:localImageAsset];
         
         MUKMediaAudioAsset *localAudioAsset = [[MUKMediaAudioAsset alloc] init];

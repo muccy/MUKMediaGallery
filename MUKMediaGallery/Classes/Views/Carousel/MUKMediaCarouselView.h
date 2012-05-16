@@ -166,6 +166,9 @@
 
 @interface MUKMediaCarouselView (OverlayView)
 /**
+ */
+- (BOOL)shouldShowOverlayViewAtIndex:(NSInteger)index;
+/**
  Overlay view is hidden or not.
  
  By default overlay view is shown, so this method returns `NO`.

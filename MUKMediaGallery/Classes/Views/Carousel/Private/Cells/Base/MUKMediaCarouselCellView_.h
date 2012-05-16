@@ -39,6 +39,11 @@
  Overlay view (under the spinner)
  */
 @property (nonatomic, strong) UIView *overlayView;
+/*
+ Caption label (into overlay view)
+ */
+@property (nonatomic, strong) UIView *captionLabelContainer;
+@property (nonatomic, strong) UILabel *captionLabel;
 
 @property (nonatomic) UIEdgeInsets insets;
 @property (nonatomic, readonly) UIEdgeInsets overlayViewInsets;
@@ -75,3 +80,12 @@
 - (BOOL)isOverlayViewHidden;
 - (void)setOverlayViewHidden:(BOOL)hidden animated:(BOOL)animated;
 @end
+
+
+@interface MUKMediaCarouselCellView_ (Caption)
+- (CGRect)captionLabelContainerFrameWithText:(NSString *)text;
+- (void)setCaptionText:(NSString *)text;
+- (UIFont *)captionFont;
+- (UILineBreakMode)captionLineBreakMode;
+@end
+

@@ -107,6 +107,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    BOOL shouldScrollToTop = NO;
+    
     if (viewWillAppearCalled_ == NO) {
         viewWillAppearCalled_ = YES;
         
@@ -122,11 +124,16 @@
             hasTopPadding_ = (prevStatusBarStyle_ == UIStatusBarStyleBlackTranslucent && prevNavBarStyle_ == UIBarStyleBlackTranslucent);
         }
         
-        if (hasTopPadding_) {
-            self.thumbnailsView.topPadding = [self topPadding_];
-            [self.thumbnailsView scrollToTopAnimated:NO];
-        }        
+        shouldScrollToTop = hasTopPadding_;
     }
+    
+    if (hasTopPadding_) {
+        self.thumbnailsView.topPadding = [self topPadding_];
+        
+        if (shouldScrollToTop) {
+            [self.thumbnailsView scrollToTopAnimated:NO];
+        }
+    } 
     
     [self.thumbnailsView deselectSelectedMediaAsset];
 }

@@ -226,6 +226,20 @@
 
 #pragma mark - Overlay View
 
+- (BOOL)shouldShowOverlayViewAtIndex:(NSInteger)index {
+    float zoomScale = [self.gridView_ zoomScaleOfCellAtIndex:index];
+    if (ABS(zoomScale - 1.0f) > 0.0001f) {
+        // Zoomed 
+        return NO;
+    }
+    
+    if (![self isOverlayViewHidden]) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 - (BOOL)isOverlayViewHidden {
     return self.overlayViewHidden_;
 }
@@ -361,7 +375,16 @@
         
         // Adjust overlay view visibility
         if (weakSelf.togglesOverlayViewOnUserTouch) {
-            [weakSelf setOverlayViewHidden:![weakSelf isOverlayViewHidden] animated:YES];
+            if ([weakSelf shouldShowOverlayViewAtIndex:cellIndex]) {
+                if ([weakSelf isOverlayViewHidden]) {
+                    [weakSelf setOverlayViewHidden:NO animated:YES];
+                }
+            }
+            else {
+                if (![weakSelf isOverlayViewHidden]) {
+                    [weakSelf setOverlayViewHidden:YES animated:YES];
+                }
+            }
         }
     };
     
@@ -371,10 +394,15 @@
             weakSelf.mediaAssetZoomedHandler(cellIndex, scale);
         }
         
+        // Adjust overlay view visibility
         if (weakSelf.togglesOverlayViewOnUserTouch) {
-            if (ABS(scale - 1.0f) > 0.00001f) {
-                // Zoomed
-                if ([weakSelf isOverlayViewHidden] == NO) {
+            if ([weakSelf shouldShowOverlayViewAtIndex:cellIndex]) {
+                if ([weakSelf isOverlayViewHidden]) {
+                    [weakSelf setOverlayViewHidden:NO animated:YES];
+                }
+            }
+            else {
+                if (![weakSelf isOverlayViewHidden]) {
                     [weakSelf setOverlayViewHidden:YES animated:YES];
                 }
             }
@@ -485,6 +513,11 @@
     // Adjust overlay view
     [cellView setOverlayViewHidden:[self isOverlayViewHidden] animated:NO];
     [cellView setOverlayViewInsets:[self cellOverlayViewInsets_] animated:NO];
+    
+    // Set caption
+    if ([mediaAsset respondsToSelector:@selector(mediaCaption)]) {
+        [cellView setCaptionText:[mediaAsset mediaCaption]];
+    }
     
     if (![self isLoadedMediaAssetAtIndex_:index]) {
         // Media is not loaded

@@ -26,13 +26,17 @@
 #import "MUKMediaCarouselCellView_.h"
 #import <MUKToolkit/MUKToolkit.h>
 
+#define kCaptionLabelVPadding   2.0f
+#define kCaptionLabelHPadding   6.0f  
+
 @implementation MUKMediaCarouselCellView_ {
-    BOOL needsToCenterImage_;
-    BOOL overlayViewHidden_;
+    BOOL needsToCenterImage_, overlayViewHidden_, needsCaptionLayout_;
+    CGRect lastCaptionFrame_;
 }
 @synthesize imageView = imageView_;
 @synthesize activityIndicator = activityIndicator_;
-@synthesize overlayView = overlayView_;
+@synthesize overlayView = overlayView_, captionLabelContainer = captionLabelContainer_;
+@synthesize captionLabel = captionLabel_;
 @synthesize insets = insets_, overlayViewInsets = overlayViewInsets_;
 @synthesize mediaAsset = mediaAsset_;
 
@@ -51,6 +55,23 @@
         self.overlayView.userInteractionEnabled = NO;
         self.overlayView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self addSubview:self.overlayView];
+        
+        // Create caption label
+        lastCaptionFrame_ = CGRectZero;
+        CGRect captionContainerRect = [self captionLabelContainerFrameWithText:nil];
+        self.captionLabelContainer = [[UIView alloc] initWithFrame:captionContainerRect];
+        self.captionLabelContainer.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
+        self.captionLabelContainer.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
+        [self.overlayView addSubview:self.captionLabelContainer];
+        
+        self.captionLabel = [[UILabel alloc] initWithFrame:CGRectInset(captionContainerRect, kCaptionLabelHPadding, kCaptionLabelVPadding)];
+        self.captionLabel.backgroundColor = [UIColor clearColor];
+        self.captionLabel.font = [self captionFont];
+        self.captionLabel.lineBreakMode = [self captionLineBreakMode];
+        self.captionLabel.numberOfLines = 0;
+        self.captionLabel.textColor = [UIColor colorWithWhite:0.95f alpha:1.0f];
+        self.captionLabel.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+        [self.captionLabelContainer addSubview:self.captionLabel];
         
         // Create spinner
         self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
@@ -74,6 +95,16 @@
     if (needsToCenterImage_) {
         needsToCenterImage_ = NO;
         [self centerImage];
+    }
+    
+    if (needsCaptionLayout_ || 
+        !CGRectEqualToRect(lastCaptionFrame_, self.captionLabelContainer.frame))
+    {
+        // Re-layout because frame changed (rotation?)
+        self.captionLabelContainer.frame = [self captionLabelContainerFrameWithText:self.captionLabel.text];
+        
+        needsCaptionLayout_ = NO;
+        lastCaptionFrame_ = self.captionLabelContainer.frame;
     }
 }
 
@@ -144,6 +175,50 @@
                          self.overlayView.alpha = (hidden ? 0.0f : 1.0f);
                      } 
                      completion:nil];
+}
+
+#pragma mark - Caption
+
+- (CGRect)captionLabelContainerFrameWithText:(NSString *)text {
+    CGRect frame = self.overlayView.bounds;
+    
+    if ([text length] == 0) {
+        // If no text return a basic rect in order to set autoresizing properly
+        return frame;
+    }
+    
+    // It there is text, calculate a proper frame    
+    CGRect resizedFrame = frame;
+    resizedFrame.size.height *= 0.5f;
+    resizedFrame = CGRectInset(resizedFrame, kCaptionLabelHPadding, kCaptionLabelVPadding);
+    
+    CGSize constrainSize = resizedFrame.size;
+    CGSize size = [text sizeWithFont:[self captionFont] constrainedToSize:constrainSize lineBreakMode:[self captionLineBreakMode]];
+    
+    frame.size.height = size.height + kCaptionLabelVPadding * 2.0f;
+    
+    return frame;
+}
+
+- (void)setCaptionText:(NSString *)text {
+    self.captionLabel.text = text;
+    
+    if ([text length] == 0) {
+        self.captionLabelContainer.hidden = YES;
+    }
+    else {
+        self.captionLabelContainer.hidden = NO;
+        needsCaptionLayout_ = YES;
+        [self setNeedsLayout];
+    }
+}
+
+- (UIFont *)captionFont {
+    return [UIFont boldSystemFontOfSize:12.0f];
+}
+
+- (UILineBreakMode)captionLineBreakMode {
+    return UILineBreakModeWordWrap;
 }
 
 @end
