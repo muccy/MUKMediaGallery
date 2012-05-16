@@ -166,6 +166,10 @@
 
 @interface MUKMediaCarouselView (OverlayView)
 /**
+ Check conditions because overlay view should be shown.
+ 
+ @param index Index of media asset.
+ @return `YES` if overlay view should be shown.
  */
 - (BOOL)shouldShowOverlayViewAtIndex:(NSInteger)index;
 /**
@@ -184,9 +188,16 @@
  */
 - (void)setOverlayViewHidden:(BOOL)hidden animated:(BOOL)animated;
 /**
+ Current overlay view insets.
+ 
+ @return Current overlay view insets.
  */
 - (UIEdgeInsets)overlayViewInsets;
 /**
+ Set current overlay view insets.
+ 
+ @param insets Insets which will be set.
+ @param animated `YES` if new insets should be applied with an animation.
  */
 - (void)setOverlayViewInsets:(UIEdgeInsets)insets animated:(BOOL)animated;
 @end

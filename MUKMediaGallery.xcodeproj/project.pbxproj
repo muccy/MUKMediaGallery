@@ -28,7 +28,6 @@
 		06004968154C13BA004A3B17 /* libMUKMediaGallery.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06004950154C13BA004A3B17 /* libMUKMediaGallery.a */; };
 		060049DF154C1667004A3B17 /* MUKMediaGallery-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 060049DD154C1667004A3B17 /* MUKMediaGallery-Prefix.pch */; };
 		060049E0154C1667004A3B17 /* MUKMediaGallery.h in Headers */ = {isa = PBXBuildFile; fileRef = 060049DE154C1667004A3B17 /* MUKMediaGallery.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		060049E6154C168F004A3B17 /* MUKMediaGalleryTests-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 060049E3154C168F004A3B17 /* MUKMediaGalleryTests-Info.plist */; };
 		060049E7154C168F004A3B17 /* MUKMediaGalleryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 060049E5154C168F004A3B17 /* MUKMediaGalleryTests.m */; };
 		060049F0154C1781004A3B17 /* MUKMediaAssetProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 060049EF154C1781004A3B17 /* MUKMediaAssetProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		060049FB154C18FC004A3B17 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060049FA154C18FC004A3B17 /* CoreFoundation.framework */; };
@@ -876,7 +875,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				060049E6154C168F004A3B17 /* MUKMediaGalleryTests-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1047,6 +1045,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -1070,6 +1069,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_THUMB_SUPPORT = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -1088,6 +1088,7 @@
 				DSTROOT = /tmp/MUKMediaGallery.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MUKMediaGallery/MUKMediaGallery-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1100,6 +1101,7 @@
 				DSTROOT = /tmp/MUKMediaGallery.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MUKMediaGallery/MUKMediaGallery-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1115,6 +1117,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MUKMediaGallery/MUKMediaGallery-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "MUKMediaGallery/Unit Tests/MUKMediaGalleryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = octest;
@@ -1130,6 +1133,7 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MUKMediaGallery/MUKMediaGallery-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				INFOPLIST_FILE = "MUKMediaGallery/Unit Tests/MUKMediaGalleryTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = octest;
@@ -1139,6 +1143,7 @@
 		060049EA154C16C9004A3B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_THUMB_SUPPORT = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1146,6 +1151,7 @@
 		060049EB154C16C9004A3B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_THUMB_SUPPORT = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1156,6 +1162,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MUKMediaGalleryResources/MUKMediaGalleryResources-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "MUKMediaGalleryResources/MUKMediaGalleryResources-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
@@ -1174,6 +1181,7 @@
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MUKMediaGalleryResources/MUKMediaGalleryResources-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "MUKMediaGalleryResources/MUKMediaGalleryResources-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
