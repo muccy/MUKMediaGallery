@@ -35,8 +35,14 @@
  Spinner
  */
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
+/*
+ Overlay view (under the spinner)
+ */
+@property (nonatomic, strong) UIView *overlayView;
 
 @property (nonatomic) UIEdgeInsets insets;
+@property (nonatomic, readonly) UIEdgeInsets overlayViewInsets;
+
 @property (nonatomic, strong) id<MUKMediaAsset> mediaAsset;
 
 /*
@@ -59,4 +65,13 @@
  */
 - (void)setNeedsImageCentering;
 
+@end
+
+
+@interface MUKMediaCarouselCellView_ (Overlay)
+- (CGRect)overlayViewFrame;
+- (void)setOverlayViewInsets:(UIEdgeInsets)insets animated:(BOOL)animated;
+
+- (BOOL)isOverlayViewHidden;
+- (void)setOverlayViewHidden:(BOOL)hidden animated:(BOOL)animated;
 @end

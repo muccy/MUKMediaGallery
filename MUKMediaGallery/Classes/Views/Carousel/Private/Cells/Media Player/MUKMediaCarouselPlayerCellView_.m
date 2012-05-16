@@ -72,7 +72,7 @@
         
         moviePlayer_.view.clipsToBounds = NO;
         moviePlayer_.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin;
-        [self insertSubview:moviePlayer_.view belowSubview:self.activityIndicator];
+        [self insertSubview:moviePlayer_.view belowSubview:self.overlayView];
     }
     else {
         if (![self.moviePlayer.contentURL isEqual:mediaURL]) {

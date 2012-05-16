@@ -135,7 +135,7 @@
                 self.moviePlayer = nil;
                 
                 // Insert web view
-                [self insertSubview:webView_ belowSubview:self.activityIndicator];
+                [self insertSubview:webView_ belowSubview:self.overlayView];
             }
             else {
                 self.webView.frame = frame;

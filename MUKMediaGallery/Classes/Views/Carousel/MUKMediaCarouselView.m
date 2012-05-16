@@ -43,7 +43,7 @@
 @property (nonatomic, strong) MUKGridView *gridView_;
 @property (nonatomic, strong) NSMutableIndexSet *loadedMediaIndexes_;
 @property (nonatomic, strong) PSYouTubeExtractor *youTubeExtractor_;
-@property (nonatomic) BOOL needsLoadingVisibleMedias_, notAnimatedScrolling_;
+@property (nonatomic) BOOL needsLoadingVisibleMedias_, notAnimatedScrolling_, overlayViewHidden_;
 
 - (void)commonInitialization_;
 - (void)attachGridHandlers_;
@@ -61,6 +61,7 @@
 @synthesize mediaOffset = mediaOffset_;
 @synthesize imageMinimumZoomScale = imageMinimumZoomScale_, imageMaximumZoomScale = imageMaximumZoomScale_;
 @synthesize autoplaysMedias = autoplaysMedias_;
+@synthesize togglesOverlayViewOnUserTouch = togglesOverlayViewOnUserTouch_;
 
 @synthesize scrollHandler = scrollHandler_;
 @synthesize scrollCompletionHandler = scrollCompletionHandler_;
@@ -69,7 +70,7 @@
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
 @synthesize youTubeExtractor_ = youTubeExtractor__;
-@synthesize needsLoadingVisibleMedias_ = needsLoadingVisibleMedias__, notAnimatedScrolling_ = notAnimatedScrolling__;
+@synthesize needsLoadingVisibleMedias_ = needsLoadingVisibleMedias__, notAnimatedScrolling_ = notAnimatedScrolling__, overlayViewHidden_ = overlayViewHidden__;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -220,6 +221,19 @@
     }
 }
 
+#pragma mark - Overlay View
+
+- (BOOL)isOverlayViewHidden {
+    return self.overlayViewHidden_;
+}
+
+- (void)setOverlayViewHidden:(BOOL)hidden animated:(BOOL)animated {
+    self.overlayViewHidden_ = hidden;
+    
+    MUKMediaCarouselCellView_ *cellView = (MUKMediaCarouselCellView_ *)[self.gridView_ cellViewAtIndex:[self currentMediaAssetIndex]];
+    [cellView setOverlayViewHidden:hidden animated:animated];
+}
+
 #pragma mark - Private
 
 - (void)commonInitialization_ {
@@ -228,6 +242,7 @@
     purgesImagesMemoryCacheWhenReloading_ = YES;
     imageMinimumZoomScale_ = 1.0f;
     imageMaximumZoomScale_ = 3.0f;
+    togglesOverlayViewOnUserTouch_ = YES;
     
     loadedMediaIndexes__ = [[NSMutableIndexSet alloc] init];
     gridView__ = [[MUKGridView alloc] initWithFrame:[self gridFrame_]];
@@ -324,13 +339,23 @@
         if (weakSelf.mediaAssetTappedHandler) {
             weakSelf.mediaAssetTappedHandler(cellIndex);
         }
-//        
-//        MUKMediaCarouselCellView_ *cellView = (MUKMediaCarouselCellView_ *)[weakGridView cellViewAtIndex:cellIndex];
-//        if ([cellView isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]])
-//        {
-//            MUKMediaCarouselPlayerCellView_ *playerCell = (MUKMediaCarouselPlayerCellView_ *)cellView;
-//            [playerCell reactToCellTap];
-//        }
+        
+        // Adjust overlay view visibility
+        if (weakSelf.togglesOverlayViewOnUserTouch) {
+            [weakSelf setOverlayViewHidden:![weakSelf isOverlayViewHidden] animated:YES];
+        }
+    };
+    
+    self.gridView_.cellZoomHandler = ^(UIView<MUKRecyclable> *cellView, UIView *zoomedView, NSInteger cellIndex, float scale)
+    {
+        if (weakSelf.togglesOverlayViewOnUserTouch) {
+            if (ABS(scale - 1.0f) > 0.00001f) {
+                // Zoomed
+                if ([weakSelf isOverlayViewHidden] == NO) {
+                    [weakSelf setOverlayViewHidden:YES animated:YES];
+                }
+            }
+        }
     };
  
     self.gridView_.cellZoomViewHandler = ^UIView* (UIView<MUKRecyclable> *cellView, NSInteger index)
@@ -428,11 +453,15 @@
 {
     // Clean cell
     cellView.backgroundColor = self.backgroundColor;
-    cellView.insets = UIEdgeInsetsMake(0, self.mediaOffset/2, 0, self.mediaOffset/2);    
+    cellView.insets = UIEdgeInsetsMake(0, self.mediaOffset/2, 0, self.mediaOffset/2); 
+    [cellView setOverlayViewInsets:cellView.insets animated:NO];
     
     // Associate with this media asset
     id<MUKMediaAsset> prevMediaAsset = cellView.mediaAsset;
     cellView.mediaAsset = mediaAsset;
+    
+    // Adjust overlay view visibility
+    [cellView setOverlayViewHidden:[self isOverlayViewHidden] animated:NO];
     
     if (![self isLoadedMediaAssetAtIndex_:index]) {
         // Media is not loaded

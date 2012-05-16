@@ -114,6 +114,12 @@
  Default is `NO`.
  */
 @property (nonatomic) BOOL autoplaysMedias;
+/**
+ Show and hide overlay view on user touches.
+ 
+ Default is `YES`.
+ */
+@property (nonatomic) BOOL togglesOverlayViewOnUserTouch;
 
 /** @name Handlers */
 /**
@@ -151,4 +157,23 @@
  @param animated `YES` if you want to animate transition.
  */
 - (void)scrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated;
+@end
+
+
+@interface MUKMediaCarouselView (OverlayView)
+/**
+ Overlay view is hidden or not.
+ 
+ By default overlay view is shown, so this method returns `NO`.
+ 
+ @return `YES` if overlay view is hidden.
+ */
+- (BOOL)isOverlayViewHidden;
+/**
+ Hides or shows overlay view.
+ 
+ @param hidden `YES` if you want to hide overlay view.
+ @param animated `YES` if you want the transition to be animated.
+ */
+- (void)setOverlayViewHidden:(BOOL)hidden animated:(BOOL)animated;
 @end
