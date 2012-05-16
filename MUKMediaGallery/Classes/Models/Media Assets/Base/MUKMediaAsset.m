@@ -27,6 +27,7 @@
 
 @implementation MUKMediaAsset
 @synthesize thumbnailURL, mediaURL;
+@synthesize caption;
 
 - (MUKMediaAssetKind)mediaKind {
     return MUKMediaAssetKindNone;
@@ -52,6 +53,10 @@
     }
     
     return NO;
+}
+
+- (NSString *)mediaCaption {
+    return self.caption;
 }
 
 @end

@@ -47,4 +47,8 @@
  URL could either a file URL and a remote URL.
  */
 @property (nonatomic, strong) NSURL *mediaURL;
+/**
+ Caption text.
+ */
+@property (nonatomic, strong) NSString *caption;
 @end

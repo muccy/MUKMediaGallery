@@ -75,5 +75,9 @@ typedef enum {
  @return `YES` if two objects represent the same asset.
  */
 - (BOOL)isEqualToMediaAsset:(id<MUKMediaAsset>)mediaAsset;
+/**
+ Media caption text.
+ */
+- (NSString *)mediaCaption;
 
 @end
