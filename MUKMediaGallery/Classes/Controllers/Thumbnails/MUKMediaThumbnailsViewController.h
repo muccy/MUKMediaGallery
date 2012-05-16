@@ -50,6 +50,14 @@
  */
 @property (nonatomic) BOOL managesBarsTransparency;
 
+/** @name Handlers */
+/**
+ Handler used to configure newly pushed carousel view controller.
+ 
+ Use this handler, for example, in order to set file caching properly.
+ */
+@property (nonatomic, copy) void (^carouselConfigurator)(MUKMediaCarouselViewController *carouselViewController, NSInteger mediaAssetIndex);
+
 /** @name Methods */
 /**
  Designated initializer.
@@ -106,8 +114,15 @@
  */
 - (MUKMediaCarouselViewController *)newCarouselViewControllerToShowMediaAssetAtIndex:(NSInteger)index;
 /**
+ Carousel view controller configuration.
+ 
  Method which configures a carousel which will be pushed onto 
  navigation stack after a thumbanail has been tapped.
+ 
+ Default implementation transfers media assets array, thumbnails cache,
+ scrolls to media asset index and updates carousel view controller title.
+ 
+ After all it calls carouselConfigurator, if any.
  
  @param carouselViewController Carousel which will be pushed.
  @param index Tapped media asset index.

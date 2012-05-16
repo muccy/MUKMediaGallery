@@ -92,9 +92,29 @@
         row.selectionHandler = ^{
             ChainedViewController *viewController = [[ChainedViewController alloc] initWithNibName:nil bundle:nil completion:^(MUKMediaThumbnailsViewController *vc)
             {
+                NSURL *cacheContainer = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"Auto-Chained-Thumbs-Cache"];
+                
+                vc.thumbnailsView.usesThumbnailImageFileCache = YES;
+                vc.thumbnailsView.thumbnailsFetcher.cache.fileCacheURLHandler = ^(id key)
+                {
+                    NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:[key absoluteString] containerURL:cacheContainer];
+                    
+                    return cacheURL;
+                };
+                
                 vc.thumbnailsView.mediaAssets = [weakSelf standardMediaAssets_];
                 [vc.thumbnailsView reloadThumbnails];
             }];
+            
+            NSURL *cacheContainer = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"Auto-Chained-Full-Cache"];
+            viewController.carouselConfigurator = ^(MUKMediaCarouselViewController *carouselController, NSInteger index)
+            {
+                carouselController.carouselView.imagesFetcher.cache.fileCacheURLHandler = ^(id key)
+                {
+                    NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:[key absoluteString] containerURL:cacheContainer];
+                    return cacheURL;
+                };
+            };
             
             [weakSelf.navigationController pushViewController:viewController animated:YES];
         };

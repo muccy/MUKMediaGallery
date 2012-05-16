@@ -38,6 +38,8 @@
 }
 @synthesize thumbnailsView = thumbnailsView_;
 @synthesize managesBarsTransparency = managesBarsTransparency_;
+@synthesize carouselConfigurator = carouselConfigurator_;
+
 @synthesize completionHandler_ = completionHandler__;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil completion:(void (^)(MUKMediaThumbnailsViewController *))completionHandler
@@ -191,6 +193,10 @@
     
     [carouselViewController.carouselView scrollToMediaAssetAtIndex:index animated:NO];
     [carouselViewController updateTitle];
+    
+    if (self.carouselConfigurator) {
+        self.carouselConfigurator(carouselViewController, index);
+    }
 }
 
 #pragma mark - Private
