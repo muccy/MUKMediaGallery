@@ -66,6 +66,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
 
     if (self.thumbnailsView == nil) {
         self.thumbnailsView = [[MUKMediaThumbnailsView alloc] initWithFrame:self.view.bounds];

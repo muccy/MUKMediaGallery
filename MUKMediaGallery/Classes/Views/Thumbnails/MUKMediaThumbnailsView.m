@@ -100,6 +100,7 @@
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
     [super setBackgroundColor:backgroundColor];
     self.gridView_.backgroundColor = backgroundColor;
+    self.mediaAssetsCountView_.backgroundColor = backgroundColor;
 }
 
 #pragma mark - Accessors
@@ -605,6 +606,7 @@
 
 - (void)configureThumbnailCell_:(MUKMediaThumbnailView_ *)cell withMediaAsset_:(id<MUKMediaAsset>)mediaAsset atIndex_:(NSInteger)index
 {
+    cell.backgroundColor = self.backgroundColor;
     cell.imageOffset = self.thumbnailOffset;
     
     // Don't preserve selection
