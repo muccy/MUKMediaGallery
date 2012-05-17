@@ -449,7 +449,7 @@
             self.mediaAssetsCountView_ = [[MUKMediaThumbnailsCountView_ alloc] initWithFrame:CGRectMake(0, 0, 200, kMediaAssetsCountViewHeight)];
         } // if mediaAssetsCountView_ == nil
         
-        self.mediaAssetsCountView_.backgroundColor = self.backgroundColor;
+        self.mediaAssetsCountView_.backgroundColor = self.gridView_.backgroundColor;
         self.gridView_.tailView = self.mediaAssetsCountView_;
     } 
     

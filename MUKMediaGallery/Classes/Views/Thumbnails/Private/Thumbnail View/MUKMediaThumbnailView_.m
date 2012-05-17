@@ -30,29 +30,12 @@
 - (CGRect)containerViewFrame_;
 @end
 
-@implementation MUKMediaThumbnailView_ {
-    BOOL containerViewSetUp_;
-}
+@implementation MUKMediaThumbnailView_
 @synthesize imageView = imageView_, mediaKindImageView = mediaKindImageView_;
 @synthesize containerView = containerView_, bottomView = bottomView_, selectionOverlayView = selectionOverlayView_;
 @synthesize durationLabel = durationLabel_;
 @synthesize imageOffset = imageOffset_;
 @synthesize mediaAsset = mediaAsset_;
-
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    if (containerViewSetUp_ == NO) {        
-        self.containerView.layer.borderWidth = 1.0f;
-        self.containerView.layer.borderColor = [UIColor colorWithWhite:0.9f alpha:0.3f].CGColor;
-        
-        self.containerView.backgroundColor = [UIColor colorWithWhite:0.8f alpha:1.0f];
-        
-        containerViewSetUp_ = YES;
-    }
-}
-
 
 #pragma mark - Accessors
 
