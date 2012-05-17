@@ -31,6 +31,7 @@
 @interface RootTableViewController ()
 @property (nonatomic, strong) NSArray *rows_;
 - (NSArray *)standardMediaAssets_;
+- (NSArray *)remoteThumbnailsAssets_;
 @end
 
 @implementation RootTableViewController
@@ -71,10 +72,22 @@
         row.subtitle = @"MUKMediaThumbnailsView";
         row.selectionHandler = ^{
             ThumbnailsViewController *viewController = [[ThumbnailsViewController alloc] initWithNibName:nil bundle:nil];
+            viewController.usesFileCache = YES;
             viewController.mediaAssets = [weakSelf standardMediaAssets_];
             [weakSelf.navigationController pushViewController:viewController animated:YES];
         };
-        [rows addObject:row];  
+        [rows addObject:row]; 
+        
+        row = [[Row_ alloc] init];
+        row.title = @"Remote Thumbnails View";
+        row.subtitle = @"MUKMediaThumbnailsView";
+        row.selectionHandler = ^{
+            ThumbnailsViewController *viewController = [[ThumbnailsViewController alloc] initWithNibName:nil bundle:nil];
+            viewController.usesFileCache = NO;
+            viewController.mediaAssets = [weakSelf remoteThumbnailsAssets_];
+            [weakSelf.navigationController pushViewController:viewController animated:YES];
+        };
+        [rows addObject:row]; 
         
         row = [[Row_ alloc] init];
         row.title = @"Carousel View";
@@ -213,6 +226,56 @@
     }
     
     return mediaAssets;
+}
+
+- (NSArray *)remoteThumbnailsAssets_ {
+    NSArray *URLStrings = [[NSArray alloc] initWithObjects:
+                           @"http://farm8.staticflickr.com/7056/6859998891_38c6e8111f_t.jpg",
+                           @"http://farm7.staticflickr.com/6039/6327833811_16f34da1db_t.jpg",
+                           @"http://farm6.staticflickr.com/5470/7180036482_c2ece9b447_t.jpg",
+                           @"http://farm8.staticflickr.com/7189/7098047023_b603860d23_t.jpg",
+                           @"http://farm8.staticflickr.com/7014/6695011735_7fd1b9e32a_t.jpg",
+                           @"http://farm9.staticflickr.com/8006/7215377670_4c4c1c04b4_t.jpg",
+                           @"http://farm8.staticflickr.com/7084/7215352896_77d833cab0_t.jpg",
+                           @"http://farm6.staticflickr.com/5332/7215355798_5d6446cdf7_t.jpg",
+                           @"http://farm8.staticflickr.com/7081/7215188826_9eaaf57151_t.jpg",
+                           @"http://farm1.staticflickr.com/188/417924629_6832e79c98_t.jpg",
+                           @"http://farm4.staticflickr.com/3552/3284140306_35b859c620_t.jpg",
+                           @"http://farm2.staticflickr.com/1087/994551622_b3a4e2be32_t.jpg",
+                           @"http://farm4.staticflickr.com/3159/3019874112_769b607d2f_t.jpg",
+                           @"http://farm3.staticflickr.com/2361/2351000967_245c4d028d_t.jpg",
+                           @"http://farm3.staticflickr.com/2249/3005103471_3bd92e02e3_t.jpg",
+                           @"http://farm1.staticflickr.com/60/214965701_afa4d5f824_t.jpg",
+                           @"http://farm8.staticflickr.com/7213/6962165646_5cb8effa10_t.jpg",
+                           @"http://farm4.staticflickr.com/3255/3153346586_ae900be48a_t.jpg",
+                           @"http://farm4.staticflickr.com/3136/2745459668_659a5095ca_t.jpg",
+                           @"http://farm3.staticflickr.com/2334/2411062263_43b8965a00_t.jpg",
+                           @"http://farm3.staticflickr.com/2157/2232204467_7a22a0953d_t.jpg",
+                           @"http://farm3.staticflickr.com/2279/1750062309_6f1411539a_t.jpg",
+                           @"http://farm4.staticflickr.com/3444/3244546342_69910d9747_t.jpg",
+                           @"http://farm1.staticflickr.com/49/172843023_3bcd0d3a10_t.jpg",
+                           @"http://farm4.staticflickr.com/3044/2684002442_d7eb40735a_t.jpg",
+                           @"http://farm4.staticflickr.com/3338/3274183756_10411ace99_t.jpg",
+                           @"http://farm3.staticflickr.com/2267/2084104463_be10c746f0_t.jpg",
+                           @"http://farm6.staticflickr.com/5323/7007199108_f5461e738c_t.jpg",
+                           @"http://farm4.staticflickr.com/3327/5711422645_f36dc15bf8_t.jpg",
+                           @"http://farm8.staticflickr.com/7042/6975498429_b7308492f6_t.jpg",
+                           @"http://farm1.staticflickr.com/76/190531770_b02d2ff306_t.jpg",
+                           @"http://farm7.staticflickr.com/6201/6128326891_8d9e03a2d1_t.jpg",
+                           @"http://farm4.staticflickr.com/3300/3652077613_6d9d96b1f3_t.jpg",
+                           @"http://farm3.staticflickr.com/2234/2056165222_4593805e6d_t.jpg",
+                           @"http://farm5.staticflickr.com/4003/4253832484_282a868969_t.jpg",
+                           @"http://farm5.staticflickr.com/4053/5143024453_006c915c0d_t.jpg",
+                           nil];
+    
+    NSArray *assets = [MUK array:URLStrings map:^id(id obj, NSInteger index, BOOL *exclude, BOOL *stop) 
+    {
+        MUKMediaImageAsset *imageAsset = [[MUKMediaImageAsset alloc] init];
+        imageAsset.thumbnailURL = [[NSURL alloc] initWithString:obj];
+        return imageAsset;
+    }];
+    
+    return assets;
 }
 
 @end

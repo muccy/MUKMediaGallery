@@ -117,17 +117,6 @@
     return locations;
 }
 
-+ (MUKURLConnection *)assetResourceURLForSelector:(SEL)selector connectionForMediaAsset:(id<MUKMediaAsset>)mediaAsset
-{
-    NSURL *assetURL = [self assetResourceURLForSelector:selector mediaAsset:mediaAsset];
-    if (!assetURL) return nil;
-    
-    MUKURLConnection *connection = [MUKImageFetcher standardConnectionForImageAtURL:assetURL];
-    connection.userInfo = mediaAsset;
-    
-    return connection;
-}
-
 #pragma clang diagnostic pop
 
 #pragma mark - Thumbnails
@@ -155,11 +144,6 @@
     return [self assetResourceURLForSelector:@selector(mediaThumbnailURL) cacheLocationsForMediaAsset:mediaAsset memoryCache:memoryCache fileCache:fileCache];
 }
 
-+ (MUKURLConnection *)thumbnailConnectionForMediaAsset:(id<MUKMediaAsset>)mediaAsset
-{
-    return [self assetResourceURLForSelector:@selector(mediaThumbnailURL) connectionForMediaAsset:mediaAsset];
-}
-
 #pragma mark - Full Images
 
 + (UIImage *)userProvidedFullImageForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset provided:(BOOL *)provided
@@ -185,11 +169,6 @@
 + (MUKObjectCacheLocation)fullImageCacheLocationsForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache
 {
     return [self assetResourceURLForSelector:@selector(mediaURL) cacheLocationsForMediaAsset:mediaImageAsset memoryCache:memoryCache fileCache:fileCache];
-}
-
-+ (MUKURLConnection *)fullImageConnectionForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset
-{
-    return [self assetResourceURLForSelector:@selector(mediaURL) connectionForMediaAsset:mediaImageAsset];
 }
 
 #pragma mark - Media Assets

@@ -13,4 +13,6 @@
 @property (nonatomic, strong) IBOutlet MUKMediaThumbnailsView *thumbnailsView;
 
 @property (nonatomic, strong) NSArray *mediaAssets;
+@property (nonatomic) BOOL usesFileCache;
+
 @end

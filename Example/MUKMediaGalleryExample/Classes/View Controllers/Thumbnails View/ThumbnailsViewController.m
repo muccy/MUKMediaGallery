@@ -16,6 +16,7 @@
 @implementation ThumbnailsViewController
 @synthesize thumbnailsView = thumbnailsView_;
 @synthesize mediaAssets = mediaAssets_;
+@synthesize usesFileCache = usesFileCache_;
 
 - (void)dealloc {
     self.thumbnailsView.thumbnailSelectionHandler = nil;
@@ -28,7 +29,7 @@
     
     NSURL *containerURL = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"ThumbnailsViewExampleCache"];
     
-    self.thumbnailsView.usesThumbnailImageFileCache = YES;
+    self.thumbnailsView.usesThumbnailImageFileCache = self.usesFileCache;
     self.thumbnailsView.thumbnailsFetcher.cache.fileCacheURLHandler = ^(id key) 
     {
         NSString *URLString = [key absoluteString];
@@ -41,6 +42,18 @@
     
     self.thumbnailsView.thumbnailSelectionHandler = ^(NSInteger index) {
         NSLog(@"Selected media asset at index %i", index);
+    };
+    
+    self.thumbnailsView.thumbnailConnectionHandler = ^(id<MUKMediaAsset> mediaAsset, NSInteger index)
+    {
+        MUKURLConnection *connection = [MUKImageFetcher standardConnectionForImageAtURL:[mediaAsset mediaThumbnailURL]];
+        connection.runsInBackground = YES;
+        
+        NSMutableURLRequest *request = [connection.request mutableCopy];
+        request.cachePolicy = NSURLRequestReloadIgnoringLocalAndRemoteCacheData;
+        connection.request = request;
+        
+        return connection;
     };
     
     [self.thumbnailsView reloadThumbnails];

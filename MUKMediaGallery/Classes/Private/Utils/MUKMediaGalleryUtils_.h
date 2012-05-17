@@ -26,7 +26,6 @@
 + (MUKImageFetcherSearchDomain)assetResourceURLForSelector:(SEL)selctor searchDomainsForMediaAsset:(id<MUKMediaAsset>)mediaAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache file:(BOOL)file remote:(BOOL)remote;
 + (MUKObjectCacheLocation)assetResourceURLForSelector:(SEL)selector cacheLocationsForMediaAsset:(id<MUKMediaAsset>)mediaAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache;
 
-+ (MUKURLConnection *)assetResourceURLForSelector:(SEL)selector connectionForMediaAsset:(id<MUKMediaAsset>)mediaAsset;
 @end
 
 @interface MUKMediaGalleryUtils_ (Thumbnails)
@@ -38,7 +37,6 @@
 + (MUKImageFetcherSearchDomain)thumbnailSearchDomainsForMediaAsset:(id<MUKMediaAsset>)mediaAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache file:(BOOL)file remote:(BOOL)remote;
 + (MUKObjectCacheLocation)thumbnailCacheLocationsForMediaAsset:(id<MUKMediaAsset>)mediaAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache;
 
-+ (MUKURLConnection *)thumbnailConnectionForMediaAsset:(id<MUKMediaAsset>)mediaAsset;
 @end
 
 @interface MUKMediaGalleryUtils_ (FullImages)
@@ -50,7 +48,6 @@
 + (MUKImageFetcherSearchDomain)fullImageSearchDomainsForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache file:(BOOL)file remote:(BOOL)remote;
 + (MUKObjectCacheLocation)fullImageCacheLocationsForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset memoryCache:(BOOL)memoryCache fileCache:(BOOL)fileCache;
 
-+ (MUKURLConnection *)fullImageConnectionForMediaImageAsset:(id<MUKMediaImageAsset>)mediaImageAsset;
 @end
 
 @interface MUKMediaGalleryUtils_ (MediaAssets)

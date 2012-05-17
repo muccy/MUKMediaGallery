@@ -60,6 +60,7 @@
 @synthesize showsSelection = showsSelection_;
 
 @synthesize thumbnailSelectionHandler = thumbnailSelectionHandler_;
+@synthesize thumbnailConnectionHandler = thumbnailConnectionHandler_;
 
 @synthesize mediaAssetsCountView_ = mediaAssetsCountView__;
 @synthesize gridView_ = gridView__;
@@ -399,7 +400,15 @@
         
         MUKURLConnection *connection = nil;
         if (!onlyFromMemory) {
-            connection = [MUKMediaGalleryUtils_ thumbnailConnectionForMediaAsset:mediaAsset];
+            if (self.thumbnailConnectionHandler) {
+                connection = self.thumbnailConnectionHandler(mediaAsset, index);
+            }
+            
+            if (connection == nil) {
+                connection = [MUKImageFetcher standardConnectionForImageAtURL:thumbnailURL];
+            }
+            
+            connection.userInfo = mediaAsset;
         }
         
 #if DEBUG_LOAD_THUMBNAIL

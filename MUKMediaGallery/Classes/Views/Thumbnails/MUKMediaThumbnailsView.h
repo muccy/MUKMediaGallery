@@ -113,8 +113,17 @@
 
 /** @name Handlers */
 /**
+ Handler called when a thumbnail is selected.
  */
 @property (nonatomic, copy) void (^thumbnailSelectionHandler)(NSInteger index);
+/**
+ Handler called to create a connection to download a thumbnail.
+ 
+ Return `nil` in order to use a standard connection.
+ 
+ @warning [MUKURLConnection userInfo] will be overwritten with `mediaAsset`.
+ */
+@property (nonatomic, copy) MUKURLConnection* (^thumbnailConnectionHandler)(id<MUKMediaAsset> mediaAsset, NSInteger index);
 
 /** @name Methods */
 /**

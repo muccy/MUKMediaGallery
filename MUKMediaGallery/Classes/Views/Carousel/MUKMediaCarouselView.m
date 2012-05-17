@@ -68,6 +68,7 @@
 @synthesize scrollCompletionHandler = scrollCompletionHandler_;
 @synthesize mediaAssetTappedHandler = mediaAssetTappedHandler_;
 @synthesize mediaAssetZoomedHandler = mediaAssetZoomedHandler_;
+@synthesize imageConnectionHandler = imageConnectionHandler_;
 
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
@@ -795,7 +796,15 @@
         
         MUKURLConnection *connection = nil;
         if (!onlyFromMemory) {
-            connection = [MUKMediaGalleryUtils_ fullImageConnectionForMediaImageAsset:mediaImageAsset];
+            if (self.imageConnectionHandler) {
+                connection = self.imageConnectionHandler(mediaImageAsset, index);
+            }
+            
+            if (connection == nil) {
+                connection = [MUKImageFetcher standardConnectionForImageAtURL:imageURL];
+            }
+            
+            connection.userInfo = mediaImageAsset;
         }
         
         __unsafe_unretained MUKMediaCarouselView *weakSelf = self;

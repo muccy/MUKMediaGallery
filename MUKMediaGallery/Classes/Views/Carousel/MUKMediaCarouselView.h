@@ -30,6 +30,7 @@
 /**
  A view which displays a paginated carousel of medias.
  */
+@protocol MUKMediaImageAsset;
 @interface MUKMediaCarouselView : UIView
 /** @name Properties */
 /**
@@ -141,6 +142,14 @@
  Handler called when a media is zoomed (at every zoom step).
  */
 @property (nonatomic, copy) void (^mediaAssetZoomedHandler)(NSInteger index, float scale);
+/**
+ Handler called to create a connection used to download full asset image.
+ 
+ Return `nil` if you want to use a standard connection.
+ 
+ @warning [MUKURLConnection userInfo] will be overwritten with `mediaImageAsset`.
+ */
+@property (nonatomic, copy) MUKURLConnection* (^imageConnectionHandler)(id<MUKMediaImageAsset> mediaImageAsset, NSInteger index);
 
 /** @name Methods */
 /**
