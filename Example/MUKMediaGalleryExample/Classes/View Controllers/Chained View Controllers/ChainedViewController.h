@@ -9,5 +9,5 @@
 #import <MUKMediaGallery/MUKMediaGallery.h>
 
 @interface ChainedViewController : MUKMediaThumbnailsViewController
-
+@property (nonatomic, copy) void (^doneHandler)(void);
 @end

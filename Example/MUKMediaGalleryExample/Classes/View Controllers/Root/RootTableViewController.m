@@ -32,6 +32,7 @@
 @property (nonatomic, strong) NSArray *rows_;
 - (NSArray *)standardMediaAssets_;
 - (NSArray *)remoteThumbnailsAssets_;
+- (ChainedViewController *)newChainedViewControllerWithLoadingInterval_:(NSTimeInterval)loadingInterval;
 @end
 
 @implementation RootTableViewController
@@ -103,35 +104,40 @@
         row.title = @"Auto-Chained";
         row.subtitle = @"MUKMediaThumbnailsViewController";
         row.selectionHandler = ^{
-            ChainedViewController *viewController = [[ChainedViewController alloc] initWithNibName:nil bundle:nil completion:^(MUKMediaThumbnailsViewController *vc)
-            {
-                NSURL *cacheContainer = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"Auto-Chained-Thumbs-Cache"];
-                
-                vc.thumbnailsView.usesThumbnailImageFileCache = YES;
-                vc.thumbnailsView.thumbnailsFetcher.cache.fileCacheURLHandler = ^(id key)
-                {
-                    NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:[key absoluteString] containerURL:cacheContainer];
-                    
-                    return cacheURL;
-                };
-                
-                vc.thumbnailsView.mediaAssets = [weakSelf standardMediaAssets_];
-                [vc.thumbnailsView reloadThumbnails];
-            }];
-            
-            NSURL *cacheContainer = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"Auto-Chained-Full-Cache"];
-            viewController.carouselConfigurator = ^(MUKMediaCarouselViewController *carouselController, NSInteger index)
-            {
-                carouselController.carouselView.imagesFetcher.cache.fileCacheURLHandler = ^(id key)
-                {
-                    NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:[key absoluteString] containerURL:cacheContainer];
-                    return cacheURL;
-                };
-            };
-            
+            ChainedViewController *viewController = [weakSelf newChainedViewControllerWithLoadingInterval_:0.0];            
             [weakSelf.navigationController pushViewController:viewController animated:YES];
         };
         [rows addObject:row];  
+        
+        row = [[Row_ alloc] init];
+        row.title = @"Auto-Chained (Modal)";
+        row.subtitle = @"MUKMediaThumbnailsViewController";
+        row.selectionHandler = ^{
+            ChainedViewController *viewController = [weakSelf newChainedViewControllerWithLoadingInterval_:0.0];      
+            viewController.doneHandler = ^{
+                [weakSelf dismissViewControllerAnimated:YES completion:nil];
+            };
+            
+            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+            
+            navController.modalPresentationStyle = UIModalPresentationFullScreen;
+            viewController.modalPresentationStyle = navController.modalPresentationStyle;
+            
+            navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            viewController.modalTransitionStyle = navController.modalTransitionStyle;
+            
+            [weakSelf presentViewController:navController animated:YES completion:nil];
+        };
+        [rows addObject:row];  
+        
+        row = [[Row_ alloc] init];
+        row.title = @"Auto-Chained (Deferred)";
+        row.subtitle = @"MUKMediaThumbnailsViewController";
+        row.selectionHandler = ^{
+            ChainedViewController *viewController = [weakSelf newChainedViewControllerWithLoadingInterval_:2.0];            
+            [weakSelf.navigationController pushViewController:viewController animated:YES];
+        };
+        [rows addObject:row]; 
         
         rows__ = rows;
     }
@@ -276,6 +282,40 @@
     }];
     
     return assets;
+}
+
+- (ChainedViewController *)newChainedViewControllerWithLoadingInterval_:(NSTimeInterval)loadingInteval
+{
+    ChainedViewController *viewController = [[ChainedViewController alloc] initWithNibName:nil bundle:nil completion:^(MUKMediaThumbnailsViewController *vc)
+    {
+        NSURL *cacheContainer = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"Auto-Chained-Thumbs-Cache"];
+         
+        vc.thumbnailsView.usesThumbnailImageFileCache = YES;
+        vc.thumbnailsView.thumbnailsFetcher.cache.fileCacheURLHandler = ^(id key)
+        {
+            NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:[key absoluteString] containerURL:cacheContainer];
+             
+            return cacheURL;
+        };
+         
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, loadingInteval * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            vc.thumbnailsView.mediaAssets = [self standardMediaAssets_];
+            [vc.thumbnailsView reloadThumbnails];
+        });
+    }];
+    
+    NSURL *cacheContainer = [[MUK URLForTemporaryDirectory] URLByAppendingPathComponent:@"Auto-Chained-Full-Cache"];
+    viewController.carouselConfigurator = ^(MUKMediaCarouselViewController *carouselController, NSInteger index)
+    {
+        carouselController.carouselView.imagesFetcher.cache.fileCacheURLHandler = ^(id key)
+        {
+            NSURL *cacheURL = [MUKObjectCache standardFileCacheURLForStringKey:[key absoluteString] containerURL:cacheContainer];
+            return cacheURL;
+        };
+    };
+    
+    return viewController;
 }
 
 @end
