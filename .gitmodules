@@ -10,3 +10,6 @@
 [submodule "Submodules/PSYouTubeExtractor"]
 	path = Submodules/PSYouTubeExtractor
 	url = git://github.com/steipete/PSYouTubeExtractor.git
+[submodule "Submodules/MUKToolkit"]
+	path = Submodules/MUKToolkit
+	url = git://github.com/muccy/MUKToolkit.git
