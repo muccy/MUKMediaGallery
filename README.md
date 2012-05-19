@@ -45,19 +45,26 @@ Please remember not to create a copy of files while adding project: you only nee
 
 <img src="http://i.imgur.com/pCUIQ.png" />
 
+Now disclose `MUKMediaGallery.xcodeproj` and drag contents of `Dependencies` folder to your project. With this step you are adding `MUKMediaGallery` dependencies. If your project already contains dependencies please take care to use updated libraries.
+
+<img src="http://i.imgur.com/67t0P.png" />
 
 #### Step 2: make your project dependent
 Click on your project and, then, your app target:
 
-<img src="http://i.imgur.com/WQeZZ.png" />
+<img src="http://i.imgur.com/J10tA.png" />
 
-Add dependency clicking on + button in *Target Dependencies* pane, choosing static library target (`MUKMediaGallery`) and resources bundle target (`MUKMediaGaleryResources`):
+Add dependency clicking on + button in *Target Dependencies* pane and choosing static library target (`MUKMediaGallery`), resources bundle target (`MUKMediaGalleryResources`) and its dependencies (`MUKToolkit`, `MUKObjectCache`, `MUKNetworking` and `MUKScrolling`):
 
-<img src="http://i.imgur.com/3fdiP.png" />
+<img src="http://i.imgur.com/oaXaS.png" />
 
-Link your project clicking on + button in *Link binary with Libraries* pane and choosing static library product (`libMUKMediaGallery.a`). Link also submodule dependencies (`libMUKNetworking.a`, `MUKObjectCache.a`, `libMUKScrolling.a` and `libMUKToolkit.a`):
+Link your project clicking on + button in *Link binary with Libraries* pane and choosing static library product (`libMUKMediaGallery.a`). Link also submodule dependencies (`libMUKNetworking.a`, `MUKObjectCache.a`, `libMUKScrolling.a`):
 
-<img src="http://i.imgur.com/8qmWK.png" />
+<img src="http://i.imgur.com/7xpw9.png" />
+
+To link the correct `libMUKToolkit.a` disclose the imported `MUKToolkit.xcodeproj` and drag `libMUKToolkit.a` in `Products` folder:
+
+<img src="http://i.imgur.com/gy7ZC.png" />
 
 #### Step 3: link required frameworks
 You need to link those frameworks:
@@ -70,32 +77,25 @@ You need to link those frameworks:
 
 To do so you only need to click on + button in *Link binary with Libraries* pane and you can choose them. Tipically you only need to add `Security` and `MediaPlayer`:
 
-<img src="http://i.imgur.com/q0SUB.png" />
-
-<img src="http://i.imgur.com/p9XZh.png" />
+<img src="http://i.imgur.com/q0SUB.png" /> <img src="http://i.imgur.com/p9XZh.png" />
 
 #### Step 4: add required files
-You need to add great [PSYouTubeExtractor] (*thanks to steipete for this*), because media gallery carousel uses it in order to display YouTube videos in a native movie player.
 
-Just drag `PSYouTubeExtractor` folder from added `MUKMediaGallery.xcodeproj` to your project:
+You need a resources bundle: drag it from `Products` folder in added `MUKMediaGallery.xcodeproj` to `Copy Bundle Resources` build phase of your project target:
 
-<img src="http://i.imgur.com/LxJb9.png" />
-
-You also need a resources bundle: drag it from `Products` folder in added `MUKMediaGallery.xcodeproj` to `Copy Bundle Resources` build phase of your project target:
-
-<img src="http://i.imgur.com/AHuge.png" />
+<img src="http://i.imgur.com/cKSbf.png" />
 
 #### Step 5: load categories
 In order to load every method in `MUKToolkit` dependency you need to insert `-ObjC` flag to `Other Linker Flags` in *Build Settings* of your project.
 
-<img src="http://i.imgur.com/PWWOs.png" /> 
+<img src="http://i.imgur.com/u9OUD.png" /> 
 
 
 #### Step 6: import headers
 You only need to write `#import <MUKMediaGallery/MUKMediaGallery.h>` when you need headers.
 You can also import `MUKMediaGallery` headers in your `pch` file:
 
-<img src="http://i.imgur.com/8UA1Y.png" />
+<img src="http://i.imgur.com/8UA1Y.png?1" />
 
 
 Documentation
@@ -140,4 +140,3 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [PSYouTubeExtractor]: https://github.com/steipete/PSYouTubeExtractor
 [jverkoey iOS Framework]: https://github.com/jverkoey/iOS-Framework
 [appledoc]: https://github.com/tomaz/appledoc
-
