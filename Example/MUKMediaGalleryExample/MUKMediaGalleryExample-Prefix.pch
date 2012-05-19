@@ -11,4 +11,10 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
+
+    #import <MUKMediaGallery/MUKMediaGallery.h>
+    #import <MUKToolkit/MUKToolkit.h>
+    #import <MUKNetworking/MUKNetworking.h>
+    #import <MUKObjectCache/MUKObjectCache.h>
+    #import <MUKScrolling/MUKScrolling.h>
 #endif

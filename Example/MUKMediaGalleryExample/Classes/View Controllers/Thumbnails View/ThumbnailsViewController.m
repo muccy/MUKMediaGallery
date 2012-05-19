@@ -7,7 +7,6 @@
 //
 
 #import "ThumbnailsViewController.h"
-#import <MUKToolkit/MUKToolkit.h>
 
 @interface ThumbnailsViewController ()
 

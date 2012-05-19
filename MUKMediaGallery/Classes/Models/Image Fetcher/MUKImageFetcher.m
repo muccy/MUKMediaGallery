@@ -24,8 +24,9 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "MUKImageFetcher.h"
-#import <MUKToolkit/MUKToolkit.h>
 #import "MUKImageFetcherURLConnectionQueue_.h"
+
+#import <MUKToolkit/MUKToolkit.h>
 
 @interface MUKImageFetcher ()
 - (id<NSCopying>)cacheKeyForImageURL_:(NSURL *)imageURL;

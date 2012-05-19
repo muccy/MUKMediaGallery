@@ -1,7 +1,5 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import <MUKObjectCache/MUKObjectCache.h>
-#include <MUKNetworking/MUKNetworking.h>
 
 #import <MUKMediaGallery/MUKImageFetcher.h>
 

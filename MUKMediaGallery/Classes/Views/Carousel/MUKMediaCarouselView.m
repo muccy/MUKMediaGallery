@@ -27,6 +27,8 @@
 #import "MUKMediaCarouselView_Thumbnails.h"
 
 #import <MUKScrolling/MUKScrolling.h>
+#import <MUKNetworking/MUKNetworking.h>
+
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaGalleryImageFetcher_.h"
 #import "PSYouTubeExtractor.h"

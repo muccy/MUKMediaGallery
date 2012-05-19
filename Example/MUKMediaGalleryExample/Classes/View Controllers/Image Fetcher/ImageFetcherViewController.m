@@ -7,8 +7,6 @@
 //
 
 #import "ImageFetcherViewController.h"
-#import <MUKMediaGallery/MUKMediaGallery.h>
-#import <MUKToolkit/MUKToolkit.h>
 
 @interface ImageFetcherPhoto_ : NSObject 
 @property (nonatomic, strong) NSURL *URL;

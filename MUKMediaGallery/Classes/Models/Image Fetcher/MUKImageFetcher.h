@@ -25,7 +25,6 @@
 
 #import <UIKit/UIKit.h>
 #import <MUKObjectCache/MUKObjectCache.h>
-#include <MUKNetworking/MUKNetworking.h>
 
 typedef enum {
     MUKImageFetcherSearchDomainNone         =   0,
@@ -67,6 +66,7 @@ typedef enum {
  * `MUKImageFetcherSearchDomainEverywhere` searches for image everywhere, both
  locally and on network.
  */
+@class MUKURLConnectionQueue, MUKURLConnection;
 @interface MUKImageFetcher : NSObject
 /** @name Properties */
 /**

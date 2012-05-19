@@ -31,6 +31,8 @@
 
 #import <MUKScrolling/MUKScrolling.h>
 #import <MUKToolkit/MUKToolkit.h>
+#import <MUKNetworking/MUKNetworking.h>
+
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaVideoAssetProtocol.h"
 #import "MUKMediaGalleryImageFetcher_.h"
