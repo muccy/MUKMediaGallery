@@ -45,9 +45,11 @@ Please remember not to create a copy of files while adding project: you only nee
 
 <img src="http://i.imgur.com/pCUIQ.png" />
 
-Now disclose `MUKMediaGallery.xcodeproj` and drag contents of `Dependencies` folder to your project. With this step you are adding `MUKMediaGallery` dependencies. If your project already contains dependencies please take care to use updated libraries.
+Now add `MUKToolkit.xcodeproj`, `MUKObjectCache.xcodeproj`, `MUKNetworking.xcodeproj` and `MUKScrolling.xcodeproj` by choosing those projects from `Submodules/MUKToolkit`. With this step you are adding `MUKMediaGallery` dependencies. If your project already contains dependencies please take care to use updated libraries.
 
-<img src="http://i.imgur.com/67t0P.png" />
+Please add also [PSYouTubeExtractor] required files (thanks steipete for you great job).
+
+<img src="http://i.imgur.com/xojf5.png" />
 
 #### Step 2: make your project dependent
 Click on your project and, then, your app target:
@@ -140,3 +142,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [PSYouTubeExtractor]: https://github.com/steipete/PSYouTubeExtractor
 [jverkoey iOS Framework]: https://github.com/jverkoey/iOS-Framework
 [appledoc]: https://github.com/tomaz/appledoc
+

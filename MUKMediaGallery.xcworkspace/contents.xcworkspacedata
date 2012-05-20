@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "container:"
+      name = "Dependencies">
+      <FileRef
+         location = "group:Submodules/MUKNetworking/MUKNetworking.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Submodules/MUKObjectCache/MUKObjectCache.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Submodules/MUKScrolling/MUKScrolling.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Submodules/MUKToolkit/MUKToolkit.xcodeproj">
+      </FileRef>
+   </Group>
+   <FileRef
+      location = "group:MUKMediaGallery.xcodeproj">
+   </FileRef>
+</Workspace>

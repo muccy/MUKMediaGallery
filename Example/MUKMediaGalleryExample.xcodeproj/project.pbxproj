@@ -28,12 +28,12 @@
 		06A93C5D155A67E90083CFE4 /* ImageFetcherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C5C155A67E90083CFE4 /* ImageFetcherViewController.m */; };
 		06D07285156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 06D07284156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 */; };
 		06D072DB15618E91000296C3 /* ChainedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D072D915618E91000296C3 /* ChainedViewController.m */; };
+		06EEEF1E156953540090EE76 /* libMUKMediaGallery.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B031551584400454D72 /* libMUKMediaGallery.a */; };
+		06EEEF1F156953540090EE76 /* libMUKNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1BF51567933F0040DA06 /* libMUKNetworking.a */; };
+		06EEEF20156953540090EE76 /* libMUKObjectCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1BFC1567933F0040DA06 /* libMUKObjectCache.a */; };
+		06EEEF21156953540090EE76 /* libMUKScrolling.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1C031567933F0040DA06 /* libMUKScrolling.a */; };
+		06EEEF22156953540090EE76 /* libMUKToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1C0A1567933F0040DA06 /* libMUKToolkit.a */; };
 		06FF1BF01567933F0040DA06 /* PSYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06FF1BEF1567933F0040DA06 /* PSYouTubeExtractor.m */; };
-		06FF1C17156793B70040DA06 /* libMUKToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1C0A1567933F0040DA06 /* libMUKToolkit.a */; };
-		06FF1C18156793BD0040DA06 /* libMUKMediaGallery.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B031551584400454D72 /* libMUKMediaGallery.a */; };
-		06FF1C19156793BD0040DA06 /* libMUKNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1BF51567933F0040DA06 /* libMUKNetworking.a */; };
-		06FF1C1A156793BD0040DA06 /* libMUKObjectCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1BFC1567933F0040DA06 /* libMUKObjectCache.a */; };
-		06FF1C1B156793BD0040DA06 /* libMUKScrolling.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1C031567933F0040DA06 /* libMUKScrolling.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,11 +203,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06FF1C18156793BD0040DA06 /* libMUKMediaGallery.a in Frameworks */,
-				06FF1C19156793BD0040DA06 /* libMUKNetworking.a in Frameworks */,
-				06FF1C1A156793BD0040DA06 /* libMUKObjectCache.a in Frameworks */,
-				06FF1C1B156793BD0040DA06 /* libMUKScrolling.a in Frameworks */,
-				06FF1C17156793B70040DA06 /* libMUKToolkit.a in Frameworks */,
+				06EEEF1E156953540090EE76 /* libMUKMediaGallery.a in Frameworks */,
+				06EEEF1F156953540090EE76 /* libMUKNetworking.a in Frameworks */,
+				06EEEF20156953540090EE76 /* libMUKObjectCache.a in Frameworks */,
+				06EEEF21156953540090EE76 /* libMUKScrolling.a in Frameworks */,
+				06EEEF22156953540090EE76 /* libMUKToolkit.a in Frameworks */,
 				0671974D1560FC730017EAC0 /* MediaPlayer.framework in Frameworks */,
 				060B1B1C1551587C00454D72 /* Security.framework in Frameworks */,
 				060B1ACA1551581A00454D72 /* UIKit.framework in Frameworks */,

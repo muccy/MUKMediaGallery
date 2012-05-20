@@ -106,11 +106,15 @@
 		06D7BA2B156692A0006F1E42 /* MUKGridCellFixedSize.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D7BA23156692A0006F1E42 /* MUKGridCellFixedSize.h */; };
 		06D7BA2C156692A0006F1E42 /* MUKGridCellOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D7BA24156692A0006F1E42 /* MUKGridCellOptions.h */; };
 		06D7BA2D156692A0006F1E42 /* MUKRecyclableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D7BA25156692A0006F1E42 /* MUKRecyclableView.h */; };
-		06D7BA3E156692EA006F1E42 /* libMUKToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06D7BA02156691FF006F1E42 /* libMUKToolkit.a */; };
-		06D7BA3F156692F1006F1E42 /* libMUKNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06D7B9E11566919C006F1E42 /* libMUKNetworking.a */; };
-		06D7BA40156692F1006F1E42 /* libMUKObjectCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06D7B9E81566919C006F1E42 /* libMUKObjectCache.a */; };
-		06D7BA41156692F1006F1E42 /* libMUKScrolling.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06D7B9EF1566919C006F1E42 /* libMUKScrolling.a */; };
 		06D7BA4215669301006F1E42 /* PSYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */; };
+		06EEEECE156950500090EE76 /* libMUKNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEECA156950500090EE76 /* libMUKNetworking.a */; };
+		06EEEECF156950500090EE76 /* libMUKObjectCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEECB156950500090EE76 /* libMUKObjectCache.a */; };
+		06EEEED0156950500090EE76 /* libMUKScrolling.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEECC156950500090EE76 /* libMUKScrolling.a */; };
+		06EEEED1156950500090EE76 /* libMUKToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEECD156950500090EE76 /* libMUKToolkit.a */; };
+		06EEEED2156950A50090EE76 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06D7B9BD15669068006F1E42 /* UIKit.framework */; };
+		06EEEED3156950AF0090EE76 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06D7B9BF1566906D006F1E42 /* CoreGraphics.framework */; };
+		06EEEED5156950B50090EE76 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEED4156950B50090EE76 /* Security.framework */; };
+		06EEEED7156950BA0090EE76 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEED6156950BA0090EE76 /* MediaPlayer.framework */; };
 		06FF1B8015678C8B0040DA06 /* MUKToolkit.h in Headers */ = {isa = PBXBuildFile; fileRef = 06FF1B7F15678C8B0040DA06 /* MUKToolkit.h */; };
 		06FF1B8315678C9A0040DA06 /* MUKNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 06FF1B8215678C9A0040DA06 /* MUKNetworking.h */; };
 		06FF1B8515678CBD0040DA06 /* MUKScrolling.h in Headers */ = {isa = PBXBuildFile; fileRef = 06FF1B8415678CBD0040DA06 /* MUKScrolling.h */; };
@@ -139,96 +143,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		06D7B9E01566919C006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C31566919B006F1E42 /* MUKNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0656683E1517A85A00DA53AA;
-			remoteInfo = MUKNetworking;
-		};
-		06D7B9E21566919C006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C31566919B006F1E42 /* MUKNetworking.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 0656684E1517A85A00DA53AA;
-			remoteInfo = MUKNetworkingTests;
-		};
-		06D7B9E71566919C006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C61566919B006F1E42 /* MUKObjectCache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 066F8468154ECD6B00704724;
-			remoteInfo = MUKObjectCache;
-		};
-		06D7B9E91566919C006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C61566919B006F1E42 /* MUKObjectCache.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 066F8478154ECD6B00704724;
-			remoteInfo = MUKObjectCacheTests;
-		};
-		06D7B9EE1566919C006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C91566919B006F1E42 /* MUKScrolling.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 06339BC9153584FD00FB07ED;
-			remoteInfo = MUKScrolling;
-		};
-		06D7B9F01566919C006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C91566919B006F1E42 /* MUKScrolling.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 06339BD9153584FD00FB07ED;
-			remoteInfo = MUKScrollingTests;
-		};
-		06D7BA01156691FF006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9F8156691FE006F1E42 /* MUKToolkit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 065793871523337F00D6762A;
-			remoteInfo = MUKToolkit;
-		};
-		06D7BA03156691FF006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9F8156691FE006F1E42 /* MUKToolkit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 065793971523337F00D6762A;
-			remoteInfo = MUKToolkitTests;
-		};
-		06D7BA32156692B7006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9F8156691FE006F1E42 /* MUKToolkit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 065793861523337F00D6762A;
-			remoteInfo = MUKToolkit;
-		};
 		06D7BA36156692E0006F1E42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 06004947154C13BA004A3B17 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 0600494F154C13BA004A3B17;
 			remoteInfo = MUKMediaGallery;
-		};
-		06D7BA38156692E0006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C61566919B006F1E42 /* MUKObjectCache.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 066F8467154ECD6A00704724;
-			remoteInfo = MUKObjectCache;
-		};
-		06D7BA3A156692E0006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C91566919B006F1E42 /* MUKScrolling.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 06339BC8153584FD00FB07ED;
-			remoteInfo = MUKScrolling;
-		};
-		06D7BA3C156692E0006F1E42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 06D7B9C31566919B006F1E42 /* MUKNetworking.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 0656683D1517A85A00DA53AA;
-			remoteInfo = MUKNetworking;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -374,10 +294,6 @@
 		06D072D4156189A8000296C3 /* MUKMediaThumbnailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailsViewController.m; sourceTree = "<group>"; };
 		06D7B9BD15669068006F1E42 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		06D7B9BF1566906D006F1E42 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		06D7B9C31566919B006F1E42 /* MUKNetworking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKNetworking.xcodeproj; path = Submodules/MUKNetworking/MUKNetworking.xcodeproj; sourceTree = "<group>"; };
-		06D7B9C61566919B006F1E42 /* MUKObjectCache.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKObjectCache.xcodeproj; path = Submodules/MUKObjectCache/MUKObjectCache.xcodeproj; sourceTree = "<group>"; };
-		06D7B9C91566919B006F1E42 /* MUKScrolling.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKScrolling.xcodeproj; path = Submodules/MUKScrolling/MUKScrolling.xcodeproj; sourceTree = "<group>"; };
-		06D7B9F8156691FE006F1E42 /* MUKToolkit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKToolkit.xcodeproj; path = Submodules/MUKToolkit/MUKToolkit.xcodeproj; sourceTree = "<group>"; };
 		06D7BA0615669222006F1E42 /* MUK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUK.h; path = Submodules/MUKToolkit/MUKToolkit/Classes/Base/MUK.h; sourceTree = "<group>"; };
 		06D7BA0715669222006F1E42 /* MUK+String.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MUK+String.h"; path = "Submodules/MUKToolkit/MUKToolkit/Classes/String/MUK+String.h"; sourceTree = "<group>"; };
 		06D7BA0815669222006F1E42 /* MUK+Date.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MUK+Date.h"; path = "Submodules/MUKToolkit/MUKToolkit/Classes/Date/MUK+Date.h"; sourceTree = "<group>"; };
@@ -397,6 +313,12 @@
 		06D7BA23156692A0006F1E42 /* MUKGridCellFixedSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKGridCellFixedSize.h; path = "Submodules/MUKScrolling/MUKScrolling/Classes/Grid/Cell Size/Fixed/MUKGridCellFixedSize.h"; sourceTree = "<group>"; };
 		06D7BA24156692A0006F1E42 /* MUKGridCellOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKGridCellOptions.h; path = "Submodules/MUKScrolling/MUKScrolling/Classes/Grid/Cell Options/MUKGridCellOptions.h"; sourceTree = "<group>"; };
 		06D7BA25156692A0006F1E42 /* MUKRecyclableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKRecyclableView.h; path = "Submodules/MUKScrolling/MUKScrolling/Classes/Recyclable View/MUKRecyclableView.h"; sourceTree = "<group>"; };
+		06EEEECA156950500090EE76 /* libMUKNetworking.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKNetworking.a; path = "Submodules/MUKNetworking/build/Release-iphoneos/libMUKNetworking.a"; sourceTree = "<group>"; };
+		06EEEECB156950500090EE76 /* libMUKObjectCache.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKObjectCache.a; path = "Submodules/MUKObjectCache/build/Release-iphoneos/libMUKObjectCache.a"; sourceTree = "<group>"; };
+		06EEEECC156950500090EE76 /* libMUKScrolling.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKScrolling.a; path = "Submodules/MUKScrolling/build/Release-iphoneos/libMUKScrolling.a"; sourceTree = "<group>"; };
+		06EEEECD156950500090EE76 /* libMUKToolkit.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKToolkit.a; path = "Submodules/MUKToolkit/build/Release-iphoneos/libMUKToolkit.a"; sourceTree = "<group>"; };
+		06EEEED4156950B50090EE76 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		06EEEED6156950BA0090EE76 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		06FF1B7F15678C8B0040DA06 /* MUKToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKToolkit.h; path = Submodules/MUKToolkit/MUKToolkit/MUKToolkit.h; sourceTree = "<group>"; };
 		06FF1B8215678C9A0040DA06 /* MUKNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKNetworking.h; path = Submodules/MUKNetworking/MUKNetworking/MUKNetworking.h; sourceTree = "<group>"; };
 		06FF1B8415678CBD0040DA06 /* MUKScrolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKScrolling.h; path = Submodules/MUKScrolling/MUKScrolling/MUKScrolling.h; sourceTree = "<group>"; };
@@ -417,13 +339,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06D7BA3F156692F1006F1E42 /* libMUKNetworking.a in Frameworks */,
-				06D7BA40156692F1006F1E42 /* libMUKObjectCache.a in Frameworks */,
-				06D7BA41156692F1006F1E42 /* libMUKScrolling.a in Frameworks */,
+				06EEEED7156950BA0090EE76 /* MediaPlayer.framework in Frameworks */,
+				06EEEED5156950B50090EE76 /* Security.framework in Frameworks */,
+				06EEEED3156950AF0090EE76 /* CoreGraphics.framework in Frameworks */,
+				06EEEED2156950A50090EE76 /* UIKit.framework in Frameworks */,
+				06004968154C13BA004A3B17 /* libMUKMediaGallery.a in Frameworks */,
+				06EEEECE156950500090EE76 /* libMUKNetworking.a in Frameworks */,
+				06EEEECF156950500090EE76 /* libMUKObjectCache.a in Frameworks */,
+				06EEEED0156950500090EE76 /* libMUKScrolling.a in Frameworks */,
+				06EEEED1156950500090EE76 /* libMUKToolkit.a in Frameworks */,
 				06004962154C13BA004A3B17 /* SenTestingKit.framework in Frameworks */,
 				06004965154C13BA004A3B17 /* Foundation.framework in Frameworks */,
-				06004968154C13BA004A3B17 /* libMUKMediaGallery.a in Frameworks */,
-				06D7BA3E156692EA006F1E42 /* libMUKToolkit.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,7 +367,6 @@
 		06004945154C13BA004A3B17 = {
 			isa = PBXGroup;
 			children = (
-				06D7B9AF15668FF6006F1E42 /* Dependencies */,
 				060049E1154C167C004A3B17 /* LICENSE */,
 				060049DD154C1667004A3B17 /* MUKMediaGallery-Prefix.pch */,
 				060049DE154C1667004A3B17 /* MUKMediaGallery.h */,
@@ -467,6 +392,12 @@
 		06004952154C13BA004A3B17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				06EEEED6156950BA0090EE76 /* MediaPlayer.framework */,
+				06EEEED4156950B50090EE76 /* Security.framework */,
+				06EEEECA156950500090EE76 /* libMUKNetworking.a */,
+				06EEEECB156950500090EE76 /* libMUKObjectCache.a */,
+				06EEEECC156950500090EE76 /* libMUKScrolling.a */,
+				06EEEECD156950500090EE76 /* libMUKToolkit.a */,
 				06D7B9BF1566906D006F1E42 /* CoreGraphics.framework */,
 				06D7B9BD15669068006F1E42 /* UIKit.framework */,
 				06004953154C13BA004A3B17 /* Foundation.framework */,
@@ -479,6 +410,7 @@
 		060049DC154C1667004A3B17 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				06EEEEC9156950130090EE76 /* Dependencies */,
 				06004A3A154C2958004A3B17 /* Private */,
 				066F8454154E940600704724 /* Models */,
 				06D072D01561898D000296C3 /* Controllers */,
@@ -778,6 +710,7 @@
 				06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */,
 			);
 			name = PSYouTubeExtractor;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		06D0729D15610CA7000296C3 /* YouTube */ = {
@@ -816,18 +749,6 @@
 			path = Thumbnails;
 			sourceTree = "<group>";
 		};
-		06D7B9AF15668FF6006F1E42 /* Dependencies */ = {
-			isa = PBXGroup;
-			children = (
-				06D7B9F8156691FE006F1E42 /* MUKToolkit.xcodeproj */,
-				06D7B9C31566919B006F1E42 /* MUKNetworking.xcodeproj */,
-				06D7B9C61566919B006F1E42 /* MUKObjectCache.xcodeproj */,
-				06D7B9C91566919B006F1E42 /* MUKScrolling.xcodeproj */,
-				06D0728615610BFD000296C3 /* PSYouTubeExtractor */,
-			);
-			name = Dependencies;
-			sourceTree = "<group>";
-		};
 		06D7B9C11566909E006F1E42 /* Dependencies Public Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -845,42 +766,6 @@
 				06D7BA1615669236006F1E42 /* MUKObjectCache.h */,
 			);
 			name = MUKObjectCache;
-			sourceTree = "<group>";
-		};
-		06D7B9C41566919B006F1E42 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				06D7B9E11566919C006F1E42 /* libMUKNetworking.a */,
-				06D7B9E31566919C006F1E42 /* MUKNetworkingTests.octest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		06D7B9C71566919B006F1E42 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				06D7B9E81566919C006F1E42 /* libMUKObjectCache.a */,
-				06D7B9EA1566919C006F1E42 /* MUKObjectCacheTests.octest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		06D7B9CA1566919B006F1E42 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				06D7B9EF1566919C006F1E42 /* libMUKScrolling.a */,
-				06D7B9F11566919C006F1E42 /* MUKScrollingTests.octest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		06D7B9F9156691FE006F1E42 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				06D7BA02156691FF006F1E42 /* libMUKToolkit.a */,
-				06D7BA04156691FF006F1E42 /* MUKToolkitTests.octest */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		06D7BA0515669214006F1E42 /* MUKToolkit */ = {
@@ -923,6 +808,14 @@
 				06D7BA25156692A0006F1E42 /* MUKRecyclableView.h */,
 			);
 			name = MUKScrolling;
+			sourceTree = "<group>";
+		};
+		06EEEEC9156950130090EE76 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				06D0728615610BFD000296C3 /* PSYouTubeExtractor */,
+			);
+			name = Dependencies;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1028,10 +921,6 @@
 			);
 			dependencies = (
 				06D7BA37156692E0006F1E42 /* PBXTargetDependency */,
-				06D7BA39156692E0006F1E42 /* PBXTargetDependency */,
-				06D7BA3B156692E0006F1E42 /* PBXTargetDependency */,
-				06D7BA3D156692E0006F1E42 /* PBXTargetDependency */,
-				06D7BA33156692B7006F1E42 /* PBXTargetDependency */,
 			);
 			name = MUKMediaGalleryTests;
 			productName = MUKMediaGalleryTests;
@@ -1074,24 +963,6 @@
 			mainGroup = 06004945154C13BA004A3B17;
 			productRefGroup = 06004951154C13BA004A3B17 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 06D7B9C41566919B006F1E42 /* Products */;
-					ProjectRef = 06D7B9C31566919B006F1E42 /* MUKNetworking.xcodeproj */;
-				},
-				{
-					ProductGroup = 06D7B9C71566919B006F1E42 /* Products */;
-					ProjectRef = 06D7B9C61566919B006F1E42 /* MUKObjectCache.xcodeproj */;
-				},
-				{
-					ProductGroup = 06D7B9CA1566919B006F1E42 /* Products */;
-					ProjectRef = 06D7B9C91566919B006F1E42 /* MUKScrolling.xcodeproj */;
-				},
-				{
-					ProductGroup = 06D7B9F9156691FE006F1E42 /* Products */;
-					ProjectRef = 06D7B9F8156691FE006F1E42 /* MUKToolkit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				0600494F154C13BA004A3B17 /* MUKMediaGallery */,
@@ -1101,65 +972,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		06D7B9E11566919C006F1E42 /* libMUKNetworking.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libMUKNetworking.a;
-			remoteRef = 06D7B9E01566919C006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06D7B9E31566919C006F1E42 /* MUKNetworkingTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = MUKNetworkingTests.octest;
-			remoteRef = 06D7B9E21566919C006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06D7B9E81566919C006F1E42 /* libMUKObjectCache.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libMUKObjectCache.a;
-			remoteRef = 06D7B9E71566919C006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06D7B9EA1566919C006F1E42 /* MUKObjectCacheTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = MUKObjectCacheTests.octest;
-			remoteRef = 06D7B9E91566919C006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06D7B9EF1566919C006F1E42 /* libMUKScrolling.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libMUKScrolling.a;
-			remoteRef = 06D7B9EE1566919C006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06D7B9F11566919C006F1E42 /* MUKScrollingTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = MUKScrollingTests.octest;
-			remoteRef = 06D7B9F01566919C006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06D7BA02156691FF006F1E42 /* libMUKToolkit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libMUKToolkit.a;
-			remoteRef = 06D7BA01156691FF006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		06D7BA04156691FF006F1E42 /* MUKToolkitTests.octest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = MUKToolkitTests.octest;
-			remoteRef = 06D7BA03156691FF006F1E42 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0600495D154C13BA004A3B17 /* Resources */ = {
@@ -1273,30 +1085,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		06D7BA33156692B7006F1E42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = MUKToolkit;
-			targetProxy = 06D7BA32156692B7006F1E42 /* PBXContainerItemProxy */;
-		};
 		06D7BA37156692E0006F1E42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0600494F154C13BA004A3B17 /* MUKMediaGallery */;
 			targetProxy = 06D7BA36156692E0006F1E42 /* PBXContainerItemProxy */;
-		};
-		06D7BA39156692E0006F1E42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = MUKObjectCache;
-			targetProxy = 06D7BA38156692E0006F1E42 /* PBXContainerItemProxy */;
-		};
-		06D7BA3B156692E0006F1E42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = MUKScrolling;
-			targetProxy = 06D7BA3A156692E0006F1E42 /* PBXContainerItemProxy */;
-		};
-		06D7BA3D156692E0006F1E42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = MUKNetworking;
-			targetProxy = 06D7BA3C156692E0006F1E42 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
