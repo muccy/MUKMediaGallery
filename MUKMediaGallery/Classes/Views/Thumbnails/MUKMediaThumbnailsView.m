@@ -87,6 +87,7 @@
 }
 
 - (void)dealloc {
+    [thumbnailsFetcher_.connectionQueue cancelAllConnections];
     [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:NO];
     thumbnailsFetcher_.shouldStartConnectionHandler = nil;
     

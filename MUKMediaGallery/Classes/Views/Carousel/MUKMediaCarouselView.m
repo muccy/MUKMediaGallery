@@ -95,9 +95,11 @@
 }
 
 - (void)dealloc {
+    [thumbnailsFetcher_.connectionQueue cancelAllConnections];
     [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:NO];
     thumbnailsFetcher_.shouldStartConnectionHandler = nil;
     
+    [imagesFetcher_.connectionQueue cancelAllConnections];
     [(MUKMediaGalleryImageFetcher_ *)imagesFetcher_ setBlockHandlers:NO];
     imagesFetcher_.shouldStartConnectionHandler = nil;
     
@@ -808,9 +810,7 @@
             
             connection.userInfo = mediaImageAsset;
         }
-        
-        __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
-        
+                
         [self.imagesFetcher loadImageForURL:imageURL searchDomains:searchDomains cacheToLocations:cacheLocations connection:connection completionHandler:^(UIImage *image, MUKImageFetcherSearchDomain resultDomains) 
          {             
              // Insert in right cell at this time
@@ -820,14 +820,14 @@
                  rightCell = cell;
              }
              else {
-                 rightCell = (MUKMediaCarouselImageCellView_ *)[weakSelf.gridView_ cellViewAtIndex:index];
+                 rightCell = (MUKMediaCarouselImageCellView_ *)[self.gridView_ cellViewAtIndex:index];
              }
              
              if (mediaImageAsset == rightCell.mediaAsset) {
                  [rightCell setCenteredImage:image];
                  
                  if (image) {
-                     [weakSelf didLoadMediaAsset_:mediaImageAsset atIndex_:index inCell_:rightCell];
+                     [self didLoadMediaAsset_:mediaImageAsset atIndex_:index inCell_:rightCell];
                  }
              }
          }];
