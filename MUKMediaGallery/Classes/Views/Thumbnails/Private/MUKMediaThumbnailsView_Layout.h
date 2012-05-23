@@ -25,7 +25,9 @@
 
 #import "MUKMediaThumbnailsView.h"
 
+@class MUKGridCellFixedSize;
 @interface MUKMediaThumbnailsView ()
 - (void)adjustGridView_;
-+ (CGRect)gridFrameForBounds_:(CGRect)bounds cellSize_:(CGSize)cellSize imageOffset_:(CGSize)imageOffset;
++ (CGRect)gridFrameForBounds_:(CGRect)bounds thumbnailSize_:(CGSize)thumbnailSize  imageOffset_:(CGSize)imageOffset;
++ (MUKGridCellFixedSize *)cellSizeWithThumbnailSize_:(CGSize)thumbnailSize imageOffset_:(CGSize)imageOffset;
 @end

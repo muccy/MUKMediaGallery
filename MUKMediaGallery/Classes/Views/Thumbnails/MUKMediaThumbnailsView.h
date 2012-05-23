@@ -69,13 +69,13 @@
 /**
  Size of thumbnails.
  
- Default is `{79, 79}`.
+ Default is `{75, 75}` on phone and `{104, 104}` on pad.
  */
 @property (nonatomic) CGSize thumbnailSize;
 /**
  Space between thumbnails.
  
- Default is `{4, 4}`.
+ Default is `{4, 4}` on phone and `{5, 5}` on pad.
  */
 @property (nonatomic) CGSize thumbnailOffset;
 /**

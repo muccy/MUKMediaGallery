@@ -145,7 +145,7 @@
     if (!CGSizeEqualToSize(thumbnailSize, self.thumbnailSize)) {
         thumbnailSize_ = thumbnailSize;
         
-        self.gridView_.cellSize = [[MUKGridCellFixedSize alloc] initWithSize:thumbnailSize];
+        self.gridView_.cellSize = [[self class] cellSizeWithThumbnailSize_:self.thumbnailSize imageOffset_:self.thumbnailOffset];
         [self adjustGridView_];
     }
 }
@@ -170,6 +170,8 @@
 - (void)setThumbnailOffset:(CGSize)thumbnailOffset {
     if (!CGSizeEqualToSize(thumbnailOffset, thumbnailOffset_)) {
         thumbnailOffset_ = thumbnailOffset;
+        
+        self.gridView_.cellSize = [[self class] cellSizeWithThumbnailSize_:self.thumbnailSize imageOffset_:self.thumbnailOffset];
         [self adjustGridView_];
     }
 }
@@ -243,10 +245,17 @@
     selectedCellIndex__ = -1;
     showsSelection_ = YES;
     
-    thumbnailSize_ = CGSizeMake(79, 79);
-    thumbnailOffset_ = CGSizeMake(4, 4);
+    if (UIUserInterfaceIdiomPad == [[UIDevice currentDevice] userInterfaceIdiom])
+    {
+        thumbnailSize_ = CGSizeMake(104, 104);
+        thumbnailOffset_ = CGSizeMake(5, 5);
+    }
+    else {
+        thumbnailSize_ = CGSizeMake(75, 75);
+        thumbnailOffset_ = CGSizeMake(4, 4);
+    }
     
-    CGRect gridFrame = [[self class] gridFrameForBounds_:self.bounds cellSize_:thumbnailSize_ imageOffset_:thumbnailOffset_];
+    CGRect gridFrame = [[self class] gridFrameForBounds_:self.bounds thumbnailSize_:self.thumbnailSize imageOffset_:self.thumbnailOffset];
     self.gridView_ = [[MUKGridView alloc] initWithFrame:gridFrame];
     
     self.gridView_.alwaysBounceVertical = YES;
@@ -256,7 +265,7 @@
     self.gridView_.detectsDoubleTapGesture = NO;
     self.gridView_.detectsLongPressGesture = NO;
     
-    self.gridView_.cellSize = [[MUKGridCellFixedSize alloc] initWithSize:thumbnailSize_];
+    self.gridView_.cellSize = [[self class] cellSizeWithThumbnailSize_:self.thumbnailSize imageOffset_:self.thumbnailOffset];
         
     displaysMediaAssetsCount_ = YES;
     // Don't insert here, because we have 0 assets
@@ -565,7 +574,7 @@
 #pragma mark - Private: Layout
 
 - (void)adjustGridView_ {
-    CGRect gridFrame = [[self class] gridFrameForBounds_:self.bounds cellSize_:thumbnailSize_ imageOffset_:thumbnailOffset_];
+    CGRect gridFrame = [[self class] gridFrameForBounds_:self.bounds thumbnailSize_:self.thumbnailSize imageOffset_:self.thumbnailOffset];
     if (!CGRectEqualToRect(gridFrame, self.gridView_.frame)) {
         self.gridView_.frame = gridFrame;
     }
@@ -574,15 +583,17 @@
     self.gridView_.scrollIndicatorInsets = UIEdgeInsetsMake(self.gridView_.contentInset.top, 0, 0, -self.thumbnailOffset.width);
 }
 
-+ (CGRect)gridFrameForBounds_:(CGRect)bounds cellSize_:(CGSize)cellSize imageOffset_:(CGSize)imageOffset
++ (CGRect)gridFrameForBounds_:(CGRect)bounds thumbnailSize_:(CGSize)thumbnailSize  imageOffset_:(CGSize)imageOffset
 {
     CGRect frame = bounds;
     
     // Set same border to right
     frame.size.width -= imageOffset.width;
     
+    CGFloat cellWidth = thumbnailSize.width + imageOffset.width;
+    
     // How much whitespace?
-    NSInteger whiteSpace = (NSInteger)frame.size.width % (NSInteger)cellSize.width;
+    NSInteger whiteSpace = (NSInteger)frame.size.width % (NSInteger)cellWidth;
     
     // Center to divide whitespace
     if (whiteSpace > 0) { 
@@ -591,6 +602,13 @@
     }
     
     return frame;
+}
+
++ (MUKGridCellFixedSize *)cellSizeWithThumbnailSize_:(CGSize)thumbnailSize imageOffset_:(CGSize)imageOffset
+{
+    CGFloat width = thumbnailSize.width + imageOffset.width;
+    CGFloat height = thumbnailSize.height + imageOffset.height;
+    return [[MUKGridCellFixedSize alloc] initWithSize:CGSizeMake(width, height)];
 }
 
 #pragma mark - Private: Selection
