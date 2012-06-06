@@ -29,16 +29,16 @@
 
 @interface MUKMediaCarouselPlayerCellView_ : MUKMediaCarouselCellView_
 @property (nonatomic, strong) MPMoviePlayerController *moviePlayer;
-/*
- Helps to permit movie player and scroll view to play nicely 
- toghether
- */
-@property (nonatomic) BOOL hacksTouchesManagement;
 
 - (void)setMediaURL:(NSURL *)mediaURL kind:(MUKMediaAssetKind)kind;
 - (void)cleanup;
 
-// Call when cell is tapped
-//- (void)reactToCellTap;
+/*
+ This method is called by internal touches handlers, because
+ movie player "eats" touches.
+ It calls its handler by default.
+ */
+- (void)didTapCell;
+@property (nonatomic, copy) void (^tapHandler)(void);
 
 @end

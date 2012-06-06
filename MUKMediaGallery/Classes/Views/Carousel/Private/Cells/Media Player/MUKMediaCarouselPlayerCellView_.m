@@ -26,39 +26,26 @@
 #import "MUKMediaCarouselPlayerCellView_.h"
 #import <MUKToolkit/MUKToolkit.h>
 
-@interface MUKMediaCarouselPlayerCellView_ ()
-@property (nonatomic, strong) UIPinchGestureRecognizer *pinchGestureRecognizer_;
+#define TAP_MAX_DURATION        0.9f
 
+@interface MUKMediaCarouselPlayerCellView_ ()
+@property (nonatomic, strong) NSDate *touchesBeganDate_;
+@property (nonatomic) BOOL touchesMoved_, touchesCancelled_;
 @property (nonatomic) MUKMediaAssetKind lastKind_;
 
 - (CGRect)playerFrameForKind_:(MUKMediaAssetKind)kind;
 - (MPMovieSourceType)movieSourceTypeFromMediaURL_:(NSURL *)mediaURL;
 @end
 
-@interface MUKMediaCarouselPlayerCellView_ (LocalGestures_)
-- (void)handlePinch_:(UIPinchGestureRecognizer *)recognizer;
-@end
-
-@implementation MUKMediaCarouselPlayerCellView_ {
-    BOOL replicatingTouch_;
-}
+@implementation MUKMediaCarouselPlayerCellView_
 @synthesize moviePlayer = moviePlayer_;
-@synthesize lastKind_ = lastKind__;
-@synthesize pinchGestureRecognizer_ = pinchGestureRecognizer__;
-@synthesize hacksTouchesManagement = hacksTouchesManagement_;
+@synthesize tapHandler = tapHandler_;
 
-- (id)initWithFrame:(CGRect)frame recycleIdentifier:(NSString *)recycleIdentifier
-{
-    self = [super initWithFrame:frame recycleIdentifier:recycleIdentifier];
-    
-    if (self) {
-        hacksTouchesManagement_ = YES;
-        self.pinchGestureRecognizer_ = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinch_:)];
-        [self addGestureRecognizer:self.pinchGestureRecognizer_];
-    }
-    
-    return self;
-}
+@synthesize lastKind_ = lastKind__;
+@synthesize touchesBeganDate_ = touchesBeganDate__;
+@synthesize touchesMoved_ = touchesMoved__, touchesCancelled_ = touchesCancelled__;
+
+#pragma mark - Accessors
 
 - (void)setMediaURL:(NSURL *)mediaURL kind:(MUKMediaAssetKind)kind {
     if (mediaURL == nil) return;
@@ -87,46 +74,61 @@
     [self.moviePlayer prepareToPlay];
 }
 
-- (void)cleanup {
-    self.lastKind_ = MUKMediaAssetKindNone;
-    
-    [self.moviePlayer stop];
-    [self.moviePlayer.view removeFromSuperview];
-    self.moviePlayer = nil;
-}
-
 - (void)setInsets:(UIEdgeInsets)insets {
     [super setInsets:insets];
     
     self.moviePlayer.view.frame = [self playerFrameForKind_:self.lastKind_];
 }
 
-- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *view;
+#pragma mark - Methods
+
+- (void)cleanup {
+    self.lastKind_ = MUKMediaAssetKindNone;
     
-    if (self.hacksTouchesManagement) {
-        if (self.lastKind_ == MUKMediaAssetKindAudio) {
-            view = [super hitTest:point withEvent:event];
-        }
-        else {
-            // Pass touches to movie player only on the bottom
-            static CGFloat const kControlsHeight = 40.0f;
-            
-            if (point.y > self.bounds.size.height - kControlsHeight)
-            {
-                view = [super hitTest:point withEvent:event];
-            }
-            else {
-                view = self;
-            }
-        }
-    }
-    else {
-        view = [super hitTest:point withEvent:event];
-    }
+    [self.moviePlayer stop];
+    [self.moviePlayer.view removeFromSuperview];
+    self.moviePlayer = nil;
     
-    return view;
+    self.tapHandler = nil;
 }
+
+- (void)didTapCell {
+    if (self.tapHandler) {
+        self.tapHandler();
+    }
+}
+
+#pragma mark - Touches Handling
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {    
+    if ([touches count] == 1) {
+        self.touchesMoved_ = NO;
+        self.touchesCancelled_ = NO;
+        self.touchesBeganDate_ = [NSDate date];
+    }
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.touchesMoved_ = YES;
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {    
+    if (self.touchesCancelled_ == NO &&
+        self.touchesMoved_ == NO)
+    {
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:self.touchesBeganDate_];
+        
+        if (interval < TAP_MAX_DURATION) {
+            [self didTapCell];
+        }
+    }   
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.touchesCancelled_ = YES;
+}
+
+#pragma mark - Overrides
 
 - (CGRect)captionLabelContainerFrameWithText:(NSString *)text
 {
@@ -141,22 +143,6 @@
 - (UIViewAutoresizing)captionLabelContainerAutoresizingMask {
     return UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
 }
-
-//  Can't toggle programmatically commands
-//
-//- (void)reactToCellTap {
-//    MPMovieControlStyle mode = self.moviePlayer.controlStyle;
-//    
-//    // Toggle embedded <--> none
-//    if (mode == MPMovieControlStyleNone) {
-//        mode = MPMovieControlStyleEmbedded;
-//    }
-//    else {
-//        mode = MPMovieControlStyleNone;
-//    }
-//    
-//    self.moviePlayer.controlStyle = mode;
-//}
 
 #pragma mark - Private
 
@@ -184,15 +170,5 @@
     
     return MPMovieSourceTypeUnknown; // downloadable or streaming?
 }  
-
-#pragma mark - Private: Local Gestures
-
-- (void)handlePinch_:(UIPinchGestureRecognizer *)recognizer {
-    if (self.hacksTouchesManagement) {
-        if (self.lastKind_ != MUKMediaAssetKindAudio) {
-            [self.moviePlayer setFullscreen:YES animated:YES];
-        }
-    }
-}
 
 @end

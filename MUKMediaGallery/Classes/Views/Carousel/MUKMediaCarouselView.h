@@ -173,6 +173,19 @@
 @end
 
 
+@interface MUKMediaCarouselView (Callbacks)
+/**
+ Callback invoked when a media asset is tapped.
+ 
+ Default implementation calls mediaAssetTappedHandler and, then,
+ toggles overlay view (if togglesOverlayViewOnUserTouch is set to `YES`).
+ 
+ @param index Media asset index.
+ */
+- (void)didTapMediaAssetAtIndex:(NSInteger)index;
+@end
+
+
 @interface MUKMediaCarouselView (OverlayView)
 /**
  Check conditions because overlay view should be shown.

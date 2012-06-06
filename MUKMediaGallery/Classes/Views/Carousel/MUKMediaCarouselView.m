@@ -229,6 +229,28 @@
     }
 }
 
+#pragma mark - Callbacks
+
+- (void)didTapMediaAssetAtIndex:(NSInteger)index {
+    if (self.mediaAssetTappedHandler) {
+        self.mediaAssetTappedHandler(index);
+    }
+    
+    // Adjust overlay view visibility
+    if (self.togglesOverlayViewOnUserTouch) {
+        if ([self shouldShowOverlayViewAtIndex:index]) {
+            if ([self isOverlayViewHidden]) {
+                [self setOverlayViewHidden:NO animated:YES];
+            }
+        }
+        else {
+            if (![self isOverlayViewHidden]) {
+                [self setOverlayViewHidden:YES animated:YES];
+            }
+        }
+    }
+}
+
 #pragma mark - Overlay View
 
 - (BOOL)shouldShowOverlayViewAtIndex:(NSInteger)index {
@@ -374,23 +396,7 @@
     };
     
     self.gridView_.cellTappedHandler = ^(NSInteger cellIndex) {
-        if (weakSelf.mediaAssetTappedHandler) {
-            weakSelf.mediaAssetTappedHandler(cellIndex);
-        }
-        
-        // Adjust overlay view visibility
-        if (weakSelf.togglesOverlayViewOnUserTouch) {
-            if ([weakSelf shouldShowOverlayViewAtIndex:cellIndex]) {
-                if ([weakSelf isOverlayViewHidden]) {
-                    [weakSelf setOverlayViewHidden:NO animated:YES];
-                }
-            }
-            else {
-                if (![weakSelf isOverlayViewHidden]) {
-                    [weakSelf setOverlayViewHidden:YES animated:YES];
-                }
-            }
-        }
+        [weakSelf didTapMediaAssetAtIndex:cellIndex];
     };
     
     self.gridView_.cellZoomHandler = ^(UIView<MUKRecyclable> *cellView, UIView *zoomedView, NSInteger cellIndex, float scale)
@@ -522,6 +528,18 @@
     // Set caption
     if ([mediaAsset respondsToSelector:@selector(mediaCaption)]) {
         [cellView setCaptionText:[mediaAsset mediaCaption]];
+    }
+    
+    // Set tap handler if needed
+    if ([cellView isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]]) {
+        __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+        [(MUKMediaCarouselPlayerCellView_ *)cellView setTapHandler:^{
+            // Get media asset index
+            NSInteger mediaAssetIndex = [weakSelf.mediaAssets indexOfObject:cellView.mediaAsset];
+            if (mediaAssetIndex != NSNotFound) {
+                [weakSelf didTapMediaAssetAtIndex:mediaAssetIndex];
+            }
+        }];
     }
     
     if (![self isLoadedMediaAssetAtIndex_:index]) {
@@ -686,7 +704,7 @@
     view.imageView.image = nil;
     
     if ([view isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]])
-    {
+    {        
         // Clean movie player
         MUKMediaCarouselPlayerCellView_ *mpCell = (MUKMediaCarouselPlayerCellView_ *)view;
         [mpCell cleanup];
