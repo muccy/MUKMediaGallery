@@ -60,13 +60,9 @@ Add dependency clicking on + button in *Target Dependencies* pane and choosing s
 
 <img src="http://i.imgur.com/oaXaS.png" />
 
-Link your project clicking on + button in *Link binary with Libraries* pane and choosing static library product (`libMUKMediaGallery.a`). Link also submodule dependencies (`libMUKNetworking.a`, `MUKObjectCache.a`, `libMUKScrolling.a`):
+Link your project clicking on + button in *Link binary with Libraries* pane and choosing static library product (`libMUKMediaGallery.a`). Link also submodule dependencies (`libMUKNetworking.a`, `MUKObjectCache.a`, `libMUKScrolling.a` and `libMUKToolkit.a`):
 
-<img src="http://i.imgur.com/7xpw9.png" />
-
-To link the correct `libMUKToolkit.a` disclose the imported `MUKToolkit.xcodeproj` and drag `libMUKToolkit.a` in `Products` folder:
-
-<img src="http://i.imgur.com/gy7ZC.png" />
+<img src="http://i.imgur.com/AsiNx.png" />
 
 #### Step 3: link required frameworks
 You need to link those frameworks:
@@ -142,4 +138,3 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [PSYouTubeExtractor]: https://github.com/steipete/PSYouTubeExtractor
 [jverkoey iOS Framework]: https://github.com/jverkoey/iOS-Framework
 [appledoc]: https://github.com/tomaz/appledoc
-
