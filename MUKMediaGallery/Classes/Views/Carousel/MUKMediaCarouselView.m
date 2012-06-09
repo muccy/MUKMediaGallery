@@ -239,7 +239,9 @@
     if (self.togglesOverlayViewOnUserTouch) {
         if ([self shouldShowOverlayViewAtIndex:index]) {
             if ([self isOverlayViewHidden]) {
-                [self setOverlayViewHidden:NO animated:YES];
+                if ([self canHideOverlayViewAtIndex:index]) {
+                    [self setOverlayViewHidden:NO animated:YES];
+                }
             }
         }
         else {
@@ -452,7 +454,9 @@
         if (weakSelf.togglesOverlayViewOnUserTouch) {
             if ([weakSelf shouldShowOverlayViewAtIndex:cellIndex]) {
                 if ([weakSelf isOverlayViewHidden]) {
-                    [weakSelf setOverlayViewHidden:NO animated:YES];
+                    if ([weakSelf canHideOverlayViewAtIndex:cellIndex]) {
+                        [weakSelf setOverlayViewHidden:NO animated:YES];
+                    }
                 }
             }
             else {
