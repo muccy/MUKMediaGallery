@@ -222,9 +222,8 @@
         
         [self.gridView_ scrollToCellAtIndex:index position:MUKGridScrollPositionHead animated:animated];
         
-        if (!animated) {
-            self.needsLoadingVisibleMedias_ = YES;
-            [self setNeedsLayout];
+        if (!animated) {            
+            [self didScrollToMediaAssetAtIndex:index animated:NO];
         }
     }
 }
@@ -251,6 +250,29 @@
     }
 }
 
+- (void)didScrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated
+{
+    if (animated) {
+        // Animated
+        // Thumbnails already loaded from memory
+        [self loadCurrentMedia_];
+        
+        if (self.scrollCompletionHandler) {
+            self.scrollCompletionHandler();
+        }
+    }
+    else {
+        // Not animated
+        self.needsLoadingVisibleMedias_ = YES;
+        [self setNeedsLayout];
+    }
+    
+    // Overlay could not be hidden?
+    if (![self canHideOverlayViewAtIndex:index]) {
+        [self setOverlayViewHidden:NO animated:animated];
+    }
+}
+
 #pragma mark - Overlay View
 
 - (BOOL)shouldShowOverlayViewAtIndex:(NSInteger)index {
@@ -265,6 +287,32 @@
     }
     
     return YES;
+}
+
+- (BOOL)canHideOverlayViewAtIndex:(NSInteger)index {
+    BOOL canHide;
+    
+    MUKMediaCarouselCellView_ *cellView = (MUKMediaCarouselCellView_ *)[self.gridView_ cellViewAtIndex:index];
+    
+    if (cellView) {
+        /*
+         Disable possibility of hiding YouTube overlay if video is shown with
+         web view.
+         */
+        if ([cellView isKindOfClass:[MUKMediaCarouselYouTubeCellView_ class]]) {
+            MUKMediaCarouselYouTubeCellView_ *ytCellView = (MUKMediaCarouselYouTubeCellView_ *)cellView;
+            canHide = !ytCellView.usingWebView;
+        }
+        else {
+            canHide = YES;
+        }
+    }
+    else {
+        // No cell view
+        canHide = NO;
+    }
+    
+    return canHide;
 }
 
 - (BOOL)isOverlayViewHidden {
@@ -387,12 +435,7 @@
     
     self.gridView_.scrollCompletionHandler = ^(MUKGridScrollKind scrollKind)
     {
-        // Thumbnails already loaded from memory
-        [weakSelf loadCurrentMedia_];
-        
-        if (weakSelf.scrollCompletionHandler) {
-            weakSelf.scrollCompletionHandler();
-        }
+        [weakSelf didScrollToMediaAssetAtIndex:[weakSelf currentMediaAssetIndex] animated:YES];
     };
     
     self.gridView_.cellTappedHandler = ^(NSInteger cellIndex) {
@@ -657,6 +700,11 @@
     if (MUKMediaAssetKindImage == [mediaAsset mediaKind]) {
         MUKGridCellOptions *options = [self cellOptionsForMediaAsset_:mediaAsset permitsZoomIfRequested_:YES];
         [self.gridView_ setOptions:options forCellAtIndex:index];
+    }
+    
+    // Overlay could not be hidden?
+    if (![self canHideOverlayViewAtIndex:index]) {
+        [self setOverlayViewHidden:NO animated:YES];
     }
 }
 

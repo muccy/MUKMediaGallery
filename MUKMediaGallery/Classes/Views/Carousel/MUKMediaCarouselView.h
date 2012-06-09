@@ -183,6 +183,19 @@
  @param index Media asset index.
  */
 - (void)didTapMediaAssetAtIndex:(NSInteger)index;
+/**
+ Callback invoked when scroll to a media asset is completed.
+ 
+ Default implementation shows media for current index and it calls
+ scrollCompletionHandler if transition has been animated.
+ 
+ At the end, if canHideOverlayViewAtIndex: returns `NO`, overlay view is
+ hidden.
+ 
+ @param index Media asset shown at the end of the scroll transition.
+ @param animated `YES` if scroll has been animated.
+ */
+- (void)didScrollToMediaAssetAtIndex:(NSInteger)index animated:(BOOL)animated;
 @end
 
 
@@ -194,6 +207,16 @@
  @return `YES` if overlay view should be shown.
  */
 - (BOOL)shouldShowOverlayViewAtIndex:(NSInteger)index;
+/**
+ Check condition because overlay view can be hidden.
+ 
+ @param index Index of media asset.
+ @return `NO` if there is no cell at given index or if cell is displaying
+ YouTube video with a `UIWebView` instance (it means taps can not be
+ processed by cells, so overlay view visibily could not be toggled by
+ user).
+ */
+- (BOOL)canHideOverlayViewAtIndex:(NSInteger)index;
 /**
  Overlay view is hidden or not.
  
