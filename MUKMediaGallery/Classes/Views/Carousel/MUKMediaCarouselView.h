@@ -150,6 +150,13 @@
  @warning [MUKURLConnection userInfo] will be overwritten with `mediaImageAsset`.
  */
 @property (nonatomic, copy) MUKURLConnection* (^imageConnectionHandler)(id<MUKMediaImageAsset> mediaImageAsset, NSInteger index);
+/**
+ Handler called after a media asset has been displayed into a cell.
+ 
+ This handler is invoked after spinner has been hidden and overlay view
+ is forced to visible (if needed).
+ */
+@property (nonatomic, copy) void (^mediaAssetDisplayedHandler)(id<MUKMediaAsset> mediaAsset, NSInteger index);
 
 /** @name Methods */
 /**

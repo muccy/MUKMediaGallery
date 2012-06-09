@@ -82,7 +82,16 @@
     self.moviePlayer.view.frame = [self playerFrameForKind_:kind];
     self.moviePlayer.movieSourceType = [self movieSourceTypeFromMediaURL_:mediaURL];
     
-    self.detectsTaps = YES;
+    /*
+     Say view to detect taps, but not in the case of audio player.
+     In that case taps would be detected twice (once from touchesBegan, once
+     from gesture recognizer) in the empty spaces.
+     */
+    self.detectsTaps = (MUKMediaAssetKindAudio != kind);
+    
+    /*
+     Start playing...
+     */
     [self.moviePlayer prepareToPlay];
 }
 

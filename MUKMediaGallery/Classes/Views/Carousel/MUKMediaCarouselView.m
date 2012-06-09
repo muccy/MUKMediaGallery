@@ -71,6 +71,7 @@
 @synthesize mediaAssetTappedHandler = mediaAssetTappedHandler_;
 @synthesize mediaAssetZoomedHandler = mediaAssetZoomedHandler_;
 @synthesize imageConnectionHandler = imageConnectionHandler_;
+@synthesize mediaAssetDisplayedHandler = mediaAssetDisplayedHandler_;
 
 @synthesize gridView_ = gridView__;
 @synthesize loadedMediaIndexes_ = loadedMediaIndexes__;
@@ -239,14 +240,14 @@
     if (self.togglesOverlayViewOnUserTouch) {
         if ([self shouldShowOverlayViewAtIndex:index]) {
             if ([self isOverlayViewHidden]) {
-                if ([self canHideOverlayViewAtIndex:index]) {
-                    [self setOverlayViewHidden:NO animated:YES];
-                }
+                [self setOverlayViewHidden:NO animated:YES];
             }
         }
         else {
             if (![self isOverlayViewHidden]) {
-                [self setOverlayViewHidden:YES animated:YES];
+                if ([self canHideOverlayViewAtIndex:index]) {
+                    [self setOverlayViewHidden:YES animated:YES];
+                }
             }
         }
     }
@@ -454,14 +455,14 @@
         if (weakSelf.togglesOverlayViewOnUserTouch) {
             if ([weakSelf shouldShowOverlayViewAtIndex:cellIndex]) {
                 if ([weakSelf isOverlayViewHidden]) {
-                    if ([weakSelf canHideOverlayViewAtIndex:cellIndex]) {
-                        [weakSelf setOverlayViewHidden:NO animated:YES];
-                    }
+                    [weakSelf setOverlayViewHidden:NO animated:YES];
                 }
             }
             else {
                 if (![weakSelf isOverlayViewHidden]) {
-                    [weakSelf setOverlayViewHidden:YES animated:YES];
+                    if ([weakSelf canHideOverlayViewAtIndex:cellIndex]) {
+                        [weakSelf setOverlayViewHidden:YES animated:YES];
+                    }
                 }
             }
         }
@@ -709,6 +710,11 @@
     // Overlay could not be hidden?
     if (![self canHideOverlayViewAtIndex:index]) {
         [self setOverlayViewHidden:NO animated:YES];
+    }
+    
+    // Notify completion
+    if (self.mediaAssetDisplayedHandler) {
+        self.mediaAssetDisplayedHandler(mediaAsset, index);
     }
 }
 
