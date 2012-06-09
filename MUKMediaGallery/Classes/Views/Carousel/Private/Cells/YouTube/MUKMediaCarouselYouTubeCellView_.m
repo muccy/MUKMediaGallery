@@ -49,6 +49,15 @@
 
 #pragma mark - Overrides
 
+- (BOOL)detectsTaps {
+    BOOL detectsTaps = [super detectsTaps];
+    if (detectsTaps) {
+        detectsTaps = !usingWebView_;
+    }
+    
+    return detectsTaps;
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     
@@ -132,7 +141,7 @@
                 self.moviePlayer = nil;
                 
                 // Insert web view
-                [self insertSubview:webView_ belowSubview:self.overlayView];
+                [self insertSubview:webView_ belowSubview:self.overlayView];             
             }
             else {
                 self.webView.frame = frame;

@@ -40,10 +40,21 @@
 @implementation MUKMediaCarouselPlayerCellView_
 @synthesize moviePlayer = moviePlayer_;
 @synthesize tapHandler = tapHandler_;
+@synthesize detectsTaps = detectsTaps_;
 
 @synthesize lastKind_ = lastKind__;
 @synthesize touchesBeganDate_ = touchesBeganDate__;
 @synthesize touchesMoved_ = touchesMoved__, touchesCancelled_ = touchesCancelled__;
+
+- (id)initWithFrame:(CGRect)frame recycleIdentifier:(NSString *)recycleIdentifier
+{
+    self = [super initWithFrame:frame recycleIdentifier:recycleIdentifier];
+    if (self) {
+        detectsTaps_ = NO;
+    }
+    
+    return self;
+}
 
 #pragma mark - Accessors
 
@@ -71,6 +82,7 @@
     self.moviePlayer.view.frame = [self playerFrameForKind_:kind];
     self.moviePlayer.movieSourceType = [self movieSourceTypeFromMediaURL_:mediaURL];
     
+    self.detectsTaps = YES;
     [self.moviePlayer prepareToPlay];
 }
 
@@ -88,6 +100,7 @@
     [self.moviePlayer stop];
     [self.moviePlayer.view removeFromSuperview];
     self.moviePlayer = nil;
+    self.detectsTaps = NO;
     
     self.tapHandler = nil;
 }
@@ -101,7 +114,7 @@
 #pragma mark - Touches Handling
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {    
-    if ([touches count] == 1) {
+    if (self.detectsTaps && [touches count] == 1) {
         self.touchesMoved_ = NO;
         self.touchesCancelled_ = NO;
         self.touchesBeganDate_ = [NSDate date];
@@ -113,7 +126,8 @@
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {    
-    if (self.touchesCancelled_ == NO &&
+    if (self.detectsTaps &&
+        self.touchesCancelled_ == NO &&
         self.touchesMoved_ == NO)
     {
         NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:self.touchesBeganDate_];

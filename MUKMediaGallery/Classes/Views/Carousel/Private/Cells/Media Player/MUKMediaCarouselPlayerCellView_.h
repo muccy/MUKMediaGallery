@@ -38,6 +38,7 @@
  movie player "eats" touches.
  It calls its handler by default.
  */
+@property (nonatomic) BOOL detectsTaps;
 - (void)didTapCell;
 @property (nonatomic, copy) void (^tapHandler)(void);
 
