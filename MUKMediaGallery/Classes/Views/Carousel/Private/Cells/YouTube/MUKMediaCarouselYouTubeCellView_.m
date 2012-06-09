@@ -31,10 +31,10 @@
 
 @implementation MUKMediaCarouselYouTubeCellView_ {
     CGRect lastYouTubeFrame_;
-    BOOL usingWebView_;
     NSURL *lastURL_;
 }
 @synthesize webView = webView_;
+@synthesize usingWebView = usingWebView_;
 
 - (id)initWithFrame:(CGRect)frame recycleIdentifier:(NSString *)recycleIdentifier 
 {
@@ -52,7 +52,7 @@
 - (BOOL)detectsTaps {
     BOOL detectsTaps = [super detectsTaps];
     if (detectsTaps) {
-        detectsTaps = !usingWebView_;
+        detectsTaps = !self.usingWebView;
     }
     
     return detectsTaps;
@@ -64,7 +64,7 @@
     /*
      Do the best to resize web view embed
      */
-    if (usingWebView_) {
+    if (self.usingWebView) {
         // Using web view
         
         CGRect currentYouTubeFrame = [self youTubeFrame_];
@@ -90,7 +90,7 @@
 - (void)setInsets:(UIEdgeInsets)insets {
     [super setInsets:insets];
     
-    if (usingWebView_) {
+    if (self.usingWebView) {
         self.webView.frame = [self youTubeFrame_];
         [self setNeedsLayout];
     }
@@ -99,7 +99,7 @@
 - (void)cleanup {
     [super cleanup];
     
-    usingWebView_ = NO;
+    self.usingWebView = NO;
     lastYouTubeFrame_ = CGRectZero;
     lastURL_ = nil;
     
@@ -113,7 +113,7 @@
 - (void)setMediaURL:(NSURL *)mediaURL inWebView:(BOOL)useWebView {
     if (mediaURL == nil) return;
     
-    usingWebView_ = useWebView;
+    self.usingWebView = useWebView;
     
     if (!useWebView) {
         // Play asset in movie player

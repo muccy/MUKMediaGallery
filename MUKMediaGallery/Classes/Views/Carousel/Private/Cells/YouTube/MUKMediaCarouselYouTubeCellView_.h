@@ -27,6 +27,7 @@
 
 @interface MUKMediaCarouselYouTubeCellView_ : MUKMediaCarouselPlayerCellView_
 @property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic) BOOL usingWebView;
 
 - (void)setMediaURL:(NSURL *)mediaURL inWebView:(BOOL)useWebView;
 
