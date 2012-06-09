@@ -223,6 +223,7 @@
         youTubeVideoAsset.duration = 906; // 15:06
         youTubeVideoAsset.thumbnailURL = [NSURL URLWithString:@"http://i2.ytimg.com/vi/UF8uR6Z6KLc/default.jpg"];
         youTubeVideoAsset.mediaURL = [NSURL URLWithString:@"http://www.youtube.com/watch?v=UF8uR6Z6KLc"];
+        youTubeVideoAsset.caption = @"Steve Jobs at Stanford";
         [mediaAssets addObject:youTubeVideoAsset];
         
         MUKMediaAudioAsset *remoteAudioAsset = [[MUKMediaAudioAsset alloc] init];
