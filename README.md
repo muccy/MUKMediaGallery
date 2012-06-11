@@ -14,7 +14,6 @@ Usage
 See sample project to see usage.
 
 This framework basically contains five classes:
-* `MUKImageFetcher`, a class you can use in order to load and cache images (also in a `UITableView`).
 * `MUKMediaThumbnailsView`, a view which displays a grid of thumbnails.
 * `MUKMediaCarouselView`, a view which display a paginated list of photos, videos and audios.
 * `MUKMediaThumbnailsViewController`, a view controller which manages a `MUKMediaThumbnailsView` instance.
@@ -45,24 +44,24 @@ Please remember not to create a copy of files while adding project: you only nee
 
 <img src="http://i.imgur.com/pCUIQ.png" />
 
-Now add `MUKToolkit.xcodeproj`, `MUKObjectCache.xcodeproj`, `MUKNetworking.xcodeproj` and `MUKScrolling.xcodeproj` by choosing those projects from `Submodules/MUKToolkit`. With this step you are adding `MUKMediaGallery` dependencies. If your project already contains dependencies please take care to use updated libraries.
+Now add `MUKToolkit.xcodeproj`, `MUKObjectCache.xcodeproj`, `MUKNetworking.xcodeproj`, `MUKImageFetcher.xcodeproj` and `MUKScrolling.xcodeproj` by choosing these projects from `Submodules` folder. With this step you are adding `MUKMediaGallery` dependencies (recursively). If your project already contains dependencies please take care to use updated libraries.
 
-Please add also [PSYouTubeExtractor] required files (thanks steipete for you great job).
-
-<img src="http://i.imgur.com/xojf5.png" />
+Please add also `LBYouTubeExtractor` and `JSONKit` from `Submodules/LBYouTubeView`.
+ 
+<img src="http://i.imgur.com/kRtNP.png" /> <img src="http://i.imgur.com/ys9eo.png" />
 
 #### Step 2: make your project dependent
 Click on your project and, then, your app target:
 
 <img src="http://i.imgur.com/J10tA.png" />
 
-Add dependency clicking on + button in *Target Dependencies* pane and choosing static library target (`MUKMediaGallery`), resources bundle target (`MUKMediaGalleryResources`) and its dependencies (`MUKToolkit`, `MUKObjectCache`, `MUKNetworking` and `MUKScrolling`):
+Add dependency clicking on + button in *Target Dependencies* pane and choosing static library target (`MUKMediaGallery`), resources bundle target (`MUKMediaGalleryResources`) and its dependencies (`MUKToolkit`, `MUKObjectCache`, `MUKNetworking`, `MUKImageFetcher` and `MUKScrolling`):
 
-<img src="http://i.imgur.com/oaXaS.png" />
+<img src="http://i.imgur.com/2khFf.png" />
 
-Link your project clicking on + button in *Link binary with Libraries* pane and choosing static library product (`libMUKMediaGallery.a`). Link also submodule dependencies (`libMUKNetworking.a`, `MUKObjectCache.a`, `libMUKScrolling.a` and `libMUKToolkit.a`):
+Link your project clicking on + button in *Link binary with Libraries* pane and choosing static library product (`libMUKMediaGallery.a`). Link also submodule dependencies (`libMUKNetworking.a`, `MUKObjectCache.a`, `libMUKScrolling.a`, `libMUKImageFetcher.a` and `libMUKToolkit.a`):
 
-<img src="http://i.imgur.com/AsiNx.png" />
+<img src="http://i.imgur.com/GQtoK.png" />
 
 #### Step 3: link required frameworks
 You need to link those frameworks:
@@ -88,8 +87,12 @@ In order to load every method in `MUKToolkit` dependency you need to insert `-Ob
 
 <img src="http://i.imgur.com/u9OUD.png" /> 
 
+#### Step 6: disable ARC for JSONKit
+JSONKit does not support ARC: you can disable it adding `-fno-objc-arc` compiler flag for `JSONKit.m`.
 
-#### Step 6: import headers
+<img src="http://i.imgur.com/ow7Fk.png" />
+
+#### Step 7: import headers
 You only need to write `#import <MUKMediaGallery/MUKMediaGallery.h>` when you need headers.
 You can also import `MUKMediaGallery` headers in your `pch` file:
 
