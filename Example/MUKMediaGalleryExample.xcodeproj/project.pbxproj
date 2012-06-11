@@ -22,10 +22,12 @@
 		060B1B55155188BF00454D72 /* MUKMediaGallery.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 060B1B071551584400454D72 /* MUKMediaGallery.bundle */; };
 		062448351552848E005CE74D /* sea.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 062448341552848E005CE74D /* sea.mp4 */; };
 		062448371552849A005CE74D /* sea-movie-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 062448361552849A005CE74D /* sea-movie-thumbnail.jpg */; };
+		063DF023158641D9008ABADA /* LBYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DF01D158641D9008ABADA /* LBYouTubeExtractor.m */; };
+		063DF025158641D9008ABADA /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DF021158641D9008ABADA /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		063DF0291586432B008ABADA /* libMUKImageFetcher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 063DEFE315864198008ABADA /* libMUKImageFetcher.a */; };
 		0671974D1560FC730017EAC0 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0671974C1560FC730017EAC0 /* MediaPlayer.framework */; };
 		06A26C3F155E6F92009D36F0 /* CarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C3D155E6F92009D36F0 /* CarouselViewController.m */; };
 		06A26C40155E6F92009D36F0 /* CarouselViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A26C3E155E6F92009D36F0 /* CarouselViewController.xib */; };
-		06A93C5D155A67E90083CFE4 /* ImageFetcherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C5C155A67E90083CFE4 /* ImageFetcherViewController.m */; };
 		06D07285156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 06D07284156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 */; };
 		06D072DB15618E91000296C3 /* ChainedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D072D915618E91000296C3 /* ChainedViewController.m */; };
 		06EEEF1E156953540090EE76 /* libMUKMediaGallery.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 060B1B031551584400454D72 /* libMUKMediaGallery.a */; };
@@ -33,7 +35,6 @@
 		06EEEF20156953540090EE76 /* libMUKObjectCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1BFC1567933F0040DA06 /* libMUKObjectCache.a */; };
 		06EEEF21156953540090EE76 /* libMUKScrolling.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1C031567933F0040DA06 /* libMUKScrolling.a */; };
 		06EEEF22156953540090EE76 /* libMUKToolkit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06FF1C0A1567933F0040DA06 /* libMUKToolkit.a */; };
-		06FF1BF01567933F0040DA06 /* PSYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06FF1BEF1567933F0040DA06 /* PSYouTubeExtractor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 060049F8154C18FC004A3B17;
 			remoteInfo = MUKMediaGalleryResources;
+		};
+		063DEFE215864198008ABADA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 063DEFD915864196008ABADA /* MUKImageFetcher.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06FD13D9158482D400FDCD9E;
+			remoteInfo = MUKImageFetcher;
+		};
+		063DEFE415864198008ABADA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 063DEFD915864196008ABADA /* MUKImageFetcher.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06FD13E9158482D400FDCD9E;
+			remoteInfo = MUKImageFetcherTests;
+		};
+		063DF02715864321008ABADA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 063DEFD915864196008ABADA /* MUKImageFetcher.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 06FD13D8158482D400FDCD9E;
+			remoteInfo = MUKImageFetcher;
 		};
 		06FF1BF41567933F0040DA06 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -181,12 +203,15 @@
 		062448341552848E005CE74D /* sea.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sea.mp4; sourceTree = "<group>"; };
 		062448361552849A005CE74D /* sea-movie-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "sea-movie-thumbnail.jpg"; sourceTree = "<group>"; };
 		0624483E15528742005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/Example/MUKMediaGalleryExample/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
+		063DEFD915864196008ABADA /* MUKImageFetcher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKImageFetcher.xcodeproj; path = ../Submodules/MUKImageFetcher/MUKImageFetcher.xcodeproj; sourceTree = "<group>"; };
+		063DF01C158641D9008ABADA /* LBYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBYouTubeExtractor.h; sourceTree = "<group>"; };
+		063DF01D158641D9008ABADA /* LBYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBYouTubeExtractor.m; sourceTree = "<group>"; };
+		063DF020158641D9008ABADA /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		063DF021158641D9008ABADA /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		0671974C1560FC730017EAC0 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		06A26C3C155E6F92009D36F0 /* CarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselViewController.h; sourceTree = "<group>"; };
 		06A26C3D155E6F92009D36F0 /* CarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselViewController.m; sourceTree = "<group>"; };
 		06A26C3E155E6F92009D36F0 /* CarouselViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CarouselViewController.xib; sourceTree = "<group>"; };
-		06A93C5B155A67E90083CFE4 /* ImageFetcherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageFetcherViewController.h; sourceTree = "<group>"; };
-		06A93C5C155A67E90083CFE4 /* ImageFetcherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageFetcherViewController.m; sourceTree = "<group>"; };
 		06D07284156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "SexForModerns-StopTheClock_64kb.mp3"; sourceTree = "<group>"; };
 		06D072D815618E91000296C3 /* ChainedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChainedViewController.h; sourceTree = "<group>"; };
 		06D072D915618E91000296C3 /* ChainedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChainedViewController.m; sourceTree = "<group>"; };
@@ -194,8 +219,6 @@
 		06FF1BE21567933F0040DA06 /* MUKNetworking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKNetworking.xcodeproj; path = ../Submodules/MUKNetworking/MUKNetworking.xcodeproj; sourceTree = "<group>"; };
 		06FF1BE31567933F0040DA06 /* MUKObjectCache.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKObjectCache.xcodeproj; path = ../Submodules/MUKObjectCache/MUKObjectCache.xcodeproj; sourceTree = "<group>"; };
 		06FF1BE41567933F0040DA06 /* MUKScrolling.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKScrolling.xcodeproj; path = ../Submodules/MUKScrolling/MUKScrolling.xcodeproj; sourceTree = "<group>"; };
-		06FF1BEE1567933F0040DA06 /* PSYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSYouTubeExtractor.h; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.h; sourceTree = "<group>"; };
-		06FF1BEF1567933F0040DA06 /* PSYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSYouTubeExtractor.m; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,6 +226,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				063DF0291586432B008ABADA /* libMUKImageFetcher.a in Frameworks */,
 				06EEEF1E156953540090EE76 /* libMUKMediaGallery.a in Frameworks */,
 				06EEEF1F156953540090EE76 /* libMUKNetworking.a in Frameworks */,
 				06EEEF20156953540090EE76 /* libMUKObjectCache.a in Frameworks */,
@@ -239,6 +263,7 @@
 		060B1AC81551581A00454D72 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				063DEFD915864196008ABADA /* MUKImageFetcher.xcodeproj */,
 				06FF1BE11567933F0040DA06 /* MUKToolkit.xcodeproj */,
 				06FF1BE21567933F0040DA06 /* MUKNetworking.xcodeproj */,
 				06FF1BE31567933F0040DA06 /* MUKObjectCache.xcodeproj */,
@@ -265,7 +290,6 @@
 		060B1AD01551581A00454D72 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				06FF1BE51567933F0040DA06 /* PSYouTubeExtractor */,
 				06D07283156104F9000296C3 /* Audio */,
 				062448331552848E005CE74D /* Movies */,
 				060B1B4E1551860800454D72 /* Images */,
@@ -290,6 +314,7 @@
 		060B1B1D155158CD00454D72 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				063DF01A158641C9008ABADA /* LBYouTubeVew */,
 				060B1B1E155158CD00454D72 /* App Delegate */,
 				060B1B21155158CD00454D72 /* View Controllers */,
 			);
@@ -309,7 +334,6 @@
 			isa = PBXGroup;
 			children = (
 				060B1B22155158CD00454D72 /* Root */,
-				06A93C5A155A67CE0083CFE4 /* Image Fetcher */,
 				060B1B23155158CD00454D72 /* Thumbnails View */,
 				06A26C3B155E6F7F009D36F0 /* Carousel View */,
 				06D072D715618E47000296C3 /* Chained View Controllers */,
@@ -354,6 +378,44 @@
 			path = Movies;
 			sourceTree = "<group>";
 		};
+		063DEFDA15864196008ABADA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				063DEFE315864198008ABADA /* libMUKImageFetcher.a */,
+				063DEFE515864198008ABADA /* MUKImageFetcherTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		063DF01A158641C9008ABADA /* LBYouTubeVew */ = {
+			isa = PBXGroup;
+			children = (
+				063DF01B158641D9008ABADA /* LBYouTubeExtractor */,
+				063DF01E158641D9008ABADA /* JSONKit */,
+			);
+			name = LBYouTubeVew;
+			sourceTree = "<group>";
+		};
+		063DF01B158641D9008ABADA /* LBYouTubeExtractor */ = {
+			isa = PBXGroup;
+			children = (
+				063DF01C158641D9008ABADA /* LBYouTubeExtractor.h */,
+				063DF01D158641D9008ABADA /* LBYouTubeExtractor.m */,
+			);
+			name = LBYouTubeExtractor;
+			path = ../../../Submodules/LBYouTubeView/LBYouTubeExtractor;
+			sourceTree = "<group>";
+		};
+		063DF01E158641D9008ABADA /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				063DF020158641D9008ABADA /* JSONKit.h */,
+				063DF021158641D9008ABADA /* JSONKit.m */,
+			);
+			name = JSONKit;
+			path = ../../../Submodules/LBYouTubeView/Submodules/JSONKit;
+			sourceTree = "<group>";
+		};
 		06A26C3B155E6F7F009D36F0 /* Carousel View */ = {
 			isa = PBXGroup;
 			children = (
@@ -362,15 +424,6 @@
 				06A26C3E155E6F92009D36F0 /* CarouselViewController.xib */,
 			);
 			path = "Carousel View";
-			sourceTree = "<group>";
-		};
-		06A93C5A155A67CE0083CFE4 /* Image Fetcher */ = {
-			isa = PBXGroup;
-			children = (
-				06A93C5B155A67E90083CFE4 /* ImageFetcherViewController.h */,
-				06A93C5C155A67E90083CFE4 /* ImageFetcherViewController.m */,
-			);
-			path = "Image Fetcher";
 			sourceTree = "<group>";
 		};
 		06D07283156104F9000296C3 /* Audio */ = {
@@ -388,16 +441,6 @@
 				06D072D915618E91000296C3 /* ChainedViewController.m */,
 			);
 			path = "Chained View Controllers";
-			sourceTree = "<group>";
-		};
-		06FF1BE51567933F0040DA06 /* PSYouTubeExtractor */ = {
-			isa = PBXGroup;
-			children = (
-				06FF1BEE1567933F0040DA06 /* PSYouTubeExtractor.h */,
-				06FF1BEF1567933F0040DA06 /* PSYouTubeExtractor.m */,
-			);
-			name = PSYouTubeExtractor;
-			path = ../..;
 			sourceTree = "<group>";
 		};
 		06FF1BE61567933F0040DA06 /* Products */ = {
@@ -450,6 +493,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				063DF02815864321008ABADA /* PBXTargetDependency */,
 				06FF1C0E156793AC0040DA06 /* PBXTargetDependency */,
 				06FF1C10156793AC0040DA06 /* PBXTargetDependency */,
 				06FF1C12156793AC0040DA06 /* PBXTargetDependency */,
@@ -481,6 +525,10 @@
 			productRefGroup = 060B1AC61551581A00454D72 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 063DEFDA15864196008ABADA /* Products */;
+					ProjectRef = 063DEFD915864196008ABADA /* MUKImageFetcher.xcodeproj */;
+				},
 				{
 					ProductGroup = 060B1AE51551584200454D72 /* Products */;
 					ProjectRef = 060B1AE41551584200454D72 /* MUKMediaGallery.xcodeproj */;
@@ -529,6 +577,20 @@
 			fileType = wrapper.cfbundle;
 			path = MUKMediaGallery.bundle;
 			remoteRef = 060B1B061551584400454D72 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		063DEFE315864198008ABADA /* libMUKImageFetcher.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMUKImageFetcher.a;
+			remoteRef = 063DEFE215864198008ABADA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		063DEFE515864198008ABADA /* MUKImageFetcherTests.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = MUKImageFetcherTests.octest;
+			remoteRef = 063DEFE415864198008ABADA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		06FF1BF51567933F0040DA06 /* libMUKNetworking.a */ = {
@@ -617,10 +679,10 @@
 				060B1B24155158CD00454D72 /* AppDelegate.m in Sources */,
 				060B1B27155158E400454D72 /* RootTableViewController.m in Sources */,
 				060B1B2B1551592200454D72 /* ThumbnailsViewController.m in Sources */,
-				06A93C5D155A67E90083CFE4 /* ImageFetcherViewController.m in Sources */,
 				06A26C3F155E6F92009D36F0 /* CarouselViewController.m in Sources */,
 				06D072DB15618E91000296C3 /* ChainedViewController.m in Sources */,
-				06FF1BF01567933F0040DA06 /* PSYouTubeExtractor.m in Sources */,
+				063DF023158641D9008ABADA /* LBYouTubeExtractor.m in Sources */,
+				063DF025158641D9008ABADA /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,6 +693,11 @@
 			isa = PBXTargetDependency;
 			name = MUKMediaGalleryResources;
 			targetProxy = 060B1B531551888D00454D72 /* PBXContainerItemProxy */;
+		};
+		063DF02815864321008ABADA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MUKImageFetcher;
+			targetProxy = 063DF02715864321008ABADA /* PBXContainerItemProxy */;
 		};
 		06FF1C0E156793AC0040DA06 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

@@ -24,12 +24,12 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <UIKit/UIKit.h>
-#import <MUKMediaGallery/MUKImageFetcher.h>
 #import <MUKMediaGallery/MUKMediaAssetProtocol.h>
 
 /**
  A view which displays a grid of thumbnails.
  */
+@class MUKImageFetcher, MUKURLConnection;
 @interface MUKMediaThumbnailsView : UIView
 /** @name Properties */
 /**

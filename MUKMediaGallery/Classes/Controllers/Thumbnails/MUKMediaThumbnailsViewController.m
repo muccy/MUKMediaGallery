@@ -24,6 +24,7 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "MUKMediaThumbnailsViewController.h"
+#import <MUKImageFetcher/MUKImageFetcher.h>
 
 @interface MUKMediaThumbnailsViewController ()
 @property (nonatomic, copy) void (^completionHandler_)(MUKMediaThumbnailsViewController *);

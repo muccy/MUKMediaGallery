@@ -24,12 +24,12 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import <UIKit/UIKit.h>
-#import <MUKMediaGallery/MUKImageFetcher.h>
 #import <MUKMediaGallery/MUKMediaAssetProtocol.h>
 
 /**
  A view which displays a paginated carousel of medias.
  */
+@class MUKImageFetcher, MUKURLConnection;
 @protocol MUKMediaImageAsset;
 @interface MUKMediaCarouselView : UIView
 /** @name Properties */

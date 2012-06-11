@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MUKMediaAssetProtocol.h"
 #import "MUKMediaImageAssetProtocol.h"
-#import "MUKImageFetcher.h"
+#import <MUKImageFetcher/MUKImageFetcher.h>
 #import <MUKScrolling/MUKScrolling.h>
 
 @interface MUKMediaGalleryUtils_ : NSObject

@@ -60,6 +60,10 @@
 		0624483015527F8C005CE74D /* MUKMediaThumbnailView_video.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482A15527F8C005CE74D /* MUKMediaThumbnailView_video.png */; };
 		0624483115527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0624482B15527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png */; };
 		0624483215527F8C005CE74D /* MUKMediaThumbnailView_.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */; };
+		063DEFB015863E22008ABADA /* LBYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DEFA715863E10008ABADA /* LBYouTubeExtractor.m */; };
+		063DEFB115863E30008ABADA /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DEFAE15863E10008ABADA /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		063DEFB315863E78008ABADA /* libMUKImageFetcher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 063DEFB215863E78008ABADA /* libMUKImageFetcher.a */; };
+		063DEFB415863FBC008ABADA /* MUKImageFetcher.h in Copy MUKImageFetcher Headers */ = {isa = PBXBuildFile; fileRef = 063DEFA015863D64008ABADA /* MUKImageFetcher.h */; };
 		06499740156239F100B9A254 /* MUKMediaCarouselViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 0649973E156239F100B9A254 /* MUKMediaCarouselViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		06499741156239F100B9A254 /* MUKMediaCarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0649973F156239F100B9A254 /* MUKMediaCarouselViewController.m */; };
 		065BF44E155D07E5008C91BD /* MUKMediaCarouselView.h in Headers */ = {isa = PBXBuildFile; fileRef = 065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -76,11 +80,6 @@
 		06A26C7D155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C7B155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m */; };
 		06A26C7F155E8BC6009D36F0 /* MUKMediaCarouselView_Cells.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C7E155E8BC5009D36F0 /* MUKMediaCarouselView_Cells.h */; };
 		06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */; };
-		06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */; };
-		06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */; };
-		06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */; };
-		06D0729215610C42000296C3 /* PSYouTubeExtractor.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D0728E15610C42000296C3 /* PSYouTubeExtractor.h */; };
 		06D072A015610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D0729E15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h */; };
 		06D072A115610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D0729F15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m */; };
 		06D072D5156189A8000296C3 /* MUKMediaThumbnailsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D072D3156189A8000296C3 /* MUKMediaThumbnailsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -106,7 +105,6 @@
 		06D7BA2B156692A0006F1E42 /* MUKGridCellFixedSize.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D7BA23156692A0006F1E42 /* MUKGridCellFixedSize.h */; };
 		06D7BA2C156692A0006F1E42 /* MUKGridCellOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D7BA24156692A0006F1E42 /* MUKGridCellOptions.h */; };
 		06D7BA2D156692A0006F1E42 /* MUKRecyclableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 06D7BA25156692A0006F1E42 /* MUKRecyclableView.h */; };
-		06D7BA4215669301006F1E42 /* PSYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */; };
 		06EEEECE156950500090EE76 /* libMUKNetworking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEECA156950500090EE76 /* libMUKNetworking.a */; };
 		06EEEECF156950500090EE76 /* libMUKObjectCache.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEECB156950500090EE76 /* libMUKObjectCache.a */; };
 		06EEEED0156950500090EE76 /* libMUKScrolling.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 06EEEECC156950500090EE76 /* libMUKScrolling.a */; };
@@ -153,6 +151,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		063DEFA215863D99008ABADA /* Copy MUKImageFetcher Headers */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = MUK/DependenciesHeaders/MUKImageFetcher;
+			dstSubfolderSpec = 16;
+			files = (
+				063DEFB415863FBC008ABADA /* MUKImageFetcher.h in Copy MUKImageFetcher Headers */,
+			);
+			name = "Copy MUKImageFetcher Headers";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		06FF1B9715678D8A0040DA06 /* Copy MUKToolkit Headers */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -266,6 +275,12 @@
 		0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MUKMediaThumbnailView_.xib; sourceTree = "<group>"; };
 		0624483815528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/Localizable.strings"; sourceTree = "<absolute>"; };
 		0624483915528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
+		063DEFA015863D64008ABADA /* MUKImageFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKImageFetcher.h; path = Submodules/MUKImageFetcher/MUKImageFetcher/MUKImageFetcher.h; sourceTree = "<group>"; };
+		063DEFA615863E10008ABADA /* LBYouTubeExtractor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBYouTubeExtractor.h; sourceTree = "<group>"; };
+		063DEFA715863E10008ABADA /* LBYouTubeExtractor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBYouTubeExtractor.m; sourceTree = "<group>"; };
+		063DEFAD15863E10008ABADA /* JSONKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		063DEFAE15863E10008ABADA /* JSONKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		063DEFB215863E78008ABADA /* libMUKImageFetcher.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKImageFetcher.a; path = "Submodules/MUKImageFetcher/build/Release-iphoneos/libMUKImageFetcher.a"; sourceTree = "<group>"; };
 		0649973E156239F100B9A254 /* MUKMediaCarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselViewController.h; sourceTree = "<group>"; };
 		0649973F156239F100B9A254 /* MUKMediaCarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselViewController.m; sourceTree = "<group>"; };
 		065BF44C155D07E5008C91BD /* MUKMediaCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView.h; sourceTree = "<group>"; };
@@ -282,12 +297,6 @@
 		06A26C7B155E8ADE009D36F0 /* MUKMediaCarouselCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselCellView_.m; sourceTree = "<group>"; };
 		06A26C7E155E8BC5009D36F0 /* MUKMediaCarouselView_Cells.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselView_Cells.h; sourceTree = "<group>"; };
 		06A82AD31557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView_Selection.h; sourceTree = "<group>"; };
-		06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcher.h; sourceTree = "<group>"; };
-		06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcher.m; sourceTree = "<group>"; };
-		06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKImageFetcherURLConnectionQueue_.h; sourceTree = "<group>"; };
-		06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKImageFetcherURLConnectionQueue_.m; sourceTree = "<group>"; };
-		06D0728E15610C42000296C3 /* PSYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PSYouTubeExtractor.h; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.h; sourceTree = "<group>"; };
-		06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PSYouTubeExtractor.m; path = Submodules/PSYouTubeExtractor/PSYouTubeExtractor.m; sourceTree = "<group>"; };
 		06D0729E15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselYouTubeCellView_.h; sourceTree = "<group>"; };
 		06D0729F15610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselYouTubeCellView_.m; sourceTree = "<group>"; };
 		06D072D3156189A8000296C3 /* MUKMediaThumbnailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsViewController.h; sourceTree = "<group>"; };
@@ -313,10 +322,10 @@
 		06D7BA23156692A0006F1E42 /* MUKGridCellFixedSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKGridCellFixedSize.h; path = "Submodules/MUKScrolling/MUKScrolling/Classes/Grid/Cell Size/Fixed/MUKGridCellFixedSize.h"; sourceTree = "<group>"; };
 		06D7BA24156692A0006F1E42 /* MUKGridCellOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKGridCellOptions.h; path = "Submodules/MUKScrolling/MUKScrolling/Classes/Grid/Cell Options/MUKGridCellOptions.h"; sourceTree = "<group>"; };
 		06D7BA25156692A0006F1E42 /* MUKRecyclableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKRecyclableView.h; path = "Submodules/MUKScrolling/MUKScrolling/Classes/Recyclable View/MUKRecyclableView.h"; sourceTree = "<group>"; };
-		06EEEECA156950500090EE76 /* libMUKNetworking.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKNetworking.a; path = "Submodules/MUKNetworking/build/Release-iphoneos/libMUKNetworking.a"; sourceTree = "<group>"; };
-		06EEEECB156950500090EE76 /* libMUKObjectCache.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKObjectCache.a; path = "Submodules/MUKObjectCache/build/Release-iphoneos/libMUKObjectCache.a"; sourceTree = "<group>"; };
-		06EEEECC156950500090EE76 /* libMUKScrolling.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKScrolling.a; path = "Submodules/MUKScrolling/build/Release-iphoneos/libMUKScrolling.a"; sourceTree = "<group>"; };
-		06EEEECD156950500090EE76 /* libMUKToolkit.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libMUKToolkit.a; path = "Submodules/MUKToolkit/build/Release-iphoneos/libMUKToolkit.a"; sourceTree = "<group>"; };
+		06EEEECA156950500090EE76 /* libMUKNetworking.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKNetworking.a; path = "Submodules/MUKNetworking/build/Release-iphoneos/libMUKNetworking.a"; sourceTree = "<group>"; };
+		06EEEECB156950500090EE76 /* libMUKObjectCache.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKObjectCache.a; path = "Submodules/MUKObjectCache/build/Release-iphoneos/libMUKObjectCache.a"; sourceTree = "<group>"; };
+		06EEEECC156950500090EE76 /* libMUKScrolling.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKScrolling.a; path = "Submodules/MUKScrolling/build/Release-iphoneos/libMUKScrolling.a"; sourceTree = "<group>"; };
+		06EEEECD156950500090EE76 /* libMUKToolkit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKToolkit.a; path = "Submodules/MUKToolkit/build/Release-iphoneos/libMUKToolkit.a"; sourceTree = "<group>"; };
 		06EEEED4156950B50090EE76 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		06EEEED6156950BA0090EE76 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		06FF1B7F15678C8B0040DA06 /* MUKToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKToolkit.h; path = Submodules/MUKToolkit/MUKToolkit/MUKToolkit.h; sourceTree = "<group>"; };
@@ -339,6 +348,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				063DEFB315863E78008ABADA /* libMUKImageFetcher.a in Frameworks */,
 				06EEEED7156950BA0090EE76 /* MediaPlayer.framework in Frameworks */,
 				06EEEED5156950B50090EE76 /* Security.framework in Frameworks */,
 				06EEEED3156950AF0090EE76 /* CoreGraphics.framework in Frameworks */,
@@ -392,6 +402,7 @@
 		06004952154C13BA004A3B17 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				063DEFB215863E78008ABADA /* libMUKImageFetcher.a */,
 				06EEEED6156950BA0090EE76 /* MediaPlayer.framework */,
 				06EEEED4156950B50090EE76 /* Security.framework */,
 				06EEEECA156950500090EE76 /* libMUKNetworking.a */,
@@ -410,7 +421,7 @@
 		060049DC154C1667004A3B17 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				06EEEEC9156950130090EE76 /* Dependencies */,
+				063DEFA415863DF1008ABADA /* Dependencies */,
 				06004A3A154C2958004A3B17 /* Private */,
 				066F8454154E940600704724 /* Models */,
 				06D072D01561898D000296C3 /* Controllers */,
@@ -607,6 +618,43 @@
 			path = XIBs;
 			sourceTree = "<group>";
 		};
+		063DEF8C15863BCC008ABADA /* MUKImageFetcher */ = {
+			isa = PBXGroup;
+			children = (
+				063DEFA015863D64008ABADA /* MUKImageFetcher.h */,
+			);
+			name = MUKImageFetcher;
+			sourceTree = "<group>";
+		};
+		063DEFA415863DF1008ABADA /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				063DEFA515863E10008ABADA /* LBYouTubeExtractor */,
+				063DEFAB15863E10008ABADA /* JSONKit */,
+			);
+			name = Dependencies;
+			sourceTree = "<group>";
+		};
+		063DEFA515863E10008ABADA /* LBYouTubeExtractor */ = {
+			isa = PBXGroup;
+			children = (
+				063DEFA615863E10008ABADA /* LBYouTubeExtractor.h */,
+				063DEFA715863E10008ABADA /* LBYouTubeExtractor.m */,
+			);
+			name = LBYouTubeExtractor;
+			path = Submodules/LBYouTubeView/LBYouTubeExtractor;
+			sourceTree = SOURCE_ROOT;
+		};
+		063DEFAB15863E10008ABADA /* JSONKit */ = {
+			isa = PBXGroup;
+			children = (
+				063DEFAD15863E10008ABADA /* JSONKit.h */,
+				063DEFAE15863E10008ABADA /* JSONKit.m */,
+			);
+			name = JSONKit;
+			path = Submodules/LBYouTubeView/Submodules/JSONKit;
+			sourceTree = SOURCE_ROOT;
+		};
 		065BF444155D07AE008C91BD /* Carousel */ = {
 			isa = PBXGroup;
 			children = (
@@ -620,7 +668,6 @@
 		066F8454154E940600704724 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				06A93C55155A5BAD0083CFE4 /* Image Fetcher */,
 				060B1B381551610E00454D72 /* Media Assets */,
 			);
 			path = Models;
@@ -684,35 +731,6 @@
 			path = Base;
 			sourceTree = "<group>";
 		};
-		06A93C55155A5BAD0083CFE4 /* Image Fetcher */ = {
-			isa = PBXGroup;
-			children = (
-				06A93C5E155A6E970083CFE4 /* Private */,
-				06A93C56155A5BC30083CFE4 /* MUKImageFetcher.h */,
-				06A93C57155A5BC30083CFE4 /* MUKImageFetcher.m */,
-			);
-			path = "Image Fetcher";
-			sourceTree = "<group>";
-		};
-		06A93C5E155A6E970083CFE4 /* Private */ = {
-			isa = PBXGroup;
-			children = (
-				06A93C5F155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h */,
-				06A93C60155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m */,
-			);
-			path = Private;
-			sourceTree = "<group>";
-		};
-		06D0728615610BFD000296C3 /* PSYouTubeExtractor */ = {
-			isa = PBXGroup;
-			children = (
-				06D0728E15610C42000296C3 /* PSYouTubeExtractor.h */,
-				06D0728F15610C42000296C3 /* PSYouTubeExtractor.m */,
-			);
-			name = PSYouTubeExtractor;
-			path = ../..;
-			sourceTree = "<group>";
-		};
 		06D0729D15610CA7000296C3 /* YouTube */ = {
 			isa = PBXGroup;
 			children = (
@@ -752,6 +770,7 @@
 		06D7B9C11566909E006F1E42 /* Dependencies Public Headers */ = {
 			isa = PBXGroup;
 			children = (
+				063DEF8C15863BCC008ABADA /* MUKImageFetcher */,
 				06D7BA0515669214006F1E42 /* MUKToolkit */,
 				06D7BA181566926B006F1E42 /* MUKNetworking */,
 				06D7B9C2156690A9006F1E42 /* MUKObjectCache */,
@@ -810,14 +829,6 @@
 			name = MUKScrolling;
 			sourceTree = "<group>";
 		};
-		06EEEEC9156950130090EE76 /* Dependencies */ = {
-			isa = PBXGroup;
-			children = (
-				06D0728615610BFD000296C3 /* PSYouTubeExtractor */,
-			);
-			name = Dependencies;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -844,8 +855,6 @@
 				060B1B471551813D00454D72 /* MUKMediaAudioAsset.h in Headers */,
 				060B1B4C155181D200454D72 /* MUKMediaVideoAsset.h in Headers */,
 				06A82AD41557CDDD00B6D449 /* MUKMediaThumbnailsView_Selection.h in Headers */,
-				06A93C58155A5BC30083CFE4 /* MUKImageFetcher.h in Headers */,
-				06A93C61155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.h in Headers */,
 				065BF44E155D07E5008C91BD /* MUKMediaCarouselView.h in Headers */,
 				06A26C30155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h in Headers */,
 				06A26C37155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h in Headers */,
@@ -854,7 +863,6 @@
 				06A26C7C155E8ADE009D36F0 /* MUKMediaCarouselCellView_.h in Headers */,
 				06A26C7F155E8BC6009D36F0 /* MUKMediaCarouselView_Cells.h in Headers */,
 				0671974A1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h in Headers */,
-				06D0729215610C42000296C3 /* PSYouTubeExtractor.h in Headers */,
 				06D072A015610CBC000296C3 /* MUKMediaCarouselYouTubeCellView_.h in Headers */,
 				06D072D5156189A8000296C3 /* MUKMediaThumbnailsViewController.h in Headers */,
 				06499740156239F100B9A254 /* MUKMediaCarouselViewController.h in Headers */,
@@ -894,6 +902,7 @@
 				06FF1B9815678D8C0040DA06 /* Copy MUKNetworking Headers */,
 				06FF1B9915678D8E0040DA06 /* Copy MUKObjectCache Headers */,
 				06FF1B9A15678D8F0040DA06 /* Copy MUKScrolling Headers */,
+				063DEFA215863D99008ABADA /* Copy MUKImageFetcher Headers */,
 				0600494C154C13BA004A3B17 /* Sources */,
 				0600494D154C13BA004A3B17 /* Frameworks */,
 				0600494E154C13BA004A3B17 /* Headers */,
@@ -1053,8 +1062,6 @@
 				060B1B42155161F700454D72 /* MUKMediaAsset.m in Sources */,
 				060B1B481551813D00454D72 /* MUKMediaAudioAsset.m in Sources */,
 				060B1B4D155181D200454D72 /* MUKMediaVideoAsset.m in Sources */,
-				06A93C59155A5BC30083CFE4 /* MUKImageFetcher.m in Sources */,
-				06A93C62155A6EAF0083CFE4 /* MUKImageFetcherURLConnectionQueue_.m in Sources */,
 				065BF44F155D07E5008C91BD /* MUKMediaCarouselView.m in Sources */,
 				06A26C31155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m in Sources */,
 				06A26C38155E613B009D36F0 /* MUKMediaCarouselImageCellView_.m in Sources */,
@@ -1070,8 +1077,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06D7BA4215669301006F1E42 /* PSYouTubeExtractor.m in Sources */,
 				060049E7154C168F004A3B17 /* MUKMediaGalleryTests.m in Sources */,
+				063DEFB015863E22008ABADA /* LBYouTubeExtractor.m in Sources */,
+				063DEFB115863E30008ABADA /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

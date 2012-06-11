@@ -5,6 +5,9 @@
       location = "container:"
       name = "Dependencies">
       <FileRef
+         location = "group:Submodules/MUKImageFetcher/MUKImageFetcher.xcodeproj">
+      </FileRef>
+      <FileRef
          location = "group:Submodules/MUKNetworking/MUKNetworking.xcodeproj">
       </FileRef>
       <FileRef

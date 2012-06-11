@@ -1,8 +1,6 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <MUKMediaGallery/MUKImageFetcher.h>
-
 #import <MUKMediaGallery/MUKMediaAssetProtocol.h>
 #import <MUKMediaGallery/MUKMediaImageAssetProtocol.h>
 #import <MUKMediaGallery/MUKMediaVideoAssetProtocol.h>

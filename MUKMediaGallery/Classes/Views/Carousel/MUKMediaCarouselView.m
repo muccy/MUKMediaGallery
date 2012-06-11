@@ -31,7 +31,7 @@
 
 #import "MUKMediaGalleryUtils_.h"
 #import "MUKMediaGalleryImageFetcher_.h"
-#import "PSYouTubeExtractor.h"
+#import "LBYouTubeExtractor.h"
 
 #import "MUKMediaCarouselImageCellView_.h"
 #import "MUKMediaCarouselPlayerCellView_.h"
@@ -44,7 +44,7 @@
 @interface MUKMediaCarouselView ()
 @property (nonatomic, strong) MUKGridView *gridView_;
 @property (nonatomic, strong) NSMutableIndexSet *loadedMediaIndexes_;
-@property (nonatomic, strong) PSYouTubeExtractor *youTubeExtractor_;
+@property (nonatomic, strong) LBYouTubeExtractor *youTubeExtractor_;
 @property (nonatomic) BOOL needsLoadingVisibleMedias_, notAnimatedScrolling_, overlayViewHidden_;
 @property (nonatomic) UIEdgeInsets overlayViewInsets_;
 
@@ -106,6 +106,7 @@
     
     [self.gridView_ removeAllHandlers];
     
+    self.youTubeExtractor_.completionHandler = nil;
     [self.youTubeExtractor_ cancel];
     
     // Clean all cells for prudence
@@ -655,36 +656,48 @@
                     if (![mediaURL isEqual:self.youTubeExtractor_.youTubeURL])
                     {
                         // Not processing same YouTube URL
-
-                        // Clean past extraction
-                        [self.youTubeExtractor_ cancel];
-
+                        
                         // Execute new extraction
                         MUKMediaCarouselYouTubeCellView_ *ytCell = (MUKMediaCarouselYouTubeCellView_ *)cellView;
                         
-                        self.youTubeExtractor_ = [PSYouTubeExtractor extractorForYouTubeURL:mediaURL success:^(NSURL *URL) 
-                        {
-                            // Found movie URL
-                            // Load in movie player
-                            if (ytCell.mediaAsset == mediaAsset) {
+                        if (self.youTubeExtractor_ == nil) {
+                            self.youTubeExtractor_ = [[LBYouTubeExtractor alloc] init];
+                            
+                            __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+                            self.youTubeExtractor_.completionHandler = ^(NSURL *URL, NSError *error)
+                            {
+                                if (URL) {
+                                    // Found movie URL
+                                    // Load in movie player
+                                    if (ytCell.mediaAsset == mediaAsset) {
 #if DEBUG_FAKE_NO_NATIVE_YT
-                                [ytCell setMediaURL:mediaURL inWebView:YES];
+                                        [ytCell setMediaURL:mediaURL inWebView:YES];
 #else
-                                [ytCell setMediaURL:URL inWebView:NO];
+                                        [ytCell setMediaURL:URL inWebView:NO];
 #endif
-                                
-                                [self didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
-                            }
+                                        
+                                        [weakSelf didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                                    }
+                                }
+                                else {
+                                    // Not found movie URL
+                                    // Load in web view
+                                    if (ytCell.mediaAsset == mediaAsset) {
+                                        [ytCell setMediaURL:mediaURL inWebView:YES];
+                                        
+                                        [weakSelf didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                                    }
+                                }
+                            };
+                        }
+                        else {
+                            // Cancel previous extractor instance
+                            [self.youTubeExtractor_ cancel];
+                        }
 
-                        } failure:^(NSError *error) {
-                            // Not found movie URL
-                            // Load in web view
-                            if (ytCell.mediaAsset == mediaAsset) {
-                                [ytCell setMediaURL:mediaURL inWebView:YES];
-                                
-                                [self didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
-                            }
-                        }]; // extractor
+                        // Fire extraction
+                        self.youTubeExtractor_.youTubeURL = mediaURL;
+                        [self.youTubeExtractor_ start];
                     } // if different URL
                 } // if mediaURL
             }
@@ -784,6 +797,7 @@
             }];
             
             if ([set count] == 0) {
+                self.youTubeExtractor_.completionHandler = nil;
                 [self.youTubeExtractor_ cancel];
                 self.youTubeExtractor_ = nil;
             }
