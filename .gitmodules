@@ -10,9 +10,9 @@
 [submodule "Submodules/MUKToolkit"]
 	path = Submodules/MUKToolkit
 	url = git://github.com/muccy/MUKToolkit.git
+[submodule "Submodules/MUKImageFetcher"]
+	path = Submodules/MUKImageFetcher
+	url = git://github.com/muccy/MUKImageFetcher.git
 [submodule "Submodules/LBYouTubeView"]
 	path = Submodules/LBYouTubeView
-	url = https://github.com/muccy/LBYouTubeView
-[submodule "Submodules/MUKImageFetcher.git"]
-	path = Submodules/MUKImageFetcher.git
-	url = https://github.com/muccy/MUKImageFetcher.git
+	url = git://github.com/muccy/LBYouTubeView.git
