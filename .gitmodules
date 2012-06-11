@@ -7,9 +7,12 @@
 [submodule "Submodules/MUKObjectCache"]
 	path = Submodules/MUKObjectCache
 	url = git://github.com/muccy/MUKObjectCache.git
-[submodule "Submodules/PSYouTubeExtractor"]
-	path = Submodules/PSYouTubeExtractor
-	url = git://github.com/steipete/PSYouTubeExtractor.git
 [submodule "Submodules/MUKToolkit"]
 	path = Submodules/MUKToolkit
 	url = git://github.com/muccy/MUKToolkit.git
+[submodule "Submodules/LBYouTubeView"]
+	path = Submodules/LBYouTubeView
+	url = https://github.com/muccy/LBYouTubeView
+[submodule "Submodules/MUKImageFetcher.git"]
+	path = Submodules/MUKImageFetcher.git
+	url = https://github.com/muccy/MUKImageFetcher.git
