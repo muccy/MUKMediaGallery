@@ -30,7 +30,6 @@
 		060049E7154C168F004A3B17 /* MUKMediaGalleryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 060049E5154C168F004A3B17 /* MUKMediaGalleryTests.m */; };
 		060049F0154C1781004A3B17 /* MUKMediaAssetProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 060049EF154C1781004A3B17 /* MUKMediaAssetProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		060049FB154C18FC004A3B17 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 060049FA154C18FC004A3B17 /* CoreFoundation.framework */; };
-		06004A01154C18FC004A3B17 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 060049FF154C18FC004A3B17 /* InfoPlist.strings */; };
 		06004A0A154C1CEB004A3B17 /* MUKMediaThumbnailsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A08154C1CEB004A3B17 /* MUKMediaThumbnailsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		06004A0B154C1CEB004A3B17 /* MUKMediaThumbnailsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 06004A09154C1CEB004A3B17 /* MUKMediaThumbnailsView.m */; };
 		06004A36154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06004A34154C24AD004A3B17 /* MUKMediaThumbnailsCountView_.h */; };
@@ -241,7 +240,6 @@
 		060049F9154C18FC004A3B17 /* MUKMediaGallery.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MUKMediaGallery.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		060049FA154C18FC004A3B17 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		060049FE154C18FC004A3B17 /* MUKMediaGalleryResources-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGalleryResources-Info.plist"; sourceTree = "<group>"; };
-		06004A00154C18FC004A3B17 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		06004A02154C18FC004A3B17 /* MUKMediaGalleryResources-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MUKMediaGalleryResources-Prefix.pch"; sourceTree = "<group>"; };
 		06004A08154C1CEB004A3B17 /* MUKMediaThumbnailsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaThumbnailsView.h; sourceTree = "<group>"; };
 		06004A09154C1CEB004A3B17 /* MUKMediaThumbnailsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaThumbnailsView.m; sourceTree = "<group>"; };
@@ -251,7 +249,6 @@
 		06004A3C154C2972004A3B17 /* MUKMediaGalleryUtils_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGalleryUtils_.h; sourceTree = "<group>"; };
 		06004A3D154C2972004A3B17 /* MUKMediaGalleryUtils_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGalleryUtils_.m; sourceTree = "<group>"; };
 		06004A43154C2AB7004A3B17 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		06004A45154C2AC6004A3B17 /* it */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		06004A46154C3420004A3B17 /* MUKMediaImageAssetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaImageAssetProtocol.h; sourceTree = "<group>"; };
 		06004A48154C3446004A3B17 /* MUKMediaVideoAssetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaVideoAssetProtocol.h; sourceTree = "<group>"; };
 		06004A4A154C345F004A3B17 /* MUKMediaAudioAssetProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaAudioAssetProtocol.h; sourceTree = "<group>"; };
@@ -273,8 +270,6 @@
 		0624482A15527F8C005CE74D /* MUKMediaThumbnailView_video.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MUKMediaThumbnailView_video.png; sourceTree = "<group>"; };
 		0624482B15527F8C005CE74D /* MUKMediaThumbnailView_video@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MUKMediaThumbnailView_video@2x.png"; sourceTree = "<group>"; };
 		0624482D15527F8C005CE74D /* MUKMediaThumbnailView_.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MUKMediaThumbnailView_.xib; sourceTree = "<group>"; };
-		0624483815528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/Localizable.strings"; sourceTree = "<absolute>"; };
-		0624483915528741005CE74D /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "/Users/muccy/Documents/Developer/Personal/Xcode/Git/MUKit GitHub/MUKMediaGallery/MUKMediaGalleryResources/it.lproj/InfoPlist.strings"; sourceTree = "<absolute>"; };
 		063DEFA015863D64008ABADA /* MUKImageFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKImageFetcher.h; path = Submodules/MUKImageFetcher/MUKImageFetcher/MUKImageFetcher.h; sourceTree = "<group>"; };
 		063DEFA615863E10008ABADA /* LBYouTubeExtractor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LBYouTubeExtractor.h; sourceTree = "<group>"; };
 		063DEFA715863E10008ABADA /* LBYouTubeExtractor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LBYouTubeExtractor.m; sourceTree = "<group>"; };
@@ -328,6 +323,7 @@
 		06EEEECD156950500090EE76 /* libMUKToolkit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libMUKToolkit.a; path = "Submodules/MUKToolkit/build/Release-iphoneos/libMUKToolkit.a"; sourceTree = "<group>"; };
 		06EEEED4156950B50090EE76 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		06EEEED6156950BA0090EE76 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		06F20D3615A038DF008E1A90 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		06FF1B7F15678C8B0040DA06 /* MUKToolkit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKToolkit.h; path = Submodules/MUKToolkit/MUKToolkit/MUKToolkit.h; sourceTree = "<group>"; };
 		06FF1B8215678C9A0040DA06 /* MUKNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKNetworking.h; path = Submodules/MUKNetworking/MUKNetworking/MUKNetworking.h; sourceTree = "<group>"; };
 		06FF1B8415678CBD0040DA06 /* MUKScrolling.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUKScrolling.h; path = Submodules/MUKScrolling/MUKScrolling/MUKScrolling.h; sourceTree = "<group>"; };
@@ -477,7 +473,6 @@
 			isa = PBXGroup;
 			children = (
 				060049FE154C18FC004A3B17 /* MUKMediaGalleryResources-Info.plist */,
-				060049FF154C18FC004A3B17 /* InfoPlist.strings */,
 				06004A02154C18FC004A3B17 /* MUKMediaGalleryResources-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -994,7 +989,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				06004A01154C18FC004A3B17 /* InfoPlist.strings in Resources */,
 				06004A42154C2AB7004A3B17 /* Localizable.strings in Resources */,
 				0624482E15527F8C005CE74D /* MUKMediaThumbnailView_audio.png in Resources */,
 				0624482F15527F8C005CE74D /* MUKMediaThumbnailView_audio@2x.png in Resources */,
@@ -1101,21 +1095,11 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		060049FF154C18FC004A3B17 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				06004A00154C18FC004A3B17 /* en */,
-				0624483915528741005CE74D /* it */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		06004A44154C2AB7004A3B17 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				06004A43154C2AB7004A3B17 /* en */,
-				06004A45154C2AC6004A3B17 /* it */,
-				0624483815528741005CE74D /* it */,
+				06F20D3615A038DF008E1A90 /* it */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
