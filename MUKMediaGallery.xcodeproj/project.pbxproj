@@ -285,7 +285,8 @@
 		065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselView.m; sourceTree = "<group>"; };
 		067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselPlayerCellView_.h; sourceTree = "<group>"; };
 		067197491560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselPlayerCellView_.m; sourceTree = "<group>"; };
-		0675633715D39EB000D72C58 /* MUK+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = "MUK+Color.h"; path = "Submodules/MUKToolkit/MUKToolkit/Classes/Color/MUK+Color.h"; sourceTree = "<group>"; };
+		0675633715D39EB000D72C58 /* MUK+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MUK+Color.h"; path = "Submodules/MUKToolkit/MUKToolkit/Classes/Color/MUK+Color.h"; sourceTree = "<group>"; };
+		0675639215D3A8AE00D72C58 /* LBYouTubeVideoQuality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LBYouTubeVideoQuality.h; path = Submodules/LBYouTubeView/LBYouTubeVideoQuality.h; sourceTree = SOURCE_ROOT; };
 		06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGalleryImageFetcher_.h; sourceTree = "<group>"; };
 		06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGalleryImageFetcher_.m; sourceTree = "<group>"; };
 		06A26C35155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselImageCellView_.h; sourceTree = "<group>"; };
@@ -637,6 +638,7 @@
 		063DEFA515863E10008ABADA /* LBYouTubeExtractor */ = {
 			isa = PBXGroup;
 			children = (
+				0675639215D3A8AE00D72C58 /* LBYouTubeVideoQuality.h */,
 				063DEFA615863E10008ABADA /* LBYouTubeExtractor.h */,
 				063DEFA715863E10008ABADA /* LBYouTubeExtractor.m */,
 			);

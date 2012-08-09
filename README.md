@@ -46,9 +46,9 @@ Please remember not to create a copy of files while adding project: you only nee
 
 Now add `MUKToolkit.xcodeproj`, `MUKObjectCache.xcodeproj`, `MUKNetworking.xcodeproj`, `MUKImageFetcher.xcodeproj` and `MUKScrolling.xcodeproj` by choosing these projects from `Submodules` folder. With this step you are adding `MUKMediaGallery` dependencies (recursively). If your project already contains dependencies please take care to use updated libraries.
 
-Please add also `LBYouTubeExtractor` and `JSONKit` from `Submodules/LBYouTubeView`.
+Please add also `LBYouTubeExtractor`, `LBYouTubeVideoQuality.h` and `JSONKit` from `Submodules/LBYouTubeView`.
  
-<img src="http://i.imgur.com/kRtNP.png" /> <img src="http://i.imgur.com/ys9eo.png" />
+<img src="http://i.imgur.com/DkcwQ.png" /> <img src="http://i.imgur.com/ys9eo.png" />
 
 #### Step 2: make your project dependent
 Click on your project and, then, your app target:

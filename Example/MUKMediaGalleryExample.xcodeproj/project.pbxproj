@@ -25,6 +25,7 @@
 		063DF025158641D9008ABADA /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DF021158641D9008ABADA /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		063DF0291586432B008ABADA /* libMUKImageFetcher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 063DEFE315864198008ABADA /* libMUKImageFetcher.a */; };
 		0671974D1560FC730017EAC0 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0671974C1560FC730017EAC0 /* MediaPlayer.framework */; };
+		0675639615D3A91600D72C58 /* LBYouTubeVideoQuality.h in Resources */ = {isa = PBXBuildFile; fileRef = 0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */; };
 		06A26C3F155E6F92009D36F0 /* CarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C3D155E6F92009D36F0 /* CarouselViewController.m */; };
 		06A26C40155E6F92009D36F0 /* CarouselViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 06A26C3E155E6F92009D36F0 /* CarouselViewController.xib */; };
 		06D07285156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 06D07284156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 */; };
@@ -206,6 +207,7 @@
 		063DF020158641D9008ABADA /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		063DF021158641D9008ABADA /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		0671974C1560FC730017EAC0 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = LBYouTubeVideoQuality.h; path = ../../../Submodules/LBYouTubeView/LBYouTubeVideoQuality.h; sourceTree = "<group>"; };
 		06A26C3C155E6F92009D36F0 /* CarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselViewController.h; sourceTree = "<group>"; };
 		06A26C3D155E6F92009D36F0 /* CarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselViewController.m; sourceTree = "<group>"; };
 		06A26C3E155E6F92009D36F0 /* CarouselViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CarouselViewController.xib; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 		063DF01A158641C9008ABADA /* LBYouTubeVew */ = {
 			isa = PBXGroup;
 			children = (
+				0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */,
 				063DF01B158641D9008ABADA /* LBYouTubeExtractor */,
 				063DF01E158641D9008ABADA /* JSONKit */,
 			);
@@ -660,6 +663,7 @@
 				062448371552849A005CE74D /* sea-movie-thumbnail.jpg in Resources */,
 				06A26C40155E6F92009D36F0 /* CarouselViewController.xib in Resources */,
 				06D07285156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */,
+				0675639615D3A91600D72C58 /* LBYouTubeVideoQuality.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
