@@ -69,6 +69,8 @@
 		065BF44F155D07E5008C91BD /* MUKMediaCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */; };
 		0671974A1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */; };
 		0671974B1560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m in Sources */ = {isa = PBXBuildFile; fileRef = 067197491560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m */; };
+		0675633815D39EB200D72C58 /* MUK+Color.h in Copy MUKToolkit Headers */ = {isa = PBXBuildFile; fileRef = 0675633715D39EB000D72C58 /* MUK+Color.h */; };
+		0675633915D39EBB00D72C58 /* MUK+Color.h in Headers */ = {isa = PBXBuildFile; fileRef = 0675633715D39EB000D72C58 /* MUK+Color.h */; };
 		06A26C30155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */; };
 		06A26C31155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */; };
 		06A26C37155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h in Headers */ = {isa = PBXBuildFile; fileRef = 06A26C35155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h */; };
@@ -175,6 +177,7 @@
 				06FF1BB01567910C0040DA06 /* MUK+URL.h in Copy MUKToolkit Headers */,
 				06FF1BB11567910C0040DA06 /* MUK+Geometry.h in Copy MUKToolkit Headers */,
 				06FF1BB21567910C0040DA06 /* MUK+Object.h in Copy MUKToolkit Headers */,
+				0675633815D39EB200D72C58 /* MUK+Color.h in Copy MUKToolkit Headers */,
 				06FF1BB31567910C0040DA06 /* MUK+Data.h in Copy MUKToolkit Headers */,
 			);
 			name = "Copy MUKToolkit Headers";
@@ -282,6 +285,7 @@
 		065BF44D155D07E5008C91BD /* MUKMediaCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselView.m; sourceTree = "<group>"; };
 		067197481560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselPlayerCellView_.h; sourceTree = "<group>"; };
 		067197491560F6F20017EAC0 /* MUKMediaCarouselPlayerCellView_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaCarouselPlayerCellView_.m; sourceTree = "<group>"; };
+		0675633715D39EB000D72C58 /* MUK+Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = "MUK+Color.h"; path = "Submodules/MUKToolkit/MUKToolkit/Classes/Color/MUK+Color.h"; sourceTree = "<group>"; };
 		06A26C2E155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGalleryImageFetcher_.h; sourceTree = "<group>"; };
 		06A26C2F155E5CFE009D36F0 /* MUKMediaGalleryImageFetcher_.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGalleryImageFetcher_.m; sourceTree = "<group>"; };
 		06A26C35155E613B009D36F0 /* MUKMediaCarouselImageCellView_.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaCarouselImageCellView_.h; sourceTree = "<group>"; };
@@ -793,6 +797,7 @@
 				06D7BA0A15669222006F1E42 /* MUK+URL.h */,
 				06D7BA0B15669222006F1E42 /* MUK+Geometry.h */,
 				06D7BA0C15669222006F1E42 /* MUK+Object.h */,
+				0675633715D39EB000D72C58 /* MUK+Color.h */,
 				06D7BA0D15669222006F1E42 /* MUK+Data.h */,
 			);
 			name = MUKToolkit;
@@ -867,6 +872,7 @@
 				06D7BA1115669222006F1E42 /* MUK+Array.h in Headers */,
 				06D7BA1215669222006F1E42 /* MUK+URL.h in Headers */,
 				06D7BA1315669222006F1E42 /* MUK+Geometry.h in Headers */,
+				0675633915D39EBB00D72C58 /* MUK+Color.h in Headers */,
 				06D7BA1415669222006F1E42 /* MUK+Object.h in Headers */,
 				06D7BA1515669222006F1E42 /* MUK+Data.h in Headers */,
 				06D7BA1715669236006F1E42 /* MUKObjectCache.h in Headers */,
