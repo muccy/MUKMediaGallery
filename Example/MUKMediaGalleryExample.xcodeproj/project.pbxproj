@@ -207,7 +207,7 @@
 		063DF020158641D9008ABADA /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		063DF021158641D9008ABADA /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		0671974C1560FC730017EAC0 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = LBYouTubeVideoQuality.h; path = ../../../Submodules/LBYouTubeView/LBYouTubeVideoQuality.h; sourceTree = "<group>"; };
+		0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LBYouTubeVideoQuality.h; path = ../../../Submodules/LBYouTubeView/LBYouTubeVideoQuality.h; sourceTree = "<group>"; };
 		06A26C3C155E6F92009D36F0 /* CarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselViewController.h; sourceTree = "<group>"; };
 		06A26C3D155E6F92009D36F0 /* CarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselViewController.m; sourceTree = "<group>"; };
 		06A26C3E155E6F92009D36F0 /* CarouselViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CarouselViewController.xib; sourceTree = "<group>"; };
