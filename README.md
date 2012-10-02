@@ -5,9 +5,9 @@ MUKMediaGallery is a simple, block-based, ARC-enabled, iOS 4+ library built to p
 Requirements
 ------------
 * ARC enabled compiler
-* Deployment target: iOS 4 or greater
-* Base SDK: iOS 5 or greater
-* Xcode 4 or greater
+* Deployment target: iOS 5 or greater
+* Base SDK: iOS 6 or greater
+* Xcode 4.5 or greater
 
 Usage
 -----
