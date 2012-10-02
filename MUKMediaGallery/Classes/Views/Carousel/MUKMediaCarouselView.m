@@ -393,7 +393,7 @@
     self.gridView_.cellCreationHandler = ^UIView<MUKRecyclable>* (NSInteger cellIndex) 
     {
         // Take media asset
-        id<MUKMediaAsset> mediaAsset = [weakSelf.mediaAssets objectAtIndex:cellIndex];
+        id<MUKMediaAsset> mediaAsset = (weakSelf.mediaAssets)[cellIndex];
         
         // Create or dequeue cell for this media asset
         MUKMediaCarouselCellView_ *cellView = [weakSelf createOrDequeueCellForMediaAsset_:mediaAsset];
@@ -415,7 +415,7 @@
     
     self.gridView_.cellOptionsHandler = ^(NSInteger index) {
         // Take media asset
-        id<MUKMediaAsset> mediaAsset = [weakSelf.mediaAssets objectAtIndex:index];
+        id<MUKMediaAsset> mediaAsset = (weakSelf.mediaAssets)[index];
         
         BOOL mediaLoaded = [weakSelf isLoadedMediaAssetAtIndex_:index];
         MUKGridCellOptions *options = [weakSelf cellOptionsForMediaAsset_:mediaAsset permitsZoomIfRequested_:mediaLoaded];

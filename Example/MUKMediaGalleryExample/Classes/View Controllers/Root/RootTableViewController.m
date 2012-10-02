@@ -158,7 +158,7 @@
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
-    Row_ *row = [self.rows_ objectAtIndex:indexPath.row];
+    Row_ *row = (self.rows_)[indexPath.row];
     cell.textLabel.text = row.title;
     cell.detailTextLabel.text = row.subtitle;
     
@@ -169,7 +169,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Row_ *row = [self.rows_ objectAtIndex:indexPath.row];
+    Row_ *row = (self.rows_)[indexPath.row];
     
     if (row.selectionHandler) {
         row.selectionHandler();
@@ -227,8 +227,7 @@
 }
 
 - (NSArray *)remoteThumbnailsAssets_ {
-    NSArray *URLStrings = [[NSArray alloc] initWithObjects:
-                           @"http://farm8.staticflickr.com/7056/6859998891_38c6e8111f_t.jpg",
+    NSArray *URLStrings = @[@"http://farm8.staticflickr.com/7056/6859998891_38c6e8111f_t.jpg",
                            @"http://farm7.staticflickr.com/6039/6327833811_16f34da1db_t.jpg",
                            @"http://farm6.staticflickr.com/5470/7180036482_c2ece9b447_t.jpg",
                            @"http://farm8.staticflickr.com/7189/7098047023_b603860d23_t.jpg",
@@ -263,8 +262,7 @@
                            @"http://farm4.staticflickr.com/3300/3652077613_6d9d96b1f3_t.jpg",
                            @"http://farm3.staticflickr.com/2234/2056165222_4593805e6d_t.jpg",
                            @"http://farm5.staticflickr.com/4003/4253832484_282a868969_t.jpg",
-                           @"http://farm5.staticflickr.com/4053/5143024453_006c915c0d_t.jpg",
-                           nil];
+                           @"http://farm5.staticflickr.com/4053/5143024453_006c915c0d_t.jpg"];
     
     NSArray *assets = [MUK array:URLStrings map:^id(id obj, NSInteger index, BOOL *exclude, BOOL *stop) 
     {

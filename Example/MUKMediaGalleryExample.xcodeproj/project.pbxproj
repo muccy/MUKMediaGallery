@@ -24,6 +24,7 @@
 		063DF023158641D9008ABADA /* LBYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DF01D158641D9008ABADA /* LBYouTubeExtractor.m */; };
 		063DF025158641D9008ABADA /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DF021158641D9008ABADA /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		063DF0291586432B008ABADA /* libMUKImageFetcher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 063DEFE315864198008ABADA /* libMUKImageFetcher.a */; };
+		0659120D161B3067002E5D03 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0659120C161B3067002E5D03 /* Default-568h@2x.png */; };
 		0671974D1560FC730017EAC0 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0671974C1560FC730017EAC0 /* MediaPlayer.framework */; };
 		0675639615D3A91600D72C58 /* LBYouTubeVideoQuality.h in Resources */ = {isa = PBXBuildFile; fileRef = 0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */; };
 		06A26C3F155E6F92009D36F0 /* CarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A26C3D155E6F92009D36F0 /* CarouselViewController.m */; };
@@ -206,6 +207,7 @@
 		063DF01D158641D9008ABADA /* LBYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBYouTubeExtractor.m; sourceTree = "<group>"; };
 		063DF020158641D9008ABADA /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
 		063DF021158641D9008ABADA /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		0659120C161B3067002E5D03 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		0671974C1560FC730017EAC0 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LBYouTubeVideoQuality.h; path = ../../../Submodules/LBYouTubeView/LBYouTubeVideoQuality.h; sourceTree = "<group>"; };
 		06A26C3C155E6F92009D36F0 /* CarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselViewController.h; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 		060B1AD01551581A00454D72 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				0659120C161B3067002E5D03 /* Default-568h@2x.png */,
 				06D07283156104F9000296C3 /* Audio */,
 				062448331552848E005CE74D /* Movies */,
 				060B1B4E1551860800454D72 /* Images */,
@@ -664,6 +667,7 @@
 				06A26C40155E6F92009D36F0 /* CarouselViewController.xib in Resources */,
 				06D07285156104F9000296C3 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */,
 				0675639615D3A91600D72C58 /* LBYouTubeVideoQuality.h in Resources */,
+				0659120D161B3067002E5D03 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,10 +734,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Marco Muccinelli (959P8R4D7Z)";
 				COPY_PHASE_STRIP = NO;
@@ -746,11 +746,10 @@
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PROVISIONING_PROFILE = "BA79D784-0D4B-4004-A75A-D8B5E375E419";
 				SDKROOT = iphoneos;
@@ -762,19 +761,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					armv6,
-					armv7,
-				);
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_THUMB_SUPPORT = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;

@@ -300,7 +300,7 @@
         }
         
         // Configure
-        id<MUKMediaAsset> mediaAsset = [self.mediaAssets objectAtIndex:cellIndex];
+        id<MUKMediaAsset> mediaAsset = (self.mediaAssets)[cellIndex];
         cellView.mediaAsset = mediaAsset;
         [weakSelf configureThumbnailCell_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
         
