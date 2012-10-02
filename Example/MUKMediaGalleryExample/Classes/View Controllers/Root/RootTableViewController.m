@@ -57,7 +57,7 @@
 - (NSArray *)rows_ {
     if (rows__ == nil) {
         NSMutableArray *rows = [[NSMutableArray alloc] init];
-        __unsafe_unretained RootTableViewController *weakSelf = self;
+        __weak RootTableViewController *weakSelf = self;
 
         Row_ *row = [[Row_ alloc] init];
         row.title = @"Thumbnails View";

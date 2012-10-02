@@ -134,14 +134,19 @@
     if (thumbnailsFetcher_ == nil) {
         thumbnailsFetcher_ = [[MUKMediaGalleryImageFetcher_ alloc] init];
         
-        __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+        __weak MUKMediaCarouselView *weakSelf = self;
         thumbnailsFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
         {
             // Do not start hidden asset
-                        
-            id<MUKMediaAsset> mediaAsset = connection.userInfo;
-            BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:weakSelf.mediaAssets inGridView:weakSelf.gridView_];
-            return assetVisible;
+            if (weakSelf) {
+                MUKMediaCarouselView *strongSelf = weakSelf;
+                
+                id<MUKMediaAsset> mediaAsset = connection.userInfo;
+                BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:strongSelf.mediaAssets inGridView:strongSelf.gridView_];
+                return assetVisible;
+            }
+            
+            return NO;
         };
         
         [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:YES];
@@ -154,14 +159,19 @@
     if (imagesFetcher_ == nil) {
         imagesFetcher_ = [[MUKMediaGalleryImageFetcher_ alloc] init];
         
-        __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+        __weak MUKMediaCarouselView *weakSelf = self;
         imagesFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
         {
             // Do not start hidden asset
+            if (weakSelf) {
+                MUKMediaCarouselView *strongSelf = weakSelf;
+                
+                id<MUKMediaAsset> mediaAsset = connection.userInfo;
+                BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:strongSelf.mediaAssets inGridView:strongSelf.gridView_];
+                return assetVisible;
+            }
             
-            id<MUKMediaAsset> mediaAsset = connection.userInfo;
-            BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:weakSelf.mediaAssets inGridView:weakSelf.gridView_];
-            return assetVisible;
+            return NO;
         };
         
         [(MUKMediaGalleryImageFetcher_ *)imagesFetcher_ setBlockHandlers:YES];
@@ -380,93 +390,129 @@
 }
 
 - (void)attachGridHandlers_ {
-    __unsafe_unretained MUKGridView *weakGridView = self.gridView_;
-    __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+    __weak MUKMediaCarouselView *weakSelf = self;
     
     self.gridView_.didLayoutSubviewsHandler = ^{
-        if (weakSelf.needsLoadingVisibleMedias_) {
-            weakSelf.needsLoadingVisibleMedias_ = NO;
-            [weakSelf loadCurrentMedia_];
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            if (strongSelf.needsLoadingVisibleMedias_) {
+                strongSelf.needsLoadingVisibleMedias_ = NO;
+                [strongSelf loadCurrentMedia_];
+            }
         }
     };
     
     self.gridView_.cellCreationHandler = ^UIView<MUKRecyclable>* (NSInteger cellIndex) 
     {
-        // Take media asset
-        id<MUKMediaAsset> mediaAsset = (weakSelf.mediaAssets)[cellIndex];
+        MUKMediaCarouselCellView_ *cellView = nil;
         
-        // Create or dequeue cell for this media asset
-        MUKMediaCarouselCellView_ *cellView = [weakSelf createOrDequeueCellForMediaAsset_:mediaAsset];
-        
-        // Configure
-        [weakSelf configureCellView_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            // Take media asset
+            id<MUKMediaAsset> mediaAsset = (strongSelf.mediaAssets)[cellIndex];
+            
+            // Create or dequeue cell for this media asset
+            cellView = [strongSelf createOrDequeueCellForMediaAsset_:mediaAsset];
+            
+            // Configure
+            [strongSelf configureCellView_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
+        }
 
         return cellView;
     };
     
     self.gridView_.cellEnqueuedHandler = ^(UIView<MUKRecyclable> *cellView, NSInteger index)
     {
-        // Clean hidden cells
-        [weakSelf cleanHiddenCell_:(MUKMediaCarouselCellView_ *)cellView];
-        
-        // Set media as unloaded
-        [weakSelf.loadedMediaIndexes_ removeIndex:index];
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            // Clean hidden cells
+            [strongSelf cleanHiddenCell_:(MUKMediaCarouselCellView_ *)cellView];
+            
+            // Set media as unloaded
+            [strongSelf.loadedMediaIndexes_ removeIndex:index];
+        }
     };
     
     self.gridView_.cellOptionsHandler = ^(NSInteger index) {
-        // Take media asset
-        id<MUKMediaAsset> mediaAsset = (weakSelf.mediaAssets)[index];
+        MUKGridCellOptions *options = nil;
         
-        BOOL mediaLoaded = [weakSelf isLoadedMediaAssetAtIndex_:index];
-        MUKGridCellOptions *options = [weakSelf cellOptionsForMediaAsset_:mediaAsset permitsZoomIfRequested_:mediaLoaded];
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            // Take media asset
+            id<MUKMediaAsset> mediaAsset = (strongSelf.mediaAssets)[index];
+            
+            BOOL mediaLoaded = [strongSelf isLoadedMediaAssetAtIndex_:index];
+            options = [strongSelf cellOptionsForMediaAsset_:mediaAsset permitsZoomIfRequested_:mediaLoaded];
+        }
         
         return options;
     };
     
     self.gridView_.scrollHandler = ^{
-        if (weakSelf.notAnimatedScrolling_ == NO) {
-            /*
-             Call handler only if scrolling is generated by an animation.
-             */
-            if (weakSelf.scrollHandler) {
-                weakSelf.scrollHandler();
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            if (strongSelf.notAnimatedScrolling_ == NO) {
+                /*
+                 Call handler only if scrolling is generated by an animation.
+                 */
+                if (strongSelf.scrollHandler) {
+                    strongSelf.scrollHandler();
+                }
             }
-        }
-        else {
-            weakSelf.notAnimatedScrolling_ = NO;
+            else {
+                strongSelf.notAnimatedScrolling_ = NO;
+            }
         }
     };
     
     self.gridView_.scrollCompletionHandler = ^(MUKGridScrollKind scrollKind)
     {
-        [weakSelf didScrollToMediaAssetAtIndex:[weakSelf currentMediaAssetIndex] animated:YES];
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            [strongSelf didScrollToMediaAssetAtIndex:[strongSelf currentMediaAssetIndex] animated:YES];
+        }
     };
     
     self.gridView_.cellTappedHandler = ^(NSInteger cellIndex) {
-        [weakSelf didTapMediaAssetAtIndex:cellIndex];
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            [strongSelf didTapMediaAssetAtIndex:cellIndex];
+        }
     };
     
     self.gridView_.cellZoomHandler = ^(UIView<MUKRecyclable> *cellView, UIView *zoomedView, NSInteger cellIndex, float scale)
     {
-        if (weakSelf.mediaAssetZoomedHandler) {
-            weakSelf.mediaAssetZoomedHandler(cellIndex, scale);
-        }
-        
-        // Adjust overlay view visibility
-        if (weakSelf.togglesOverlayViewOnUserTouch) {
-            if ([weakSelf shouldShowOverlayViewAtIndex:cellIndex]) {
-                if ([weakSelf isOverlayViewHidden]) {
-                    [weakSelf setOverlayViewHidden:NO animated:YES];
-                }
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            if (strongSelf.mediaAssetZoomedHandler) {
+                strongSelf.mediaAssetZoomedHandler(cellIndex, scale);
             }
-            else {
-                if (![weakSelf isOverlayViewHidden]) {
-                    if ([weakSelf canHideOverlayViewAtIndex:cellIndex]) {
-                        [weakSelf setOverlayViewHidden:YES animated:YES];
+            
+            // Adjust overlay view visibility
+            if (strongSelf.togglesOverlayViewOnUserTouch) {
+                if ([strongSelf shouldShowOverlayViewAtIndex:cellIndex])
+                {
+                    if ([strongSelf isOverlayViewHidden]) {
+                        [strongSelf setOverlayViewHidden:NO animated:YES];
                     }
                 }
-            }
-        }
+                else {
+                    if (![strongSelf isOverlayViewHidden]) {
+                        if ([strongSelf canHideOverlayViewAtIndex:cellIndex])
+                        {
+                            [strongSelf setOverlayViewHidden:YES animated:YES];
+                        }
+                    }
+                } // if shouldShowOverlayViewAtIndex
+            } // if togglesOverlayViewOnUserTouch
+        } // if weakSelf
     };
  
     self.gridView_.cellZoomViewHandler = ^UIView* (UIView<MUKRecyclable> *cellView, NSInteger index)
@@ -478,15 +524,24 @@
     self.gridView_.cellZoomedViewFrameHandler = ^(UIView<MUKRecyclable> *cellView, UIView *zoomedView, NSInteger cellIndex, float scale, CGSize boundsSize)
     {
         CGRect rect;
-        if (ABS(scale - 1.0f) > 0.00001f) {
-            // Zoomed
-            // Pay attention to offset: don't show left black space
-            boundsSize.width -= weakSelf.mediaOffset;
-            rect = [MUKGridView centeredZoomedViewFrame:zoomedView.frame boundsSize:boundsSize];
-            rect.origin.x += weakSelf.mediaOffset/2;          
+        
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            if (ABS(scale - 1.0f) > 0.00001f) {
+                // Zoomed
+                // Pay attention to offset: don't show left black space
+                boundsSize.width -= strongSelf.mediaOffset;
+                rect = [MUKGridView centeredZoomedViewFrame:zoomedView.frame boundsSize:boundsSize];
+                rect.origin.x += strongSelf.mediaOffset/2;
+            }
+            else {
+                // Not zoomed
+                MUKMediaCarouselCellView_ *view = (MUKMediaCarouselCellView_ *)cellView;
+                rect = [view centeredImageFrame];
+            }
         }
         else {
-            // Not zoomed
             MUKMediaCarouselCellView_ *view = (MUKMediaCarouselCellView_ *)cellView;
             rect = [view centeredImageFrame];
         }
@@ -496,21 +551,31 @@
     
     self.gridView_.cellZoomedViewContentSizeHandler = ^(UIView<MUKRecyclable> *cellView, UIView *zoomedView, NSInteger cellIndex, float scale, CGSize boundsSize)
     {
-        // Pay attention to offset: compensate origin shifting
         CGSize size = zoomedView.frame.size;
-        size.width += weakSelf.mediaOffset;
+        
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            // Pay attention to offset: compensate origin shifting
+            size.width += strongSelf.mediaOffset;
+        }
+        
         return size;
     };
     
     self.gridView_.cellDidLayoutSubviewsHandler = ^(UIView<MUKRecyclable> *cellView, NSInteger index)
     {
-        MUKMediaCarouselImageCellView_ *view = (MUKMediaCarouselImageCellView_ *)cellView;
-        float scale = [weakGridView zoomScaleOfCellAtIndex:index];
-        
-        if (ABS(scale - 1.0f) < 0.00001f) {
-            // Not zoomed
-            [view centerImage];
-        }
+        if (weakSelf) {
+            MUKMediaCarouselView *strongSelf = weakSelf;
+            
+            MUKMediaCarouselImageCellView_ *view = (MUKMediaCarouselImageCellView_ *)cellView;
+            float scale = [strongSelf.gridView_ zoomScaleOfCellAtIndex:index];
+            
+            if (ABS(scale - 1.0f) < 0.00001f) {
+                // Not zoomed
+                [view centerImage];
+            }
+        } // if weakSelf
     };
 }
 
@@ -580,13 +645,18 @@
     }
     
     // Set tap handler if needed
-    if ([cellView isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]]) {
-        __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+    if ([cellView isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]])
+    {
+        __weak MUKMediaCarouselView *weakSelf = self;
         [(MUKMediaCarouselPlayerCellView_ *)cellView setTapHandler:^{
-            // Get media asset index
-            NSInteger mediaAssetIndex = [weakSelf.mediaAssets indexOfObject:cellView.mediaAsset];
-            if (mediaAssetIndex != NSNotFound) {
-                [weakSelf didTapMediaAssetAtIndex:mediaAssetIndex];
+            if (weakSelf) {
+                MUKMediaCarouselView *strongSelf = weakSelf;
+                
+                // Get media asset index
+                NSInteger mediaAssetIndex = [strongSelf.mediaAssets indexOfObject:cellView.mediaAsset];
+                if (mediaAssetIndex != NSNotFound) {
+                    [strongSelf didTapMediaAssetAtIndex:mediaAssetIndex];
+                }
             }
         }];
     }
@@ -663,31 +733,35 @@
                         if (self.youTubeExtractor_ == nil) {
                             self.youTubeExtractor_ = [[LBYouTubeExtractor alloc] init];
                             
-                            __unsafe_unretained MUKMediaCarouselView *weakSelf = self;
+                            __weak MUKMediaCarouselView *weakSelf = self;
                             self.youTubeExtractor_.completionHandler = ^(NSURL *URL, NSError *error)
                             {
-                                if (URL) {
-                                    // Found movie URL
-                                    // Load in movie player
-                                    if (ytCell.mediaAsset == mediaAsset) {
+                                if (weakSelf) {
+                                    MUKMediaCarouselView *strongSelf = weakSelf;
+                                    
+                                    if (URL) {
+                                        // Found movie URL
+                                        // Load in movie player
+                                        if (ytCell.mediaAsset == mediaAsset) {
 #if DEBUG_FAKE_NO_NATIVE_YT
-                                        [ytCell setMediaURL:mediaURL inWebView:YES];
+                                            [ytCell setMediaURL:mediaURL inWebView:YES];
 #else
-                                        [ytCell setMediaURL:URL inWebView:NO];
+                                            [ytCell setMediaURL:URL inWebView:NO];
 #endif
-                                        
-                                        [weakSelf didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                                            
+                                            [strongSelf didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                                        }
                                     }
-                                }
-                                else {
-                                    // Not found movie URL
-                                    // Load in web view
-                                    if (ytCell.mediaAsset == mediaAsset) {
-                                        [ytCell setMediaURL:mediaURL inWebView:YES];
-                                        
-                                        [weakSelf didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                                    else {
+                                        // Not found movie URL
+                                        // Load in web view
+                                        if (ytCell.mediaAsset == mediaAsset) {
+                                            [ytCell setMediaURL:mediaURL inWebView:YES];
+                                            
+                                            [strongSelf didLoadMediaAsset_:mediaAsset atIndex_:index inCell_:ytCell];
+                                        }
                                     }
-                                }
+                                } // weakSelf
                             };
                         }
                         else {

@@ -173,72 +173,96 @@
 
 - (void)attachHandlersToCarouselView:(MUKMediaCarouselView *)carouselView
 {
-    __unsafe_unretained MUKMediaCarouselViewController *weakSelf = self;
-    __unsafe_unretained MUKMediaCarouselView *weakCarouselView = carouselView;
+    __weak MUKMediaCarouselViewController *weakSelf = self;
+    __weak MUKMediaCarouselView *weakCarouselView = carouselView;
     
     carouselView.scrollHandler = ^{
-        // Hide bars
-        // Ignore during rotations
-        // Ignore during fullscreen
-        if (!weakSelf->isRotating_ && !weakSelf->fullscreenMoviePlayer_)
-        {
-            if ([weakCarouselView canHideOverlayViewAtIndex:[weakCarouselView currentMediaAssetIndex]])
+        if (weakSelf && weakCarouselView) {
+            MUKMediaCarouselViewController *strongSelf = weakSelf;
+            MUKMediaCarouselView *strongCarouselView = weakCarouselView;
+            
+            // Hide bars
+            // Ignore during rotations
+            // Ignore during fullscreen
+            if (!strongSelf->isRotating_ && !strongSelf->fullscreenMoviePlayer_)
             {
-                [weakSelf setBarsHidden_:YES animated_:YES];
+                if ([strongCarouselView canHideOverlayViewAtIndex:[strongCarouselView currentMediaAssetIndex]])
+                {
+                    [strongSelf setBarsHidden_:YES animated_:YES];
+                }
             }
         }
     };
     
     carouselView.scrollCompletionHandler = ^{
         // Update title
-        weakSelf.title = [weakSelf localizedTitle_];
+        if (weakSelf) {
+            MUKMediaCarouselViewController *strongSelf = weakSelf;            
+            strongSelf.title = [strongSelf localizedTitle_];
+        }
     };
     
     carouselView.mediaAssetTappedHandler = ^(NSInteger index) {
-        // Toggle bars
-        BOOL barsHidden = [weakSelf areBarsHidden_];
-        BOOL barsWillBeHidden = !barsHidden;
-        
-        BOOL toggleBarsVisibility = YES;
-        if (barsWillBeHidden) {
-            toggleBarsVisibility = [weakCarouselView canHideOverlayViewAtIndex:index];
-        }
-        
-        if (toggleBarsVisibility) {
-            [weakSelf setBarsHidden_:barsWillBeHidden animated_:YES];
+        if (weakSelf && weakCarouselView) {
+            MUKMediaCarouselViewController *strongSelf = weakSelf;
+            MUKMediaCarouselView *strongCarouselView = weakCarouselView;
+            
+            // Toggle bars
+            BOOL barsHidden = [strongSelf areBarsHidden_];
+            BOOL barsWillBeHidden = !barsHidden;
+            
+            BOOL toggleBarsVisibility = YES;
+            if (barsWillBeHidden) {
+                toggleBarsVisibility = [strongCarouselView canHideOverlayViewAtIndex:index];
+            }
+            
+            if (toggleBarsVisibility) {
+                [strongSelf setBarsHidden_:barsWillBeHidden animated_:YES];
+            }
         }
     };
     
     carouselView.mediaAssetZoomedHandler = ^(NSInteger index, float scale)
     {
-        // Adjust overlay view visibility
-        if ([weakCarouselView shouldShowOverlayViewAtIndex:index]) {
-            // Overlay should be visibile
-            if (![weakSelf areBarsHidden_]) {
-                // Show if bar are visible
-                if ([weakCarouselView isOverlayViewHidden]) {
-                    // Show if currently hidden
-                    [weakCarouselView setOverlayViewHidden:NO animated:YES];
+        if (weakSelf && weakCarouselView) {
+            MUKMediaCarouselViewController *strongSelf = weakSelf;
+            MUKMediaCarouselView *strongCarouselView = weakCarouselView;
+            
+            // Adjust overlay view visibility
+            if ([strongCarouselView shouldShowOverlayViewAtIndex:index])
+            {
+                // Overlay should be visibile
+                if (![strongSelf areBarsHidden_]) {
+                    // Show if bar are visible
+                    if ([strongCarouselView isOverlayViewHidden]) {
+                        // Show if currently hidden
+                        [strongCarouselView setOverlayViewHidden:NO animated:YES];
+                    }
                 }
             }
-        }
-        else {
-            // Overlay should be hidden
-            if (![weakCarouselView isOverlayViewHidden]) {
-                // Hide if currently not hidden
-                if ([weakCarouselView canHideOverlayViewAtIndex:index]) {
-                    // ...and can be hidden
-                    [weakCarouselView setOverlayViewHidden:YES animated:YES];
+            else {
+                // Overlay should be hidden
+                if (![strongCarouselView isOverlayViewHidden]) {
+                    // Hide if currently not hidden
+                    if ([strongCarouselView canHideOverlayViewAtIndex:index]) {
+                        // ...and can be hidden
+                        [strongCarouselView setOverlayViewHidden:YES animated:YES];
+                    }
                 }
-            }
-        }
+            } // if shouldShowOverlayViewAtIndex:
+        } // if weakSelf && weakCarouselView
     };
     
     carouselView.mediaAssetDisplayedHandler = ^(id<MUKMediaAsset> mediaAsset, NSInteger index)
     {
-        // Adapt bars visiblity (YouTube video may have forced overlay view to
-        // visible)
-        [weakSelf setBarsHidden_:[weakCarouselView isOverlayViewHidden] animated_:YES];
+        if (weakSelf && weakCarouselView) {
+            MUKMediaCarouselViewController *strongSelf = weakSelf;
+            MUKMediaCarouselView *strongCarouselView = weakCarouselView;
+            
+            // Adapt bars visiblity (YouTube video may have forced overlay view to
+            // visible)
+            [strongSelf setBarsHidden_:[strongCarouselView isOverlayViewHidden] animated_:YES];
+        }
     };
 }
 

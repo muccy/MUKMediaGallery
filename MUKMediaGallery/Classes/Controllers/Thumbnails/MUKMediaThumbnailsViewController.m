@@ -161,16 +161,20 @@
 
 - (void)attachHandlersToThumbnailsView:(MUKMediaThumbnailsView *)thumbnailsView
 {
-    __unsafe_unretained MUKMediaThumbnailsViewController *weakSelf = self;
+    __weak MUKMediaThumbnailsViewController *weakSelf = self;
     
     thumbnailsView.thumbnailSelectionHandler = ^(NSInteger index)
     {
-        // Push carousel
-        isPushingCarousel_ = YES;
-        
-        MUKMediaCarouselViewController *viewController = [weakSelf newCarouselViewControllerToShowMediaAssetAtIndex:index];
-        
-        [weakSelf.navigationController pushViewController:viewController animated:YES];
+        if (weakSelf) {
+            MUKMediaThumbnailsViewController *strongSelf = weakSelf;
+            
+            // Push carousel
+            isPushingCarousel_ = YES;
+            
+            MUKMediaCarouselViewController *viewController = [strongSelf newCarouselViewControllerToShowMediaAssetAtIndex:index];
+            
+            [strongSelf.navigationController pushViewController:viewController animated:YES];
+        }
     };
 }
 

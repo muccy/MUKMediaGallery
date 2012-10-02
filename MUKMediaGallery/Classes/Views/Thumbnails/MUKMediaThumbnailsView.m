@@ -113,14 +113,19 @@
     if (thumbnailsFetcher_ == nil) {
         thumbnailsFetcher_ = [[MUKMediaGalleryImageFetcher_ alloc] init];
         
-        __unsafe_unretained MUKMediaThumbnailsView *weakSelf = self;
+        __weak MUKMediaThumbnailsView *weakSelf = self;
         thumbnailsFetcher_.shouldStartConnectionHandler = ^(MUKURLConnection *connection)
         {            
             // Do not start hidden asset
+            if (weakSelf) {
+                MUKMediaThumbnailsView *strongSelf = weakSelf;
+                
+                id<MUKMediaAsset> mediaAsset = connection.userInfo;
+                BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:strongSelf.mediaAssets inGridView:strongSelf.gridView_];
+                return assetVisible;
+            }
             
-            id<MUKMediaAsset> mediaAsset = connection.userInfo;
-            BOOL assetVisible = [MUKMediaGalleryUtils_ isVisibleMediaAsset:mediaAsset fromMediaAssets:weakSelf.mediaAssets inGridView:weakSelf.gridView_];
-            return assetVisible;
+            return NO;
         };
         
         [(MUKMediaGalleryImageFetcher_ *)thumbnailsFetcher_ setBlockHandlers:YES];
@@ -278,88 +283,109 @@
 }
 
 - (void)attachGridHandlers_ {
-    __unsafe_unretained MUKGridView *weakGridView = self.gridView_;
-    __unsafe_unretained MUKMediaThumbnailsView *weakSelf = self;
+    __weak MUKMediaThumbnailsView *weakSelf = self;
     
     self.gridView_.didLayoutSubviewsHandler = ^{
-        if (weakSelf.needsLoadingVisibleThumbnails_) {
-            weakSelf.needsLoadingVisibleThumbnails_ = NO;
-            [weakSelf loadVisibleThumbnails_];
+        if (weakSelf) {
+            MUKMediaThumbnailsView *strongSelf = weakSelf;
+            
+            if (strongSelf.needsLoadingVisibleThumbnails_) {
+                strongSelf.needsLoadingVisibleThumbnails_ = NO;
+                [strongSelf loadVisibleThumbnails_];
+            }
         }
     };
     
     self.gridView_.cellCreationHandler = ^(NSInteger cellIndex) {
-        static NSString *const kIdentifier = @"MUKMediaThumbnailView_";
-        // Dequeue
-        MUKMediaThumbnailView_ *cellView = (MUKMediaThumbnailView_ *)[weakGridView dequeueViewWithIdentifier:kIdentifier];
+        MUKMediaThumbnailView_ *cellView = nil;
         
-        // Create if does not exist
-        if (cellView == nil) {
-            cellView = [weakSelf createThumbnailCell_];
-            cellView.recycleIdentifier = kIdentifier;
+        if (weakSelf) {
+            MUKMediaThumbnailsView *strongSelf = weakSelf;
+            
+            static NSString *const kIdentifier = @"MUKMediaThumbnailView_";
+            // Dequeue
+            cellView = (MUKMediaThumbnailView_ *)[strongSelf.gridView_ dequeueViewWithIdentifier:kIdentifier];
+            
+            // Create if does not exist
+            if (cellView == nil) {
+                cellView = [strongSelf createThumbnailCell_];
+                cellView.recycleIdentifier = kIdentifier;
+            }
+            
+            // Configure
+            id<MUKMediaAsset> mediaAsset = (self.mediaAssets)[cellIndex];
+            cellView.mediaAsset = mediaAsset;
+            [strongSelf configureThumbnailCell_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
         }
-        
-        // Configure
-        id<MUKMediaAsset> mediaAsset = (self.mediaAssets)[cellIndex];
-        cellView.mediaAsset = mediaAsset;
-        [weakSelf configureThumbnailCell_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
         
         return cellView;
     };
     
     self.gridView_.scrollHandler = ^{
         // No selection during scroll
-        
-        if (weakSelf.selectedCellIndex_ >= 0) {
-            [weakSelf deselectCellAtIndex_:weakSelf.selectedCellIndex_];
+        if (weakSelf) {
+            MUKMediaThumbnailsView *strongSelf = weakSelf;
+            
+            if (strongSelf.selectedCellIndex_ >= 0) {
+                [strongSelf deselectCellAtIndex_:strongSelf.selectedCellIndex_];
+            }
         }
     };
     
     self.gridView_.cellTouchedHandler = ^(NSInteger cellIndex, NSSet *touches)
     {
         // Touch began
-        if (weakSelf.showsSelection == NO) return;
         
-        // If grid is moving abort touch handling immediately
-        if (weakGridView.dragging || weakGridView.decelerating) {
-            // Remove past selection
-            if (weakSelf.selectedCellIndex_ >= 0) {
-                [weakSelf deselectCellAtIndex_:weakSelf.selectedCellIndex_];
-            }
+        if (weakSelf) {
+            MUKMediaThumbnailsView *strongSelf = weakSelf;
+            MUKGridView *gridView = strongSelf.gridView_;
             
-            return;
-        }
-        
-        // If grid view is not moving, look at grid after a while, to see
-        // if it is a real tap, or if it is a touch in order to move the grid
-        MUKGridView *strongGridView = weakGridView;
-        MUKMediaThumbnailsView *strongSelf = weakSelf;
-        
-        double delayInSeconds = 0.1;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            if (strongGridView.dragging == NO && strongGridView.decelerating == NO)
-            {
-                // Grid is not moving again
-                
+            if (strongSelf.showsSelection == NO) return;
+            
+            // If grid is moving abort touch handling immediately
+            if (gridView.dragging || gridView.decelerating) {
                 // Remove past selection
                 if (strongSelf.selectedCellIndex_ >= 0) {
                     [strongSelf deselectCellAtIndex_:strongSelf.selectedCellIndex_];
                 }
                 
-                // Show selection
-                [strongSelf selectCellAtIndex_:cellIndex];
+                return;
             }
-        });
+            
+            // If grid view is not moving, look at grid after a while, to see
+            // if it is a real tap, or if it is a touch in order to move the grid            
+            double delayInSeconds = 0.1;
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+                if (gridView.dragging == NO && gridView.decelerating == NO)
+                {
+                    // Grid is not moving again
+                    
+                    // Remove past selection
+                    if (strongSelf.selectedCellIndex_ >= 0) {
+                        [strongSelf deselectCellAtIndex_:strongSelf.selectedCellIndex_];
+                    }
+                    
+                    // Show selection
+                    [strongSelf selectCellAtIndex_:cellIndex];
+                }
+            });
+        } // if weakSelf
     };
     
     self.gridView_.cellTappedHandler = ^(NSInteger cellIndex) {
-        [weakSelf didSelectMediaAssetAtIndex:cellIndex];
+        if (weakSelf) {
+            MUKMediaThumbnailsView *strongSelf = weakSelf;
+            [strongSelf didSelectMediaAssetAtIndex:cellIndex];
+        }
     };
     
     self.gridView_.scrollCompletionHandler = ^(MUKGridScrollKind scrollKind)
     {
-        [weakSelf loadVisibleThumbnails_];
+        if (weakSelf) {
+            MUKMediaThumbnailsView *strongSelf = weakSelf;
+            [strongSelf loadVisibleThumbnails_];
+        }
     };
 }
 
