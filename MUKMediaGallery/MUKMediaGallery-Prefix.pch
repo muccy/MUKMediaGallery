@@ -1,7 +1,0 @@
-//
-// Prefix header for all source files of the 'MUKMediaGallery' target in the 'MUKMediaGallery' project
-//
-
-#ifdef __OBJC__
-    #import <Foundation/Foundation.h>
-#endif
