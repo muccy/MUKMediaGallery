@@ -8,4 +8,7 @@ Pod::Spec.new do |s|
   s.author       = { 'Marco Muccinelli' => 'muccymac@gmail.com' }
   s.source       = { :git => 'https://github.com/muccy/MUKMediaGallery.git', :commit => '26fc70b045aa86e03bb15ee5bdbff5769675a599' }
   s.source_files = 'MUKMediaGallery/**/*.{h,m}'
+  s.requires_arc = true
+
+  s.dependency 'PSTCollectionView'
 end

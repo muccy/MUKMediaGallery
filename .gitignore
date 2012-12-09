@@ -12,3 +12,7 @@ xcuserdata
 # osx noise
 .DS_Store
 profile
+
+# cocoapods
+Pods
+Podfile.lock
