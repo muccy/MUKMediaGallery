@@ -648,12 +648,15 @@
     if ([cellView isKindOfClass:[MUKMediaCarouselPlayerCellView_ class]])
     {
         __weak MUKMediaCarouselView *weakSelf = self;
+        __weak MUKMediaCarouselPlayerCellView_ *weakCell = (MUKMediaCarouselPlayerCellView_ *)cellView;
+        
         [(MUKMediaCarouselPlayerCellView_ *)cellView setTapHandler:^{
-            if (weakSelf) {
+            if (weakSelf && weakCell) {
                 MUKMediaCarouselView *strongSelf = weakSelf;
+                MUKMediaCarouselPlayerCellView_ *strongCell = weakCell;
                 
                 // Get media asset index
-                NSInteger mediaAssetIndex = [strongSelf.mediaAssets indexOfObject:cellView.mediaAsset];
+                NSInteger mediaAssetIndex = [strongSelf.mediaAssets indexOfObject:strongCell.mediaAsset];
                 if (mediaAssetIndex != NSNotFound) {
                     [strongSelf didTapMediaAssetAtIndex:mediaAssetIndex];
                 }

@@ -313,7 +313,7 @@
             }
             
             // Configure
-            id<MUKMediaAsset> mediaAsset = (self.mediaAssets)[cellIndex];
+            id<MUKMediaAsset> mediaAsset = (strongSelf.mediaAssets)[cellIndex];
             cellView.mediaAsset = mediaAsset;
             [strongSelf configureThumbnailCell_:cellView withMediaAsset_:mediaAsset atIndex_:cellIndex];
         }
