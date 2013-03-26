@@ -22,7 +22,6 @@
 		062448351552848E005CE74D /* sea.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 062448341552848E005CE74D /* sea.mp4 */; };
 		062448371552849A005CE74D /* sea-movie-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 062448361552849A005CE74D /* sea-movie-thumbnail.jpg */; };
 		063DF023158641D9008ABADA /* LBYouTubeExtractor.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DF01D158641D9008ABADA /* LBYouTubeExtractor.m */; };
-		063DF025158641D9008ABADA /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 063DF021158641D9008ABADA /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		063DF0291586432B008ABADA /* libMUKImageFetcher.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 063DEFE315864198008ABADA /* libMUKImageFetcher.a */; };
 		0659120D161B3067002E5D03 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0659120C161B3067002E5D03 /* Default-568h@2x.png */; };
 		0671974D1560FC730017EAC0 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0671974C1560FC730017EAC0 /* MediaPlayer.framework */; };
@@ -205,8 +204,6 @@
 		063DEFD915864196008ABADA /* MUKImageFetcher.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MUKImageFetcher.xcodeproj; path = ../Submodules/MUKImageFetcher/MUKImageFetcher.xcodeproj; sourceTree = "<group>"; };
 		063DF01C158641D9008ABADA /* LBYouTubeExtractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LBYouTubeExtractor.h; sourceTree = "<group>"; };
 		063DF01D158641D9008ABADA /* LBYouTubeExtractor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LBYouTubeExtractor.m; sourceTree = "<group>"; };
-		063DF020158641D9008ABADA /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		063DF021158641D9008ABADA /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		0659120C161B3067002E5D03 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
 		0671974C1560FC730017EAC0 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LBYouTubeVideoQuality.h; path = ../../../Submodules/LBYouTubeView/LBYouTubeVideoQuality.h; sourceTree = "<group>"; };
@@ -393,7 +390,6 @@
 			children = (
 				0675639515D3A91600D72C58 /* LBYouTubeVideoQuality.h */,
 				063DF01B158641D9008ABADA /* LBYouTubeExtractor */,
-				063DF01E158641D9008ABADA /* JSONKit */,
 			);
 			name = LBYouTubeVew;
 			sourceTree = "<group>";
@@ -406,16 +402,6 @@
 			);
 			name = LBYouTubeExtractor;
 			path = ../../../Submodules/LBYouTubeView/LBYouTubeExtractor;
-			sourceTree = "<group>";
-		};
-		063DF01E158641D9008ABADA /* JSONKit */ = {
-			isa = PBXGroup;
-			children = (
-				063DF020158641D9008ABADA /* JSONKit.h */,
-				063DF021158641D9008ABADA /* JSONKit.m */,
-			);
-			name = JSONKit;
-			path = ../../../Submodules/LBYouTubeView/Submodules/JSONKit;
 			sourceTree = "<group>";
 		};
 		06A26C3B155E6F7F009D36F0 /* Carousel View */ = {
@@ -685,7 +671,6 @@
 				06A26C3F155E6F92009D36F0 /* CarouselViewController.m in Sources */,
 				06D072DB15618E91000296C3 /* ChainedViewController.m in Sources */,
 				063DF023158641D9008ABADA /* LBYouTubeExtractor.m in Sources */,
-				063DF025158641D9008ABADA /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
