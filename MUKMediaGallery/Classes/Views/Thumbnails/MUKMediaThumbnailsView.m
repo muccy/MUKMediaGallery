@@ -656,7 +656,7 @@
 #pragma mark - Private: Cells
 
 - (MUKMediaThumbnailView_ *)createThumbnailCell_ {
-    MUKMediaThumbnailView_ *cellView = [MUK objectOfClass:[MUKMediaThumbnailView_ class] instantiatedFromNibNamed:nil bundle:[MUKMediaGalleryUtils_ frameworkBundle] owner:nil options:nil atIndex:0];
+    MUKMediaThumbnailView_ *cellView = [MUK objectOfClass:[MUKMediaThumbnailView_ class] instantiatedFromNibNamed:nil bundle:[MUKMediaGalleryUtils_ frameworkBundle] owner:nil options:nil passingTest:nil];
     return cellView;
 }
 
