@@ -19,6 +19,7 @@
 		069F683F17772E8400AD3399 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682717772E8400AD3399 /* UIKit.framework */; };
 		069F684717772E8400AD3399 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 069F684517772E8400AD3399 /* InfoPlist.strings */; };
 		069F684917772E8400AD3399 /* MUKMediaGallery_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */; };
+		0D17421BA3704DB7A2B7332B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 952A425C2DF643CE80F8276B /* libPods.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +49,8 @@
 		069F684417772E8400AD3399 /* MUKMediaGallery ExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGallery ExampleTests-Info.plist"; sourceTree = "<group>"; };
 		069F684617772E8400AD3399 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGallery_ExampleTests.m; sourceTree = "<group>"; };
-		069F685317772FD300AD3399 /* MUKMediaGallery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGallery.h; sourceTree = "<group>"; };
+		952A425C2DF643CE80F8276B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA50E93CF31544A68881F4C4 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 				069F682617772E8400AD3399 /* CoreGraphics.framework in Frameworks */,
 				069F682817772E8400AD3399 /* UIKit.framework in Frameworks */,
 				069F682417772E8400AD3399 /* Foundation.framework in Frameworks */,
+				0D17421BA3704DB7A2B7332B /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,11 +81,11 @@
 		069F681717772E8400AD3399 = {
 			isa = PBXGroup;
 			children = (
-				069F685217772F8400AD3399 /* MUKMediaGallery */,
 				069F682917772E8400AD3399 /* MUKMediaGallery Example */,
 				069F684217772E8400AD3399 /* MUKMediaGallery ExampleTests */,
 				069F682217772E8400AD3399 /* Frameworks */,
 				069F682117772E8400AD3399 /* Products */,
+				CA50E93CF31544A68881F4C4 /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,6 +105,7 @@
 				069F682517772E8400AD3399 /* CoreGraphics.framework */,
 				069F682717772E8400AD3399 /* UIKit.framework */,
 				069F683C17772E8400AD3399 /* XCTest.framework */,
+				952A425C2DF643CE80F8276B /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -146,15 +150,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		069F685217772F8400AD3399 /* MUKMediaGallery */ = {
-			isa = PBXGroup;
-			children = (
-				069F685317772FD300AD3399 /* MUKMediaGallery.h */,
-			);
-			name = MUKMediaGallery;
-			path = ../MUKMediaGallery;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -162,9 +157,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 069F684C17772E8400AD3399 /* Build configuration list for PBXNativeTarget "MUKMediaGallery Example" */;
 			buildPhases = (
+				B6D0B3FFE13C427081892DD7 /* Check Pods Manifest.lock */,
 				069F681C17772E8400AD3399 /* Sources */,
 				069F681D17772E8400AD3399 /* Frameworks */,
 				069F681E17772E8400AD3399 /* Resources */,
+				F2F6732C6E934DA2958AA37D /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -244,6 +241,37 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B6D0B3FFE13C427081892DD7 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+		};
+		F2F6732C6E934DA2958AA37D /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		069F681C17772E8400AD3399 /* Sources */ = {
@@ -363,6 +391,7 @@
 		};
 		069F684D17772E8400AD3399 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA50E93CF31544A68881F4C4 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -376,6 +405,7 @@
 		};
 		069F684E17772E8400AD3399 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA50E93CF31544A68881F4C4 /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
