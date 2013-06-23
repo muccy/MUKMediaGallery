@@ -48,6 +48,7 @@
 		069F684417772E8400AD3399 /* MUKMediaGallery ExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGallery ExampleTests-Info.plist"; sourceTree = "<group>"; };
 		069F684617772E8400AD3399 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGallery_ExampleTests.m; sourceTree = "<group>"; };
+		069F685317772FD300AD3399 /* MUKMediaGallery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUKMediaGallery.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +78,7 @@
 		069F681717772E8400AD3399 = {
 			isa = PBXGroup;
 			children = (
+				069F685217772F8400AD3399 /* MUKMediaGallery */,
 				069F682917772E8400AD3399 /* MUKMediaGallery Example */,
 				069F684217772E8400AD3399 /* MUKMediaGallery ExampleTests */,
 				069F682217772E8400AD3399 /* Frameworks */,
@@ -142,6 +144,15 @@
 				069F684517772E8400AD3399 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		069F685217772F8400AD3399 /* MUKMediaGallery */ = {
+			isa = PBXGroup;
+			children = (
+				069F685317772FD300AD3399 /* MUKMediaGallery.h */,
+			);
+			name = MUKMediaGallery;
+			path = ../MUKMediaGallery;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -435,6 +446,7 @@
 				069F684E17772E8400AD3399 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		069F684F17772E8400AD3399 /* Build configuration list for PBXNativeTarget "MUKMediaGallery ExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -443,6 +455,7 @@
 				069F685117772E8400AD3399 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
