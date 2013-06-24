@@ -19,6 +19,7 @@
 		069F683F17772E8400AD3399 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682717772E8400AD3399 /* UIKit.framework */; };
 		069F684717772E8400AD3399 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 069F684517772E8400AD3399 /* InfoPlist.strings */; };
 		069F684917772E8400AD3399 /* MUKMediaGallery_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */; };
+		06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */; };
 		0D17421BA3704DB7A2B7332B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 952A425C2DF643CE80F8276B /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,8 @@
 		069F684417772E8400AD3399 /* MUKMediaGallery ExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGallery ExampleTests-Info.plist"; sourceTree = "<group>"; };
 		069F684617772E8400AD3399 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGallery_ExampleTests.m; sourceTree = "<group>"; };
+		06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailsViewController.h; sourceTree = "<group>"; };
+		06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailsViewController.m; sourceTree = "<group>"; };
 		952A425C2DF643CE80F8276B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA50E93CF31544A68881F4C4 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -115,6 +118,8 @@
 			children = (
 				069F683217772E8400AD3399 /* AppDelegate.h */,
 				069F683317772E8400AD3399 /* AppDelegate.m */,
+				06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */,
+				06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */,
 				069F683517772E8400AD3399 /* Images.xcassets */,
 				069F682A17772E8400AD3399 /* Supporting Files */,
 			);
@@ -278,6 +283,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */,
 				069F683417772E8400AD3399 /* AppDelegate.m in Sources */,
 				069F683017772E8400AD3399 /* main.m in Sources */,
 			);
