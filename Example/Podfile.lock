@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
-  MUKMediaGallery: 950246f8cd6da66ccf131c4eabad9c0534ddb1fa
+  MUKMediaGallery: d56e6c0a580b24c3c62b4e53199b2bd5b1d0cfd3
 
 COCOAPODS: 0.20.2
