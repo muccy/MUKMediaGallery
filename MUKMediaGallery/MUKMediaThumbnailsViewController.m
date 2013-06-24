@@ -6,6 +6,7 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 @interface MUKMediaThumbnailsViewController ()
 @property (nonatomic) NSMutableDictionary *loadedImages;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
+@property (nonatomic) CGRect lastCollectionViewBounds;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -45,12 +46,38 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
     [self.loadedImages removeAllObjects];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    if (!CGRectIsNull(self.lastCollectionViewBounds)) {
+        if (!CGSizeEqualToSize(self.lastCollectionViewBounds.size, self.collectionView.bounds.size))
+        {
+            CGFloat const ratio = self.collectionView.bounds.size.height/self.lastCollectionViewBounds.size.height;
+            
+            // Value stored in self.collectionView.contentOffset is already
+            // changed at this moment: use bounds instead
+            CGPoint offset = self.lastCollectionViewBounds.origin;
+            
+            // Don't include insets into calculations
+            offset.y = ((offset.y + self.collectionView.contentInset.top) * ratio) - self.collectionView.contentInset.top;
+            
+            // Performance check
+            if (!CGPointEqualToPoint(offset, self.collectionView.contentOffset)) {
+                [self.collectionView setContentOffset:offset animated:NO];
+            }
+        }
+    }
+    
+    self.lastCollectionViewBounds = self.collectionView.bounds;
+}
+
 #pragma mark - Private
 
 static void CommonInitialization(MUKMediaThumbnailsViewController *viewController, UICollectionViewLayout *layout)
 {
     viewController.loadedImages = [[NSMutableDictionary alloc] init];
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
+    viewController.lastCollectionViewBounds = CGRectNull;
     
     if (layout) {
         viewController.collectionView.collectionViewLayout = layout;
