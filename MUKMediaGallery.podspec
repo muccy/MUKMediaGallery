@@ -15,4 +15,5 @@ Pod::Spec.new do |s|
   s.source_files  = 'MUKMediaGallery/*.{h,m}'
   s.requires_arc  = true
   s.frameworks    = 'QuartzCore'
+  s.resource      = 'MUKMediaGallery/MUKMediaGalleryResources.bundle'
 end
