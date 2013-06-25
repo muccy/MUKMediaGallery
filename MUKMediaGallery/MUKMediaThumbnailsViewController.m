@@ -1,11 +1,14 @@
 #import "MUKMediaThumbnailsViewController.h"
 #import "MUKMediaThumbnailCell.h"
+#import "MUKMediaAttributes.h"
+#import "MUKMediaGalleryUtils.h"
 
 static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 @interface MUKMediaThumbnailsViewController ()
-@property (nonatomic) NSMutableDictionary *loadedImages;
+@property (nonatomic, readwrite) NSCache *imagesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
+@property (nonatomic) NSCache *mediaAttributesCache;
 @property (nonatomic) CGRect lastCollectionViewBounds;
 @end
 
@@ -43,7 +46,10 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    [self.loadedImages removeAllObjects];
+
+    // Just to be sure...
+    [self.imagesCache removeAllObjects];
+    [self.mediaAttributesCache removeAllObjects];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -75,7 +81,13 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 static void CommonInitialization(MUKMediaThumbnailsViewController *viewController, UICollectionViewLayout *layout)
 {
-    viewController.loadedImages = [[NSMutableDictionary alloc] init];
+    viewController.imagesCache = [[NSCache alloc] init];
+    // One screen contains ~28 thumbnails: cache more than 5 screens
+    viewController.imagesCache.countLimit = 150;
+    
+    viewController.mediaAttributesCache = [[NSCache alloc] init];
+    viewController.mediaAttributesCache.countLimit = 150;
+    
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
     viewController.lastCollectionViewBounds = CGRectNull;
     
@@ -98,12 +110,8 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 #pragma mark - Private — Images
 
-- (BOOL)hasLoadedImageAtIndex:(NSInteger)index {
-    return [[self.loadedImages allKeys] containsObject:@(index)];
-}
-
 - (UIImage *)loadedImageAtIndex:(NSInteger)index {
-    return self.loadedImages[@(index)];
+    return [self.imagesCache objectForKey:@(index)];
 }
 
 - (void)cacheLoadedImage:(UIImage *)image atIndex:(NSInteger)index {
@@ -111,7 +119,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
         return;
     }
     
-    self.loadedImages[@(index)] = image;
+    [self.imagesCache setObject:image forKey:@(index)];
 }
 
 - (BOOL)isLoadingImageAtIndex:(NSInteger)index {
@@ -127,51 +135,151 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     }
 }
 
-#pragma mark - Private — Cell
-
-- (void)configureThumbnailCell:(MUKMediaThumbnailCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (UIImage *)cachedImageOrRequestLoadingForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    cell.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
-    
-    UIImage *image = nil;
-    NSInteger const imageIndex = indexPath.item;
-    
-    // Is loaded?
-    if ([self hasLoadedImageAtIndex:imageIndex]) {
-        image = [self loadedImageAtIndex:imageIndex];
-    }
-    
+    NSInteger const kImageIndex = indexPath.item;
+    UIImage *image = [self loadedImageAtIndex:kImageIndex]; // Try to load from cache
+
     // If no image is cached, check if it's loading
     if (image == nil) {
         // If it's not loading, request an image
-        if ([self isLoadingImageAtIndex:imageIndex] == NO) {
+        if ([self isLoadingImageAtIndex:kImageIndex] == NO) {
             // Mark as loading
-            [self setLoading:YES imageAtIndex:imageIndex];
+            [self setLoading:YES imageAtIndex:kImageIndex];
             
             // This block is called by delegate which can give back an image
             // asynchronously
             void (^completionHandler)(UIImage *) = ^(UIImage *image) {
                 // Set image as not loading
-                [self setLoading:NO imageAtIndex:imageIndex];
+                [self setLoading:NO imageAtIndex:kImageIndex];
                 
                 // Cache given image
-                [self cacheLoadedImage:image atIndex:imageIndex];
+                [self cacheLoadedImage:image atIndex:kImageIndex];
                 
                 // Take actual cell and set image
                 MUKMediaThumbnailCell *actualCell = (MUKMediaThumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
                 [self setImage:image inThumbnailCell:actualCell];
             };
             
-            [self.delegate thumbnailsViewController:self loadImageForItemAtIndex:imageIndex completionHandler:completionHandler];
+            [self.delegate thumbnailsViewController:self loadImageForItemAtIndex:kImageIndex completionHandler:completionHandler];
         }
     }
     
+    return image;
+}
+
+#pragma mark - Private — Media Attributes
+
+- (MUKMediaAttributes *)mediaAttributesAtIndex:(NSInteger)index cacheIfNeeded:(BOOL)cache
+{
+    BOOL nullAttributes = NO;
+    MUKMediaAttributes *attributes = [self cachedMediaAttributesAtIndex:index nullAttributes:&nullAttributes];
+    
+    // User has chosen for this index
+    if (attributes || nullAttributes) {
+        return attributes;
+    }
+    
+    // At this point attributes == nil for sure
+    // Load from delegate!
+    
+    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:attributesForItemAtIndex:)])
+    {
+        attributes = [self.delegate thumbnailsViewController:self attributesForItemAtIndex:index];
+    }
+    
+    // Should cache it?
+    if (cache) {
+        [self cacheMediaAttributes:attributes atIndex:index];
+    }
+    
+    return attributes;
+}
+
+- (MUKMediaAttributes *)cachedMediaAttributesAtIndex:(NSInteger)index nullAttributes:(BOOL *)nullAttributes
+{
+    id cachedObject = [self.mediaAttributesCache objectForKey:@(index)];
+    MUKMediaAttributes *attributes;
+    
+    if (cachedObject == [NSNull null]) {
+        if (nullAttributes != NULL) {
+            *nullAttributes = YES;
+        }
+        
+        attributes = nil;
+    }
+    else {
+        if (nullAttributes != NULL) {
+            *nullAttributes = NO;
+        }
+        
+        attributes = cachedObject;
+    }
+    
+    return attributes;
+}
+
+- (void)cacheMediaAttributes:(MUKMediaAttributes *)attributes atIndex:(NSInteger)index {
+    id objectToCache = attributes;
+    
+    if (objectToCache == nil) {
+        objectToCache = [NSNull null];
+    }
+    
+    [self.mediaAttributesCache setObject:objectToCache forKey:@(index)];
+}
+
+#pragma mark - Private — Cell
+
+- (void)configureThumbnailCell:(MUKMediaThumbnailCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+    
+    // Get cached image or request it to delegate
+    UIImage *image = [self cachedImageOrRequestLoadingForItemAtIndexPath:indexPath];
+    
     // Anyway set the image, also if it's nil
     [self setImage:image inThumbnailCell:cell];
+    
+    // Configure bottom view of cell
+    [self configureBottomViewInThumbnailCell:cell atIndexPath:indexPath];
 }
 
 - (void)setImage:(UIImage *)image inThumbnailCell:(MUKMediaThumbnailCell *)cell {
     cell.imageView.image = image;
+}
+
+- (void)configureBottomViewInThumbnailCell:(MUKMediaThumbnailCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    MUKMediaAttributes *attributes = [self mediaAttributesAtIndex:indexPath.item cacheIfNeeded:YES];
+    cell.bottomView.hidden = (attributes == nil || attributes.kind == MUKMediaKindImage || [attributes.caption length] > 0);
+    cell.bottomIconImageView.image = [self thumbnailCellBottomViewIconForMediaAttributes:attributes];
+}
+
+- (UIImage *)thumbnailCellBottomViewIconForMediaAttributes:(MUKMediaAttributes *)attributes
+{
+    if (attributes == nil) {
+        return nil;
+    }
+    
+    UIImage *icon;
+    
+    switch (attributes.kind) {
+        case MUKMediaKindAudio:
+            icon = [MUKMediaGalleryUtils imageNamed:@"audio_small"];
+            break;
+            
+        case MUKMediaKindVideo:
+        case MUKMediaKindYouTubeVideo:
+            icon = [MUKMediaGalleryUtils imageNamed:@"video_small"];
+            break;
+            
+        default:
+            icon = nil;
+            break;
+    }
+    
+    return icon;
 }
 
 #pragma mark - <UICollectionViewDataSource>

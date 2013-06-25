@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 
 @class MUKMediaThumbnailsViewController;
+@class MUKMediaAttributes;
 @protocol MUKMediaThumbnailsViewControllerDelegate <NSObject>
 
 @required
@@ -9,9 +10,11 @@
 
 @optional
 - (BOOL)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController cancelLoadingForImageAtIndex:(NSInteger)idx;
+- (MUKMediaAttributes *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController attributesForItemAtIndex:(NSInteger)idx;
 
 @end
 
 @interface MUKMediaThumbnailsViewController : UICollectionViewController
 @property (nonatomic, weak) id<MUKMediaThumbnailsViewControllerDelegate> delegate;
+@property (nonatomic, readonly) NSCache *imagesCache;
 @end

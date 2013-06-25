@@ -40,4 +40,9 @@
     }];
 }
 
+- (MUKMediaAttributes *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController attributesForItemAtIndex:(NSInteger)idx
+{
+    return [[MUKMediaAttributes alloc] initWithKind:MUKMediaKindVideo];
+}
+
 @end
