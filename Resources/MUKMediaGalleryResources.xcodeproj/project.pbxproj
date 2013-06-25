@@ -249,7 +249,6 @@
 		06504C1217798273002217F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "MUKMediaGalleryResources/MUKMediaGalleryResources-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -260,7 +259,6 @@
 		06504C1317798273002217F3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				INFOPLIST_FILE = "MUKMediaGalleryResources/MUKMediaGalleryResources-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
