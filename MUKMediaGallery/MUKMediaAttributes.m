@@ -1,4 +1,5 @@
 #import "MUKMediaAttributes.h"
+#import <MUKToolkit/MUK+String.h>
 
 @implementation MUKMediaAttributes
 
@@ -13,6 +14,10 @@
     }
     
     return self;
+}
+
+- (void)setCaptionWithTimeInterval:(NSTimeInterval)interval {
+    self.caption = [MUK stringRepresentationOfTimeInterval:interval];
 }
 
 @end

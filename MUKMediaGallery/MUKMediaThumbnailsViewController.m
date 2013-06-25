@@ -252,8 +252,9 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 - (void)configureBottomViewInThumbnailCell:(MUKMediaThumbnailCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     MUKMediaAttributes *attributes = [self mediaAttributesAtIndex:indexPath.item cacheIfNeeded:YES];
-    cell.bottomView.hidden = (attributes == nil || attributes.kind == MUKMediaKindImage || [attributes.caption length] > 0);
+    cell.bottomView.hidden = (attributes == nil || (attributes.kind == MUKMediaKindImage && [attributes.caption length] == 0));
     cell.bottomIconImageView.image = [self thumbnailCellBottomViewIconForMediaAttributes:attributes];
+    cell.captionLabel.text = attributes.caption;
 }
 
 - (UIImage *)thumbnailCellBottomViewIconForMediaAttributes:(MUKMediaAttributes *)attributes

@@ -41,6 +41,19 @@
         [bottomView addSubview:bottomIconImageView];
         self.bottomIconImageView = bottomIconImageView;
         
+        rect = bottomView.bounds;
+        rect.origin.x = CGRectGetMaxX(bottomIconImageView.frame) + 4.0f;
+        rect.size.width -= rect.origin.x + 4.0f;
+        UILabel *captionLabel = [[UILabel alloc] initWithFrame:rect];
+        captionLabel.backgroundColor = [UIColor clearColor];
+        captionLabel.textColor = [UIColor whiteColor];
+        captionLabel.numberOfLines = 1;
+        captionLabel.textAlignment = NSTextAlignmentRight;
+        captionLabel.font = [UIFont boldSystemFontOfSize:11.0f];
+        captionLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleWidth;
+        [bottomView addSubview:captionLabel];
+        self.captionLabel = captionLabel;
+        
         CGFloat const kBorder = 1.0f;
         rect = CGRectInset(imageView.frame, kBorder, kBorder);
         UIView *borderView = [[UIView alloc] initWithFrame:imageView.frame];

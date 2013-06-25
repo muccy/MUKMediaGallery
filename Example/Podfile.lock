@@ -1,5 +1,7 @@
 PODS:
-  - MUKMediaGallery (2.0.0)
+  - MUKMediaGallery (2.0.0):
+    - MUKToolkit (~> 1.1)
+  - MUKToolkit (1.1.0)
 
 DEPENDENCIES:
   - MUKMediaGallery (from `..`)
@@ -9,6 +11,7 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
-  MUKMediaGallery: 093ded92ff2d5ea4e2c9dde8d36da733bdeb4471
+  MUKMediaGallery: ea3aac36596c530cd1dec533e128b5c6f642b8e6
+  MUKToolkit: 4819735294185275c137865d5aafbcf1a8a7354f
 
 COCOAPODS: 0.20.2

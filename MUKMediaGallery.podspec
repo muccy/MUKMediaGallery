@@ -16,4 +16,6 @@ Pod::Spec.new do |s|
   s.requires_arc  = true
   s.frameworks    = 'QuartzCore'
   s.resource      = 'MUKMediaGallery/MUKMediaGalleryResources.bundle'
+  
+  s.dependency    'MUKToolkit', '~> 1.1'
 end

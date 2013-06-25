@@ -12,5 +12,6 @@ typedef NS_ENUM(NSInteger, MUKMediaKind) {
 @property (nonatomic, copy) NSString *caption;
 
 - (instancetype)initWithKind:(MUKMediaKind)kind;
+- (void)setCaptionWithTimeInterval:(NSTimeInterval)interval;
 
 @end

@@ -42,7 +42,9 @@
 
 - (MUKMediaAttributes *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController attributesForItemAtIndex:(NSInteger)idx
 {
-    return [[MUKMediaAttributes alloc] initWithKind:MUKMediaKindVideo];
+    MUKMediaAttributes *attributes = [[MUKMediaAttributes alloc] initWithKind:MUKMediaKindAudio];
+    [attributes setCaptionWithTimeInterval:125.0];
+    return attributes;
 }
 
 @end
