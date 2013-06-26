@@ -5,6 +5,7 @@ PODS:
 
 DEPENDENCIES:
   - MUKMediaGallery (from `..`)
+  - MUKToolkit (~> 1.1)
 
 EXTERNAL SOURCES:
   MUKMediaGallery:
