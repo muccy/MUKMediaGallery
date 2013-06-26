@@ -18,6 +18,7 @@
         imageView.clipsToBounds = YES;
         imageView.contentMode = UIViewContentModeTopLeft;
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        imageView.opaque = YES;
         [self.contentView addSubview:imageView];
         self.imageView = imageView;
         
@@ -25,7 +26,7 @@
         rect.origin.y = rect.size.height - kBottomViewHeight;
         rect.size.height = kBottomViewHeight;
         UIView *bottomView = [[UIView alloc] initWithFrame:rect];
-        bottomView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.7f];
+        bottomView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
         bottomView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
         bottomView.userInteractionEnabled = NO;
         [self.contentView addSubview:bottomView];
@@ -53,18 +54,33 @@
         captionLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleWidth;
         [bottomView addSubview:captionLabel];
         self.captionLabel = captionLabel;
-        
-        CGFloat const kBorder = 1.0f;
-        rect = CGRectInset(imageView.frame, kBorder, kBorder);
-        UIView *borderView = [[UIView alloc] initWithFrame:imageView.frame];
-        borderView.autoresizingMask = imageView.autoresizingMask;
-        borderView.userInteractionEnabled = NO;
-        borderView.backgroundColor = [UIColor clearColor];
-        borderView.layer.borderWidth = kBorder;
-        borderView.layer.borderColor = [UIColor colorWithWhite:0.0f alpha:0.05f].CGColor;
-        [self.contentView addSubview:borderView];
     }
+    
     return self;
+}
+
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+    [super setBackgroundColor:backgroundColor];
+    self.imageView.backgroundColor = backgroundColor;
+}
+
+- (void)drawRect:(CGRect)rect {
+    // Draw border for empty cells
+    // Borders for filled cells are drawn over resized thumbnails as a huge
+    // optimization
+    
+    if (!self.imageView.image) {
+        [[self class] drawBorderInsideRect:self.bounds context:UIGraphicsGetCurrentContext()];
+    }
+}
+
++ (void)drawBorderInsideRect:(CGRect)rect context:(CGContextRef)ctx {
+    rect = CGRectInset(rect, 1.0f, 1.0f);
+    
+    CGContextSaveGState(ctx);
+    CGContextSetStrokeColorWithColor(ctx, [UIColor colorWithWhite:0.0f alpha:0.05f].CGColor);
+    CGContextStrokeRect(ctx, rect);
+    CGContextRestoreGState(ctx);
 }
 
 @end

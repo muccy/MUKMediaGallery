@@ -27,8 +27,20 @@
     }
     
     UIGraphicsBeginImageContextWithOptions(self.boundingSize, NO, 0.0f);
+    
+    // Draw image 
     [self.sourceImage drawInRect:imageRect];
+    
+    // Delegate could draw over image
+    if (![self isCancelled] && [self.drawingDelegate respondsToSelector:@selector(imageResizeOperation:drawOverResizedImageInContext:)])
+    {
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        [self.drawingDelegate imageResizeOperation:self drawOverResizedImageInContext:ctx];
+    }
+    
+    // Capture composed image
     self.resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+    
     UIGraphicsEndImageContext();
 }
 

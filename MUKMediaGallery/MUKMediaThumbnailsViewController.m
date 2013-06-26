@@ -6,7 +6,7 @@
 
 static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
-@interface MUKMediaThumbnailsViewController ()
+@interface MUKMediaThumbnailsViewController () <MUKMediaGalleryImageResizeOperationDrawingDelegate>
 @property (nonatomic, readwrite) NSCache *imagesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
 @property (nonatomic) NSCache *mediaAttributesCache;
@@ -180,6 +180,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     op.boundingSize = size;
     op.sourceImage = image;
     op.userInfo = indexPath;
+    op.drawingDelegate = self;
     
     __weak MUKMediaGalleryImageResizeOperation *weakOp = op;
     __weak MUKMediaThumbnailsViewController *weakSelf = self;
@@ -369,6 +370,16 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
             } // if cancelled
         } // if -isLoadingImageAtIndex:
     } // if delegate responds
+}
+
+#pragma mark - <MUKMediaGalleryImageResizeOperationDrawingDelegate>
+
+- (void)imageResizeOperation:(MUKMediaGalleryImageResizeOperation *)op drawOverResizedImageInContext:(CGContextRef)ctx
+{
+    // Draw a border over the image    
+    CGRect rect = CGRectZero;
+    rect.size = op.boundingSize;
+    [MUKMediaThumbnailCell drawBorderInsideRect:rect context:ctx];
 }
 
 @end
