@@ -79,6 +79,34 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
     self.lastCollectionViewBounds = self.collectionView.bounds;
 }
 
+#pragma mark - Methods
+
+- (void)reloadData {
+    // Empty caches
+    [self.imagesCache removeAllObjects];
+    [self.mediaAttributesCache removeAllObjects];
+    
+    // Cancel loading images
+    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
+    {
+        // Request delegate to cancel every load in progress
+        [self.loadingImageIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop)
+        {
+            [self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:idx];
+        }];
+    }
+    [self.loadingImageIndexes removeAllIndexes];
+    
+    // Cancel every resize in progress
+    [self.thumbnailResizeQueue cancelAllOperations];
+    
+    // Reset initial values
+    self.lastCollectionViewBounds = CGRectNull;
+
+    // Reload collection view
+    [self.collectionView reloadData];
+}
+
 #pragma mark - Private
 
 static void CommonInitialization(MUKMediaThumbnailsViewController *viewController, UICollectionViewLayout *layout)
@@ -91,9 +119,9 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     viewController.mediaAttributesCache.countLimit = 150;
     
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
-    viewController.lastCollectionViewBounds = CGRectNull;
-    
     viewController.thumbnailResizeQueue = [[NSOperationQueue alloc] init];
+
+    viewController.lastCollectionViewBounds = CGRectNull;
     
     if (layout) {
         viewController.collectionView.collectionViewLayout = layout;
@@ -158,8 +186,11 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
             // This block is called by delegate which can give back an image
             // asynchronously
             void (^completionHandler)(UIImage *) = ^(UIImage *image) {
-                // Resize image in a detached queue
-                [self beginResizingImage:image toThumbnailSize:[[self class] thumbnailSize] forItemAtIndexPath:indexPath];
+                // If it is still loading...
+                if ([self isLoadingImageAtIndex:kImageIndex]) {
+                    // Resize image in a detached queue
+                    [self beginResizingImage:image toThumbnailSize:[[self class] thumbnailSize] forItemAtIndexPath:indexPath];
+                }
             };
             
             [self.delegate thumbnailsViewController:self loadImageForItemAtIndex:kImageIndex completionHandler:completionHandler];
@@ -359,15 +390,14 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
         NSInteger const kImageIndex = indexPath.item;
 
         if ([self isLoadingImageAtIndex:kImageIndex]) {
-            if ([self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:kImageIndex])
-            {
-                // Mark as not loading
-                [self setLoading:NO imageAtIndex:kImageIndex];
-                
-                // Cancel image resizing
-                [self cancelImageResizingForItemAtIndexPath:indexPath];
-                
-            } // if cancelled
+            [self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:kImageIndex];
+            
+            // Mark as not loading
+            [self setLoading:NO imageAtIndex:kImageIndex];
+            
+            // Cancel image resizing
+            [self cancelImageResizingForItemAtIndexPath:indexPath];
+            
         } // if -isLoadingImageAtIndex:
     } // if delegate responds
 }

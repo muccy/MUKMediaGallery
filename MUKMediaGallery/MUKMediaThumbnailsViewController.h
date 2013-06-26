@@ -9,12 +9,16 @@
 - (void)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController loadImageForItemAtIndex:(NSInteger)idx completionHandler:(void (^)(UIImage *image))completionHandler;
 
 @optional
-- (BOOL)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController cancelLoadingForImageAtIndex:(NSInteger)idx;
+- (void)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController cancelLoadingForImageAtIndex:(NSInteger)idx;
 - (MUKMediaAttributes *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController attributesForItemAtIndex:(NSInteger)idx;
 
 @end
 
+
+
 @interface MUKMediaThumbnailsViewController : UICollectionViewController
 @property (nonatomic, weak) id<MUKMediaThumbnailsViewControllerDelegate> delegate;
 @property (nonatomic, readonly) NSCache *imagesCache;
+
+- (void)reloadData;
 @end

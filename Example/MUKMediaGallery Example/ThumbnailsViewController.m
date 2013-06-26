@@ -1,13 +1,7 @@
-//
-//  ThumbnailViewController.m
-//  MUKMediaGallery Example
-//
-//  Created by Marco on 24/06/13.
-//  Copyright (c) 2013 MeLive. All rights reserved.
-//
-
 #import "ThumbnailsViewController.h"
 #import "MediaAsset.h"
+
+#define DEBUG_SIMULATE_ASSETS_DOWNLOADING   1
 
 @interface ThumbnailsViewController () <MUKMediaThumbnailsViewControllerDelegate>
 @end
@@ -19,10 +13,45 @@
     if (self) {
         self.title = @"Thumbnails Grid";
         self.delegate = self;
+        
+#if !DEBUG_SIMULATE_ASSETS_DOWNLOADING
         self.mediaAssets = [[self class] newAssets];
+#endif
     }
     
     return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+#if DEBUG_SIMULATE_ASSETS_DOWNLOADING
+    UIView *backgroundView = [[UIView alloc] initWithFrame:self.collectionView.bounds];
+    self.collectionView.backgroundView = backgroundView;
+    
+    UIView *wrapperView = [[UIView alloc] initWithFrame:self.collectionView.backgroundView.bounds];
+    wrapperView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [spinner startAnimating];
+    [wrapperView addSubview:spinner];
+    [self.collectionView.backgroundView addSubview:wrapperView];
+
+    NSLayoutConstraint *centerXConstraint = [NSLayoutConstraint constraintWithItem:spinner attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:spinner.superview attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f];
+    NSLayoutConstraint *centerYConstraint = [NSLayoutConstraint constraintWithItem:spinner attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:spinner.superview attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f];
+    wrapperView.translatesAutoresizingMaskIntoConstraints = NO;
+    [wrapperView addConstraints:@[centerXConstraint, centerYConstraint]];
+    
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        self.mediaAssets = [[self class] newAssets];
+        [self reloadData];
+        
+        [self.collectionView.backgroundView removeFromSuperview];
+        self.collectionView.backgroundView = nil;
+    });
+#endif
 }
 
 #pragma mark - Private
