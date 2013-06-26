@@ -14,12 +14,22 @@
     self = [super initWithFrame:frame];
     if (self) {
         CGRect rect = self.contentView.bounds;
+        UIView *backgroundView = [[UIView alloc] initWithFrame:rect];
+        self.backgroundView = backgroundView;
+        
+        UIView *selectionOverlayView = [[UIView alloc] initWithFrame:rect];
+        selectionOverlayView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
+        self.selectedBackgroundView = selectionOverlayView;
+        
+        // Put everything in background view, so selected background view will
+        // overlap contents when cell is tapped. Content view will remain empty
+        
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
         imageView.clipsToBounds = YES;
         imageView.contentMode = UIViewContentModeTopLeft;
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         imageView.opaque = YES;
-        [self.contentView addSubview:imageView];
+        [self.backgroundView addSubview:imageView];
         self.imageView = imageView;
         
         CGFloat const kBottomViewHeight = 17.0f;
@@ -29,7 +39,7 @@
         bottomView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
         bottomView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
         bottomView.userInteractionEnabled = NO;
-        [self.contentView addSubview:bottomView];
+        [self.backgroundView addSubview:bottomView];
         self.bottomView = bottomView;
         
         rect = bottomView.bounds;
