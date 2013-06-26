@@ -16,7 +16,7 @@
         CGRect rect = self.contentView.bounds;
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
         imageView.clipsToBounds = YES;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.contentMode = UIViewContentModeTopLeft;
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self.contentView addSubview:imageView];
         self.imageView = imageView;

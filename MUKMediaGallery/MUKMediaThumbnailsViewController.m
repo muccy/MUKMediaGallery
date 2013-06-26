@@ -2,6 +2,7 @@
 #import "MUKMediaThumbnailCell.h"
 #import "MUKMediaAttributes.h"
 #import "MUKMediaGalleryUtils.h"
+#import "MUKMediaGalleryImageResizeOperation.h"
 
 static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
@@ -10,6 +11,7 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
 @property (nonatomic) NSCache *mediaAttributesCache;
 @property (nonatomic) CGRect lastCollectionViewBounds;
+@property (nonatomic) NSOperationQueue *thumbnailResizeQueue;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -91,6 +93,8 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
     viewController.lastCollectionViewBounds = CGRectNull;
     
+    viewController.thumbnailResizeQueue = [[NSOperationQueue alloc] init];
+    
     if (layout) {
         viewController.collectionView.collectionViewLayout = layout;
     }
@@ -100,12 +104,16 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 + (UICollectionViewFlowLayout *)newGridLayout {
     UICollectionViewFlowLayout *grid = [[UICollectionViewFlowLayout alloc] init];
-    grid.itemSize = CGSizeMake(75.0f, 75.0f);
+    grid.itemSize = [self thumbnailSize];
     grid.minimumInteritemSpacing = 4.0f;
     grid.minimumLineSpacing = 4.0f;
     grid.sectionInset = UIEdgeInsetsMake(4.0f, 4.0f, 4.0f, 4.0f);
     
     return grid;
+}
+
++ (CGSize)thumbnailSize {
+    return CGSizeMake(75.0f, 75.0f);
 }
 
 #pragma mark - Private — Images
@@ -150,15 +158,8 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
             // This block is called by delegate which can give back an image
             // asynchronously
             void (^completionHandler)(UIImage *) = ^(UIImage *image) {
-                // Set image as not loading
-                [self setLoading:NO imageAtIndex:kImageIndex];
-                
-                // Cache given image
-                [self cacheLoadedImage:image atIndex:kImageIndex];
-                
-                // Take actual cell and set image
-                MUKMediaThumbnailCell *actualCell = (MUKMediaThumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-                [self setImage:image inThumbnailCell:actualCell];
+                // Resize image in a detached queue
+                [self beginResizingImage:image toThumbnailSize:[[self class] thumbnailSize] forItemAtIndexPath:indexPath];
             };
             
             [self.delegate thumbnailsViewController:self loadImageForItemAtIndex:kImageIndex completionHandler:completionHandler];
@@ -166,6 +167,59 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     }
     
     return image;
+}
+
+- (void)beginResizingImage:(UIImage *)image toThumbnailSize:(CGSize)size forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (!image) {
+        [self didFinishResizingImage:nil forItemAtIndexPath:indexPath cancelled:NO];
+        return;
+    }
+    
+    MUKMediaGalleryImageResizeOperation *op = [[MUKMediaGalleryImageResizeOperation alloc] init];
+    op.boundingSize = size;
+    op.sourceImage = image;
+    op.userInfo = indexPath;
+    
+    __weak MUKMediaGalleryImageResizeOperation *weakOp = op;
+    __weak MUKMediaThumbnailsViewController *weakSelf = self;
+    op.completionBlock = ^{
+        MUKMediaGalleryImageResizeOperation *strongOp = weakOp;
+        MUKMediaThumbnailsViewController *strongSelf = weakSelf;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [strongSelf didFinishResizingImage:strongOp.resizedImage forItemAtIndexPath:indexPath cancelled:[strongOp isCancelled]];
+        });
+    };
+    
+    [self.thumbnailResizeQueue addOperation:op];
+}
+
+- (void)cancelImageResizingForItemAtIndexPath:(NSIndexPath *)indexPath {
+    for (MUKMediaGalleryImageResizeOperation *op in self.thumbnailResizeQueue.operations)
+    {
+        if ([(NSIndexPath *)op.userInfo isEqual:indexPath]) {
+            [op cancel];
+            break;
+        }
+    }
+}
+
+- (void)didFinishResizingImage:(UIImage *)resizedImage forItemAtIndexPath:(NSIndexPath *)indexPath cancelled:(BOOL)cancelled
+{
+    NSInteger const kImageIndex = indexPath.item;
+    
+    // Set image as not loading
+    [self setLoading:NO imageAtIndex:kImageIndex];
+    
+    if (!cancelled) {
+        // Cache resized image
+        [self cacheLoadedImage:resizedImage atIndex:kImageIndex];
+        
+        // Take actual cell and set image
+        MUKMediaThumbnailCell *actualCell = (MUKMediaThumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+        [self setImage:resizedImage inThumbnailCell:actualCell];
+    }
 }
 
 #pragma mark - Private — Media Attributes
@@ -301,13 +355,17 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 {
     if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
     {
-        NSInteger const imageIndex = indexPath.item;
+        NSInteger const kImageIndex = indexPath.item;
 
-        if ([self isLoadingImageAtIndex:imageIndex]) {
-            if ([self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:imageIndex])
+        if ([self isLoadingImageAtIndex:kImageIndex]) {
+            if ([self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:kImageIndex])
             {
                 // Mark as not loading
-                [self setLoading:NO imageAtIndex:imageIndex];
+                [self setLoading:NO imageAtIndex:kImageIndex];
+                
+                // Cancel image resizing
+                [self cancelImageResizingForItemAtIndexPath:indexPath];
+                
             } // if cancelled
         } // if -isLoadingImageAtIndex:
     } // if delegate responds

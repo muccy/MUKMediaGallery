@@ -31,10 +31,11 @@
     NSMutableArray *mediaAssets = [[NSMutableArray alloc] init];
     
     for (NSInteger i=0; i<100; i++) {
+        // http://www.flickr.com/photos/26895569@N07/9134939367/sizes/l/in/explore-2013-06-25/
         MediaAsset *remoteImageAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindImage];
-        remoteImageAsset.thumbnailURL = [NSURL URLWithString:@"http://farm5.staticflickr.com/4092/4988725775_23993fbb41_t.jpg"];
-        remoteImageAsset.URL = [NSURL URLWithString:@"http://farm5.staticflickr.com/4092/4988725775_23993fbb41_z.jpg"];
-        remoteImageAsset.caption = @"Creative Commons Surfing Image";
+        remoteImageAsset.thumbnailURL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_m.jpg"];
+        remoteImageAsset.URL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_5083834193_o.jpg"];
+        remoteImageAsset.caption = @"Castilla Sangra";
         [mediaAssets addObject:remoteImageAsset];
         
         MediaAsset *localVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindVideo];
