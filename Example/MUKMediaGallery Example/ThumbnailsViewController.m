@@ -149,7 +149,7 @@
 - (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPushAfterSelectingItemAtIndex:(NSInteger)idx
 {
     CarouselViewController *carouselViewController = [[CarouselViewController alloc] initWithCollectionViewLayout:nil];
-    // TODO
+    carouselViewController.mediaAssets = self.mediaAssets;
     return carouselViewController;
 }
 
