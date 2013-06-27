@@ -119,8 +119,11 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     viewController.mediaAttributesCache.countLimit = 150;
     
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
+    
     viewController.thumbnailResizeQueue = [[NSOperationQueue alloc] init];
-
+    viewController.thumbnailResizeQueue.name = @"it.melive.MUKit.MUKMediaGallery.MUKMediaThumbnailsViewController.ThumbnailResizeQueue";
+    viewController.thumbnailResizeQueue.maxConcurrentOperationCount = 1;
+    
     viewController.lastCollectionViewBounds = CGRectNull;
     
     if (layout) {
