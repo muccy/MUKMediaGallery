@@ -8,11 +8,12 @@
 
 @implementation ThumbnailsViewController
 
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    self = [super initWithCollectionViewLayout:layout];
+- (instancetype)initWithDelegate:(id<MUKMediaThumbnailsViewControllerDelegate>)delegate
+{
+    delegate = self;
+    self = [super initWithDelegate:delegate];
     if (self) {
         self.title = @"Thumbnails Grid";
-        self.delegate = self;
         
 #if !DEBUG_SIMULATE_ASSETS_DOWNLOADING
         self.mediaAssets = [[self class] newAssets];

@@ -15,7 +15,7 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    ThumbnailsViewController *thumbnailsViewController = [[ThumbnailsViewController alloc] init];
+    ThumbnailsViewController *thumbnailsViewController = [[ThumbnailsViewController alloc] initWithDelegate:nil];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:thumbnailsViewController];
     self.window.rootViewController = navController;
     

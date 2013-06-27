@@ -18,5 +18,6 @@
 
 @interface MUKMediaThumbnailsViewController : UICollectionViewController
 @property (nonatomic, weak) id<MUKMediaThumbnailsViewControllerDelegate> delegate;
+- (instancetype)initWithDelegate:(id<MUKMediaThumbnailsViewControllerDelegate>)delegate;
 - (void)reloadData;
 @end
