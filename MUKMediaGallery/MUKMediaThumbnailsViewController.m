@@ -7,7 +7,7 @@
 static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 @interface MUKMediaThumbnailsViewController () <MUKMediaGalleryImageResizeOperationDrawingDelegate>
-@property (nonatomic, readwrite) NSCache *imagesCache;
+@property (nonatomic) NSCache *imagesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
 @property (nonatomic) NSCache *mediaAttributesCache;
 @property (nonatomic) CGRect lastCollectionViewBounds;

@@ -18,7 +18,5 @@
 
 @interface MUKMediaThumbnailsViewController : UICollectionViewController
 @property (nonatomic, weak) id<MUKMediaThumbnailsViewControllerDelegate> delegate;
-@property (nonatomic, readonly) NSCache *imagesCache;
-
 - (void)reloadData;
 @end
