@@ -2,10 +2,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface MUKMediaThumbnailCell ()
-@property (nonatomic, weak, readwrite) UIImageView *imageView;
-@property (nonatomic, weak, readwrite) UIView *bottomView;
-@property (nonatomic, weak, readwrite) UIImageView *bottomIconImageView;
-@property (nonatomic, weak, readwrite) UILabel *captionLabel;
 @end
 
 @implementation MUKMediaThumbnailCell
@@ -30,7 +26,7 @@
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         imageView.opaque = YES;
         [self.backgroundView addSubview:imageView];
-        self.imageView = imageView;
+        _imageView = imageView;
         
         CGFloat const kBottomViewHeight = 17.0f;
         rect.origin.y = rect.size.height - kBottomViewHeight;
@@ -40,7 +36,7 @@
         bottomView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleWidth;
         bottomView.userInteractionEnabled = NO;
         [self.backgroundView addSubview:bottomView];
-        self.bottomView = bottomView;
+        _bottomView = bottomView;
         
         rect = bottomView.bounds;
         rect.origin.x = 6.0f;
@@ -50,7 +46,7 @@
         bottomIconImageView.contentMode = UIViewContentModeLeft;
         bottomIconImageView.backgroundColor = [UIColor clearColor];
         [bottomView addSubview:bottomIconImageView];
-        self.bottomIconImageView = bottomIconImageView;
+        _bottomIconImageView = bottomIconImageView;
         
         rect = bottomView.bounds;
         rect.origin.x = CGRectGetMaxX(bottomIconImageView.frame) + 4.0f;
@@ -63,7 +59,7 @@
         captionLabel.font = [UIFont boldSystemFontOfSize:11.0f];
         captionLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleWidth;
         [bottomView addSubview:captionLabel];
-        self.captionLabel = captionLabel;
+        _captionLabel = captionLabel;
     }
     
     return self;
