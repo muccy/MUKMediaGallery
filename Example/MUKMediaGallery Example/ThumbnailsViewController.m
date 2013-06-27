@@ -1,7 +1,8 @@
 #import "ThumbnailsViewController.h"
 #import "MediaAsset.h"
+#import "CarouselViewController.h"
 
-#define DEBUG_SIMULATE_ASSETS_DOWNLOADING   1
+#define DEBUG_SIMULATE_ASSETS_DOWNLOADING   0
 
 @interface ThumbnailsViewController () <MUKMediaThumbnailsViewControllerDelegate>
 @end
@@ -143,6 +144,13 @@
     }
     
     return attributes;
+}
+
+- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPushAfterSelectingItemAtIndex:(NSInteger)idx
+{
+    CarouselViewController *carouselViewController = [[CarouselViewController alloc] initWithCollectionViewLayout:nil];
+    // TODO
+    return carouselViewController;
 }
 
 @end

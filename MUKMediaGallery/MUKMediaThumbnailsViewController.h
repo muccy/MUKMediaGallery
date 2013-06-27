@@ -1,6 +1,7 @@
 #import <UIKit/UIKit.h>
 
 @class MUKMediaThumbnailsViewController;
+@class MUKMediaCarouselViewController;
 @class MUKMediaAttributes;
 @protocol MUKMediaThumbnailsViewControllerDelegate <NSObject>
 
@@ -11,6 +12,7 @@
 @optional
 - (void)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController cancelLoadingForImageAtIndex:(NSInteger)idx;
 - (MUKMediaAttributes *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController attributesForItemAtIndex:(NSInteger)idx;
+- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPushAfterSelectingItemAtIndex:(NSInteger)idx;
 
 @end
 

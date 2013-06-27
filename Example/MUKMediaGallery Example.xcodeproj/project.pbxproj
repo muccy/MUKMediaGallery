@@ -13,6 +13,7 @@
 		063F7C53177ACCE6005C0BD2 /* palms.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4D177ACCE6005C0BD2 /* palms.jpg */; };
 		063F7C54177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */; };
 		063F7C55177ACCE6005C0BD2 /* sea.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C50177ACCE6005C0BD2 /* sea.mp4 */; };
+		06807E5F177C260F00AF0BC8 /* CarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06807E5E177C260F00AF0BC8 /* CarouselViewController.m */; };
 		069F682417772E8400AD3399 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682317772E8400AD3399 /* Foundation.framework */; };
 		069F682617772E8400AD3399 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682517772E8400AD3399 /* CoreGraphics.framework */; };
 		069F682817772E8400AD3399 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682717772E8400AD3399 /* UIKit.framework */; };
@@ -46,6 +47,8 @@
 		063F7C4D177ACCE6005C0BD2 /* palms.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = palms.jpg; sourceTree = "<group>"; };
 		063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "sea-movie-thumbnail.jpg"; sourceTree = "<group>"; };
 		063F7C50177ACCE6005C0BD2 /* sea.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sea.mp4; sourceTree = "<group>"; };
+		06807E5D177C260F00AF0BC8 /* CarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselViewController.h; sourceTree = "<group>"; };
+		06807E5E177C260F00AF0BC8 /* CarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselViewController.m; sourceTree = "<group>"; };
 		069F682017772E8400AD3399 /* MUKMediaGallery Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MUKMediaGallery Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		069F682317772E8400AD3399 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		069F682517772E8400AD3399 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -167,6 +170,8 @@
 				069F683317772E8400AD3399 /* AppDelegate.m */,
 				06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */,
 				06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */,
+				06807E5D177C260F00AF0BC8 /* CarouselViewController.h */,
+				06807E5E177C260F00AF0BC8 /* CarouselViewController.m */,
 				063F7C45177ACB55005C0BD2 /* MediaAsset.h */,
 				063F7C46177ACB55005C0BD2 /* MediaAsset.m */,
 				069F682A17772E8400AD3399 /* Supporting Files */,
@@ -338,6 +343,7 @@
 			files = (
 				06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */,
 				069F683417772E8400AD3399 /* AppDelegate.m in Sources */,
+				06807E5F177C260F00AF0BC8 /* CarouselViewController.m in Sources */,
 				069F683017772E8400AD3399 /* main.m in Sources */,
 				063F7C47177ACB55005C0BD2 /* MediaAsset.m in Sources */,
 			);

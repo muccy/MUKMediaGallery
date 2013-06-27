@@ -3,6 +3,7 @@
 #import "MUKMediaAttributes.h"
 #import "MUKMediaGalleryUtils.h"
 #import "MUKMediaGalleryImageResizeOperation.h"
+#import "MUKMediaCarouselViewController.h"
 
 static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
@@ -386,6 +387,8 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     return cell;
 }
 
+#pragma mark - <UICollectionViewDelegate>
+
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
@@ -403,6 +406,18 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
             
         } // if -isLoadingImageAtIndex:
     } // if delegate responds
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{    
+    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:carouselToPushAfterSelectingItemAtIndex:)])
+    {
+        MUKMediaCarouselViewController *carouselViewController = [self.delegate thumbnailsViewController:self carouselToPushAfterSelectingItemAtIndex:indexPath.item];
+        
+        if (carouselViewController) {
+            [self.navigationController pushViewController:carouselViewController animated:YES];
+        }
+    }
 }
 
 #pragma mark - <MUKMediaGalleryImageResizeOperationDrawingDelegate>
