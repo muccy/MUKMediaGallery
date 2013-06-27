@@ -16,17 +16,6 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 @implementation MUKMediaThumbnailsViewController
 
-- (instancetype)initWithDelegate:(id<MUKMediaThumbnailsViewControllerDelegate>)delegate
-{
-    self = [super initWithCollectionViewLayout:[[self class] newGridLayout]];
-    if (self) {
-        _delegate = delegate;
-        CommonInitialization(self, nil);
-    }
-    
-    return self;
-}
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -37,11 +26,17 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 }
 
 - (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    return [self initWithDelegate:nil];
+    layout = [[self class] newGridLayout];
+    self = [super initWithCollectionViewLayout:layout];
+    if (self) {
+        CommonInitialization(self, nil);
+    }
+    
+    return self;
 }
 
 - (id)init {
-    return [self initWithDelegate:nil];
+    return [self initWithCollectionViewLayout:nil];
 }
 
 - (void)viewDidLoad {
