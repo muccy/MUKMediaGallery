@@ -1,6 +1,6 @@
 #import "MUKMediaThumbnailsViewController.h"
 #import "MUKMediaThumbnailCell.h"
-#import "MUKMediaAttributes.h"
+#import "MUKMediaAttributesCache.h"
 #import "MUKMediaGalleryUtils.h"
 #import "MUKMediaGalleryImageResizeOperation.h"
 #import "MUKMediaCarouselViewController.h"
@@ -8,9 +8,9 @@
 static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 @interface MUKMediaThumbnailsViewController () <MUKMediaGalleryImageResizeOperationDrawingDelegate>
-@property (nonatomic) NSCache *imagesCache;
+@property (nonatomic) MUKMediaModelCache *imagesCache;
+@property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
-@property (nonatomic) NSCache *mediaAttributesCache;
 @property (nonatomic) CGRect lastCollectionViewBounds;
 @property (nonatomic) NSOperationQueue *thumbnailResizeQueue;
 @end
@@ -47,14 +47,6 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
     [self.collectionView registerClass:[MUKMediaThumbnailCell class] forCellWithReuseIdentifier:kCellIdentifier];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-
-    // Just to be sure...
-    [self.imagesCache removeAllObjects];
-    [self.mediaAttributesCache removeAllObjects];
-}
-
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
@@ -84,18 +76,10 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 - (void)reloadData {
     // Empty caches
-    [self.imagesCache removeAllObjects];
-    [self.mediaAttributesCache removeAllObjects];
+    [self.imagesCache.cache removeAllObjects];
+    [self.mediaAttributesCache.cache removeAllObjects];
     
-    // Cancel loading images
-    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
-    {
-        // Request delegate to cancel every load in progress
-        [self.loadingImageIndexes enumerateIndexesUsingBlock:^(NSUInteger idx, BOOL *stop)
-        {
-            [self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:idx];
-        }];
-    }
+    // Mark every image as not loaded
     [self.loadingImageIndexes removeAllIndexes];
     
     // Cancel every resize in progress
@@ -112,12 +96,9 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 static void CommonInitialization(MUKMediaThumbnailsViewController *viewController, UICollectionViewLayout *layout)
 {
-    viewController.imagesCache = [[NSCache alloc] init];
     // One screen contains ~28 thumbnails: cache more than 5 screens
-    viewController.imagesCache.countLimit = 150;
-    
-    viewController.mediaAttributesCache = [[NSCache alloc] init];
-    viewController.mediaAttributesCache.countLimit = 150;
+    viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:150 cacheNulls:NO];
+    viewController.mediaAttributesCache = [[MUKMediaAttributesCache alloc] initWithCountLimit:150 cacheNulls:YES];
     
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
     
@@ -150,18 +131,6 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 #pragma mark - Private — Images
 
-- (UIImage *)loadedImageAtIndex:(NSInteger)index {
-    return [self.imagesCache objectForKey:@(index)];
-}
-
-- (void)cacheLoadedImage:(UIImage *)image atIndex:(NSInteger)index {
-    if (image == nil) {
-        return;
-    }
-    
-    [self.imagesCache setObject:image forKey:@(index)];
-}
-
 - (BOOL)isLoadingImageAtIndex:(NSInteger)index {
     return [self.loadingImageIndexes containsIndex:index];
 }
@@ -178,7 +147,9 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 - (UIImage *)cachedImageOrRequestLoadingForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger const kImageIndex = indexPath.item;
-    UIImage *image = [self loadedImageAtIndex:kImageIndex]; // Try to load from cache
+    
+    // Try to load from cache
+    UIImage *image = [self.imagesCache objectAtIndex:kImageIndex isNull:NULL];
 
     // If no image is cached, check if it's loading
     if (image == nil) {
@@ -250,73 +221,12 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     
     if (!cancelled) {
         // Cache resized image
-        [self cacheLoadedImage:resizedImage atIndex:kImageIndex];
+        [self.imagesCache setObject:resizedImage atIndex:kImageIndex];
         
         // Take actual cell and set image
         MUKMediaThumbnailCell *actualCell = (MUKMediaThumbnailCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
         [self setImage:resizedImage inThumbnailCell:actualCell];
     }
-}
-
-#pragma mark - Private — Media Attributes
-
-- (MUKMediaAttributes *)mediaAttributesAtIndex:(NSInteger)index cacheIfNeeded:(BOOL)cache
-{
-    BOOL nullAttributes = NO;
-    MUKMediaAttributes *attributes = [self cachedMediaAttributesAtIndex:index nullAttributes:&nullAttributes];
-    
-    // User has chosen for this index
-    if (attributes || nullAttributes) {
-        return attributes;
-    }
-    
-    // At this point attributes == nil for sure
-    // Load from delegate!
-    
-    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:attributesForItemAtIndex:)])
-    {
-        attributes = [self.delegate thumbnailsViewController:self attributesForItemAtIndex:index];
-    }
-    
-    // Should cache it?
-    if (cache) {
-        [self cacheMediaAttributes:attributes atIndex:index];
-    }
-    
-    return attributes;
-}
-
-- (MUKMediaAttributes *)cachedMediaAttributesAtIndex:(NSInteger)index nullAttributes:(BOOL *)nullAttributes
-{
-    id cachedObject = [self.mediaAttributesCache objectForKey:@(index)];
-    MUKMediaAttributes *attributes;
-    
-    if (cachedObject == [NSNull null]) {
-        if (nullAttributes != NULL) {
-            *nullAttributes = YES;
-        }
-        
-        attributes = nil;
-    }
-    else {
-        if (nullAttributes != NULL) {
-            *nullAttributes = NO;
-        }
-        
-        attributes = cachedObject;
-    }
-    
-    return attributes;
-}
-
-- (void)cacheMediaAttributes:(MUKMediaAttributes *)attributes atIndex:(NSInteger)index {
-    id objectToCache = attributes;
-    
-    if (objectToCache == nil) {
-        objectToCache = [NSNull null];
-    }
-    
-    [self.mediaAttributesCache setObject:objectToCache forKey:@(index)];
 }
 
 #pragma mark - Private — Cell
@@ -341,7 +251,16 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 - (void)configureBottomViewInThumbnailCell:(MUKMediaThumbnailCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    MUKMediaAttributes *attributes = [self mediaAttributesAtIndex:indexPath.item cacheIfNeeded:YES];
+    MUKMediaAttributes *attributes = [self.mediaAttributesCache mediaAttributesAtIndex:indexPath.item cacheIfNeeded:YES loadingHandler:^MUKMediaAttributes *
+    {
+        if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:attributesForItemAtIndex:)])
+        {
+            return [self.delegate thumbnailsViewController:self attributesForItemAtIndex:indexPath.item];
+        }
+        
+        return nil;
+    }];
+    
     cell.bottomView.hidden = (attributes == nil || (attributes.kind == MUKMediaKindImage && [attributes.caption length] == 0));
     cell.bottomIconImageView.image = [self thumbnailCellBottomViewIconForMediaAttributes:attributes];
     cell.captionLabel.text = attributes.caption;

@@ -20,5 +20,9 @@
 
 @interface MUKMediaThumbnailsViewController : UICollectionViewController
 @property (nonatomic, weak) id<MUKMediaThumbnailsViewControllerDelegate> delegate;
+
+// Remember to cancel your downloads before to call this method, because
+// -thumbnailsViewController:cancelLoadingForImageAtIndex: won't be
+// invoked
 - (void)reloadData;
 @end
