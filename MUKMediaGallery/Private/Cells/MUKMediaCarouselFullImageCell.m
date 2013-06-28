@@ -1,10 +1,10 @@
-#import "MUKMediaFullImageCell.h"
+#import "MUKMediaCarouselFullImageCell.h"
 
-@interface MUKMediaFullImageCell ()
+@interface MUKMediaCarouselFullImageCell ()
 @property (nonatomic, readwrite) MUKMediaImageKind imageKind;
 @end
 
-@implementation MUKMediaFullImageCell
+@implementation MUKMediaCarouselFullImageCell
 
 - (id)initWithFrame:(CGRect)frame
 {

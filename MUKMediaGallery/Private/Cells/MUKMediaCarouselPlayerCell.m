@@ -1,6 +1,6 @@
-#import "MUKMediaPlayerCell.h"
+#import "MUKMediaCarouselPlayerCell.h"
 
-@implementation MUKMediaPlayerCell
+@implementation MUKMediaCarouselPlayerCell
 
 - (id)initWithFrame:(CGRect)frame
 {

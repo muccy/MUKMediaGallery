@@ -1,6 +1,6 @@
 #import "MUKMediaCarouselViewController.h"
-#import "MUKMediaFullImageCell.h"
-#import "MUKMediaPlayerCell.h"
+#import "MUKMediaCarouselFullImageCell.h"
+#import "MUKMediaCarouselPlayerCell.h"
 #import "MUKMediaAttributesCache.h"
 
 static NSString *const kFullImageCellIdentifier = @"MUKMediaFullImageCell";
@@ -60,8 +60,8 @@ static CGFloat const kLateralPadding = 4.0f;
     frame.size.width += kLateralPadding * 2.0f;
     self.collectionView.frame = frame;
     
-    [self.collectionView registerClass:[MUKMediaFullImageCell class] forCellWithReuseIdentifier:kFullImageCellIdentifier];
-    [self.collectionView registerClass:[MUKMediaPlayerCell class] forCellWithReuseIdentifier:kMediaPlayerCellIdentifier];
+    [self.collectionView registerClass:[MUKMediaCarouselFullImageCell class] forCellWithReuseIdentifier:kFullImageCellIdentifier];
+    [self.collectionView registerClass:[MUKMediaCarouselPlayerCell class] forCellWithReuseIdentifier:kMediaPlayerCellIdentifier];
     
     // This adjust things prior rotation
     [self beginObservingBoundsChanges];
@@ -259,7 +259,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
             [[self cacheForImageKind:imageKind] setObject:image atIndex:kImageIndex];
             
             // Get actual cell
-            MUKMediaFullImageCell *cell = (MUKMediaFullImageCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+            MUKMediaCarouselFullImageCell *cell = (MUKMediaCarouselFullImageCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
                         
             // Set image if needed
             if ([self shouldSetLoadedImageOfKind:imageKind intoFullImageCell:cell atIndexPath:indexPath])
@@ -317,22 +317,22 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 {
     cell.backgroundColor = [UIColor colorWithRed:(float)(arc4random()%255)/255.0f green:(float)(arc4random()%255)/255.0f blue:(float)(arc4random()%255)/255.0f alpha:0.7f];
     
-    if ([cell isKindOfClass:[MUKMediaFullImageCell class]]) {
-        [self configureFullImageCell:(MUKMediaFullImageCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
+    if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
+        [self configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
     }
-    else if ([cell isKindOfClass:[MUKMediaPlayerCell class]]) {
-        [self configureMediaPlayerCell:(MUKMediaPlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
+    else if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+        [self configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
     }
 }
 
-- (void)configureFullImageCell:(MUKMediaFullImageCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
+- (void)configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
 {    
     MUKMediaImageKind foundImageKind = MUKMediaImageKindNone;
     UIImage *image = [self biggestCachedImageOrRequestLoadingForItemAtIndexPath:indexPath foundImageKind:&foundImageKind];
     [cell setImage:image ofKind:foundImageKind];
 }
 
-- (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoFullImageCell:(MUKMediaFullImageCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoFullImageCell:(MUKMediaCarouselFullImageCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     if (!cell || !indexPath) return NO;
     
@@ -355,7 +355,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return shouldSetImage;
 }
 
-- (void)configureMediaPlayerCell:(MUKMediaPlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
+- (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
 {
     // TODO
 }

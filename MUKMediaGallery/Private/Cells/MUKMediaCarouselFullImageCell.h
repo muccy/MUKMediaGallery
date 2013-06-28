@@ -1,7 +1,7 @@
-#import <UIKit/UIKit.h>
-#import <MUKMediaGallery/MUKMediaImageKind.h>
+#import "MUKMediaCarouselCell.h"
+#import "MUKMediaImageKind.h"
 
-@interface MUKMediaFullImageCell : UICollectionViewCell
+@interface MUKMediaCarouselFullImageCell : MUKMediaCarouselCell
 @property (nonatomic, weak, readonly) UIImageView *imageView;
 @property (nonatomic, readonly) MUKMediaImageKind imageKind;
 
