@@ -317,11 +317,16 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 {
     cell.backgroundColor = [UIColor colorWithRed:(float)(arc4random()%255)/255.0f green:(float)(arc4random()%255)/255.0f blue:(float)(arc4random()%255)/255.0f alpha:0.7f];
     
-    if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
-        [self configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
-    }
-    else if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
-        [self configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
+    if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
+        MUKMediaCarouselCell *carouselCell = (MUKMediaCarouselCell *)cell;
+        [carouselCell setCaption:attributes.caption];
+        
+        if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
+            [self configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
+        }
+        else if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+            [self configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
+        }
     }
 }
 

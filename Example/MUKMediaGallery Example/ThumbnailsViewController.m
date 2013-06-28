@@ -68,7 +68,7 @@
         MediaAsset *remoteImageAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindImage];
         remoteImageAsset.thumbnailURL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_m.jpg"];
         remoteImageAsset.URL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_b.jpg"]; // [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_5083834193_o.jpg"];
-        remoteImageAsset.caption = @"Castilla Sangra";
+        remoteImageAsset.caption = @"Castilla entera se desangra\ny nadie cierra la herida ni recoge\nsu roja sangre derramada.\nQuien puede atender tamaña brecha\nno siente la sangre por sus venas\ny deja a su albur sangre y herida.\nLos cielos que saben de olvidos\nacercan su luz a esos colores\nque gritan quedo su agonía.\nQuien puede encauzar esas arterias\nque ponga el color dentro, en las venas,\ny fluya roja y encendida\nhaciendo de la vida un paraíso.";
         [mediaAssets addObject:remoteImageAsset];
         
         MediaAsset *localVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindVideo];
