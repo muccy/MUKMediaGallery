@@ -264,7 +264,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
             // Set image if needed
             if ([self shouldSetLoadedImageOfKind:imageKind intoFullImageCell:cell atIndexPath:indexPath])
             {
-                [cell setImage:image ofKind:imageKind];
+                [self setImage:image ofKind:imageKind inFullImageCell:cell];
             }
         } // if isLoadingImageKind
     }; // completionHandler
@@ -329,7 +329,9 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 {    
     MUKMediaImageKind foundImageKind = MUKMediaImageKindNone;
     UIImage *image = [self biggestCachedImageOrRequestLoadingForItemAtIndexPath:indexPath foundImageKind:&foundImageKind];
-    [cell setImage:image ofKind:foundImageKind];
+    [self setImage:image ofKind:foundImageKind inFullImageCell:cell];
+    
+    
 }
 
 - (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoFullImageCell:(MUKMediaCarouselFullImageCell *)cell atIndexPath:(NSIndexPath *)indexPath
@@ -353,6 +355,19 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     }
     
     return shouldSetImage;
+}
+
+- (void)setImage:(UIImage *)image ofKind:(MUKMediaImageKind)kind inFullImageCell:(MUKMediaCarouselFullImageCell *)cell
+{
+    BOOL shouldShowActivityIndicator = (kind != MUKMediaImageKindFullSize);
+    if (shouldShowActivityIndicator) {
+        [cell.activityIndicatorView startAnimating];
+    }
+    else {
+        [cell.activityIndicatorView stopAnimating];
+    }
+    
+    [cell setImage:image ofKind:kind];
 }
 
 - (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath

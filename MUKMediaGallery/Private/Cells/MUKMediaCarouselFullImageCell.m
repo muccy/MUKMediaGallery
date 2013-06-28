@@ -15,7 +15,7 @@
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.bounds];
         imageView.contentMode = UIViewContentModeScaleAspectFit;
         imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        [self.contentView addSubview:imageView];
+        [self.contentView insertSubview:imageView belowSubview:self.overlayView];
         _imageView = imageView;
     }
     return self;
