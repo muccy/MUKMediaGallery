@@ -1,9 +1,11 @@
 PODS:
+  - AFNetworking (1.3.1)
   - MUKMediaGallery (2.0.0):
     - MUKToolkit (~> 1.1)
   - MUKToolkit (1.1.0)
 
 DEPENDENCIES:
+  - AFNetworking (~> 1.3)
   - MUKMediaGallery (from `..`)
   - MUKToolkit (~> 1.1)
 
@@ -12,6 +14,7 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
+  AFNetworking: 9ec8aafb9269236a7630bd8d9838ce2ba30fa2a0
   MUKMediaGallery: 3bc56adaf6470a35bf37ed9708cab47123d15e4f
   MUKToolkit: 4819735294185275c137865d5aafbcf1a8a7354f
 

@@ -2,7 +2,7 @@
 #import "MediaAsset.h"
 
 @interface CarouselViewController () <MUKMediaCarouselViewControllerDelegate>
-
+@property (nonatomic) NSOperationQueue *networkQueue;
 @end
 
 @implementation CarouselViewController
@@ -12,6 +12,8 @@
     if (self) {
         self.title = @"Thumbnails Grid";
         self.delegate = self;
+        _networkQueue = [[NSOperationQueue alloc] init];
+        _networkQueue.maxConcurrentOperationCount = 2;
     }
     
     return self;
@@ -36,6 +38,14 @@
     return [self.mediaAssets count];
 }
 
+- (MUKMediaAttributes *)carouselViewController:(MUKMediaCarouselViewController *)viewController attributesForItemAtIndex:(NSInteger)idx
+{
+    MediaAsset *asset = self.mediaAssets[idx];
+    MUKMediaAttributes *attributes = [[MUKMediaAttributes alloc] initWithKind:asset.kind];
+    attributes.caption = asset.caption;
+    return attributes;
+}
+
 - (void)carouselViewController:(MUKMediaCarouselViewController *)viewController loadImageOfKind:(MUKMediaImageKind)imageKind forItemAtIndex:(NSInteger)idx completionHandler:(void (^)(UIImage *image))completionHandler
 {
     MediaAsset *asset = self.mediaAssets[idx];
@@ -47,16 +57,34 @@
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:URL];
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
-    {
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.userInfo = @{ @"index" : @(idx), @"imageKind" : @(imageKind) };
+    
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         UIImage *image = nil;
         
-        if ([data length]) {
-            image = [UIImage imageWithData:data];
+        if ([responseObject length]) {
+            image = [UIImage imageWithData:responseObject];
         }
         
         completionHandler(image);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        completionHandler(nil);
     }];
+    
+    [self.networkQueue addOperation:op];
+}
+
+- (void)carouselViewController:(MUKMediaCarouselViewController *)viewController cancelLoadingForImageOfKind:(MUKMediaImageKind)imageKind atIndex:(NSInteger)idx
+{
+    for (AFHTTPRequestOperation *op in self.networkQueue.operations) {
+        if ([op.userInfo[@"index"] integerValue] == idx &&
+            [op.userInfo[@"imageKind"] integerValue] == imageKind)
+        {
+            [op cancel];
+            break;
+        }
+    }
 }
 
 - (NSURL *)carouselViewController:(MUKMediaCarouselViewController *)viewController mediaURLForItemAtIndex:(NSInteger)idx

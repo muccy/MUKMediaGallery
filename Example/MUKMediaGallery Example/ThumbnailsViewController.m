@@ -5,6 +5,7 @@
 #define DEBUG_SIMULATE_ASSETS_DOWNLOADING   0
 
 @interface ThumbnailsViewController () <MUKMediaThumbnailsViewControllerDelegate>
+@property (nonatomic) NSOperationQueue *networkQueue;
 @end
 
 @implementation ThumbnailsViewController
@@ -14,9 +15,11 @@
     if (self) {
         self.title = @"Thumbnails Grid";
         self.delegate = self;
+        _networkQueue = [[NSOperationQueue alloc] init];
+        _networkQueue.maxConcurrentOperationCount = 3;
         
 #if !DEBUG_SIMULATE_ASSETS_DOWNLOADING
-        self.mediaAssets = [[self class] newAssets];
+        _mediaAssets = [[self class] newAssets];
 #endif
     }
     
@@ -122,16 +125,32 @@
     }
     
     NSURLRequest *request = [NSURLRequest requestWithURL:asset.thumbnailURL];
-    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
-    {
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.userInfo = @{ @"index" : @(idx) };
+    
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         UIImage *image = nil;
         
-        if ([data length]) {
-            image = [UIImage imageWithData:data];
+        if ([responseObject length]) {
+            image = [UIImage imageWithData:responseObject];
         }
         
         completionHandler(image);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        completionHandler(nil);
     }];
+    
+    [self.networkQueue addOperation:op];
+}
+
+- (void)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController cancelLoadingForImageAtIndex:(NSInteger)idx
+{
+    for (AFHTTPRequestOperation *op in self.networkQueue.operations) {
+        if ([op.userInfo[@"index"] integerValue] == idx) {
+            [op cancel];
+            break;
+        }
+    }
 }
 
 - (MUKMediaAttributes *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController attributesForItemAtIndex:(NSInteger)idx
