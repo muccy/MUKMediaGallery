@@ -5,6 +5,7 @@
 
 static NSString *const kFullImageCellIdentifier = @"MUKMediaFullImageCell";
 static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaPlayerCell";
+static NSString *const kBoundsChangesKVOIdentifier = @"BoundsChangesKVOIdentifier";
 static CGFloat const kLateralPadding = 4.0f;
 
 @interface MUKMediaCarouselViewController ()
@@ -12,6 +13,7 @@ static CGFloat const kLateralPadding = 4.0f;
 @property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
 @property (nonatomic) CGRect lastCollectionViewBounds;
+@property (nonatomic) BOOL isObservingBoundsChanges;
 @end
 
 @implementation MUKMediaCarouselViewController
@@ -40,9 +42,13 @@ static CGFloat const kLateralPadding = 4.0f;
     return [self initWithCollectionViewLayout:nil];
 }
 
+- (void)dealloc {
+    [self stopObservingBoundsChangesIfNeeded];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+        
     self.collectionView.backgroundColor = [UIColor blackColor];
     self.collectionView.pagingEnabled = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
@@ -50,29 +56,19 @@ static CGFloat const kLateralPadding = 4.0f;
     self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
     
     CGRect frame = self.collectionView.frame;
-    frame.origin.x -= 4;
-    frame.size.width += 8;
+    frame.origin.x -= kLateralPadding;
+    frame.size.width += kLateralPadding * 2.0f;
     self.collectionView.frame = frame;
     
     [self.collectionView registerClass:[MUKMediaFullImageCell class] forCellWithReuseIdentifier:kFullImageCellIdentifier];
     [self.collectionView registerClass:[MUKMediaPlayerCell class] forCellWithReuseIdentifier:kMediaPlayerCellIdentifier];
+    
+    // This adjust things prior rotation
+    [self beginObservingBoundsChanges];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-    if (!CGRectIsNull(self.lastCollectionViewBounds)) {
-        if (!CGSizeEqualToSize(self.lastCollectionViewBounds.size, self.collectionView.bounds.size))
-        {
-            [self.collectionView.collectionViewLayout invalidateLayout];
-        }
-    }
-    
-    self.lastCollectionViewBounds = self.collectionView.bounds;
 }
 
 #pragma mark - Private
@@ -107,6 +103,35 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     layout.minimumInteritemSpacing = 0.0f;
     layout.minimumLineSpacing = 0.0f;
     return layout;
+}
+
+- (void)viewBoundsDidChangeFromSize:(CGSize)oldSize toNewSize:(CGSize)newSize {
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+#pragma mark - Private — KVO
+
+- (void)beginObservingBoundsChanges {
+    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:(__bridge void *)kBoundsChangesKVOIdentifier];
+    self.isObservingBoundsChanges = YES;
+}
+
+- (void)stopObservingBoundsChangesIfNeeded {
+    if (self.isObservingBoundsChanges) {
+        self.isObservingBoundsChanges = NO;
+        [self.view removeObserver:self forKeyPath:@"frame"];
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (kBoundsChangesKVOIdentifier == (__bridge NSString *)context) {        
+        CGRect old = [change[NSKeyValueChangeOldKey] CGRectValue];
+        CGRect new = [change[NSKeyValueChangeNewKey] CGRectValue];
+        if (!CGSizeEqualToSize(old.size, new.size)) {
+            [self viewBoundsDidChangeFromSize:old.size toNewSize:new.size];
+        }
+    }
 }
 
 #pragma mark - Private — Images

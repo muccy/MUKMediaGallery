@@ -67,7 +67,7 @@
         // http://www.flickr.com/photos/26895569@N07/9134939367/sizes/l/in/explore-2013-06-25/
         MediaAsset *remoteImageAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindImage];
         remoteImageAsset.thumbnailURL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_m.jpg"];
-        remoteImageAsset.URL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_5083834193_o.jpg"];
+        remoteImageAsset.URL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_b.jpg"]; // [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_5083834193_o.jpg"];
         remoteImageAsset.caption = @"Castilla Sangra";
         [mediaAssets addObject:remoteImageAsset];
         
