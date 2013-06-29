@@ -323,9 +323,9 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     
     if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
         MUKMediaCarouselCell *carouselCell = (MUKMediaCarouselCell *)cell;
+        carouselCell.captionLabel.text = attributes.caption;
         
         if ([attributes.caption length] && ![self areBarsHidden]) {
-            carouselCell.captionLabel.text = attributes.caption;
             [carouselCell setCaptionHidden:NO animated:NO completion:nil];
         }
         else {
@@ -405,7 +405,9 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     
     for (MUKMediaCarouselCell *cell in [self.collectionView visibleCells]) {
         if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
-            [cell setCaptionHidden:hidden animated:animated completion:nil];
+            if (hidden || (!hidden && [cell.captionLabel.text length] > 0)) {
+                [cell setCaptionHidden:hidden animated:animated completion:nil];
+            }
         }
     } // for
 }
@@ -461,6 +463,12 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return collectionView.frame.size;
+}
+
+#pragma mark - <UIScrollViewDelegate>
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self setBarsHidden:YES animated:YES];
 }
 
 #pragma mark - <MUKMediaCarouselFullImageCellDelegate>
