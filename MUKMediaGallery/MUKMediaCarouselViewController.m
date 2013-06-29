@@ -76,6 +76,12 @@ static CGFloat const kLateralPadding = 4.0f;
     [super didReceiveMemoryWarning];
 }
 
+#pragma mark - Overrides
+
+- (BOOL)prefersStatusBarHidden {
+    return self.navigationController.isNavigationBarHidden;
+}
+
 #pragma mark - Private
 
 static void CommonInitialization(MUKMediaCarouselViewController *viewController, UICollectionViewLayout *layout)
@@ -324,7 +330,14 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     
     if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
         MUKMediaCarouselCell *carouselCell = (MUKMediaCarouselCell *)cell;
-        [carouselCell setCaption:attributes.caption];
+        
+        if ([attributes.caption length] && ![self areBarsHidden]) {
+            carouselCell.captionLabel.text = attributes.caption;
+            [carouselCell setCaptionHidden:NO animated:NO completion:nil];
+        }
+        else {
+            [carouselCell setCaptionHidden:YES animated:NO completion:nil];
+        }
         
         if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
             [self configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
@@ -385,6 +398,23 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     // TODO
 }
 
+#pragma mark - Private — Bars
+
+- (BOOL)areBarsHidden {
+    return self.navigationController.navigationBarHidden;
+}
+
+- (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated {
+    [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    [self setNeedsStatusBarAppearanceUpdate];
+    
+    for (MUKMediaCarouselCell *cell in [self.collectionView visibleCells]) {
+        if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
+            [cell setCaptionHidden:hidden animated:animated completion:nil];
+        }
+    } // for
+}
+
 #pragma mark - <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -425,6 +455,13 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     [self cancelAllImageLoadingsForItemAtIndex:ItemIndexForIndexPath(indexPath)];
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Toggle bars visibility
+    BOOL barsHidden = [self areBarsHidden];
+    [self setBarsHidden:!barsHidden animated:YES];
+}
+
 #pragma mark - <UICollectionViewDelegateFlowLayout>
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -437,7 +474,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return size;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
 {
     CGFloat padding;
     if (section == 0) {
