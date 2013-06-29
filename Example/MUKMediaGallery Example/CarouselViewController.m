@@ -10,7 +10,7 @@
 - (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
     self = [super initWithCollectionViewLayout:layout];
     if (self) {
-        self.title = @"Thumbnails Grid";
+        self.title = @"Media Carousel";
         self.delegate = self;
         _networkQueue = [[NSOperationQueue alloc] init];
         _networkQueue.maxConcurrentOperationCount = 2;

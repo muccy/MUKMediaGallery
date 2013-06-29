@@ -67,6 +67,11 @@ static CGFloat const kLateralPadding = 4.0f;
     [self beginObservingBoundsChanges];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }

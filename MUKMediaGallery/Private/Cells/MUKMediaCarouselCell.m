@@ -1,5 +1,6 @@
 #import "MUKMediaCarouselCell.h"
 
+static CGFloat const kCaptionLabelMaxHeight = 80.0f;
 static CGFloat const kCaptionLabelLateralPadding = 8.0f;
 static CGFloat const kCaptionLabelBottomPadding = 5.0f;
 
@@ -88,7 +89,7 @@ static CGFloat const kCaptionLabelBottomPadding = 5.0f;
     NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-(padding)-[label]-(padding)-|" options:0 metrics:@{@"padding" : @(kCaptionLabelLateralPadding)} views:viewsDict];
     [superview addConstraints:constraints];
     
-    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|-(>=220@999)-[label]-(padding)-|" options:0 metrics:@{@"padding" : @(kCaptionLabelBottomPadding)} views:viewsDict];
+    constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[label(<=maxHeight)]-(padding)-|" options:0 metrics:@{@"padding" : @(kCaptionLabelBottomPadding), @"maxHeight" : @(kCaptionLabelMaxHeight)} views:viewsDict];
     [superview addConstraints:constraints];
     
     return label;

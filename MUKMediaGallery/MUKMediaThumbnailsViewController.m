@@ -47,6 +47,11 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
     [self.collectionView registerClass:[MUKMediaThumbnailCell class] forCellWithReuseIdentifier:kCellIdentifier];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+}
+
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
