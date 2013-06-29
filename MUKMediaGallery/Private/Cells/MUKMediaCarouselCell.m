@@ -101,6 +101,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
 - (UILabel *)newBottomAttachedCaptionLabelInSuperview:(UIView *)superview {
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 20.0f, 20.0f)];
+    label.userInteractionEnabled = NO;
     label.textColor = [UIColor whiteColor];
     label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
     label.numberOfLines = 0;
@@ -121,6 +122,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 - (UIView *)newBottomAttachedBackgroundViewForCaptionLabel:(UILabel *)label inSuperview:(UIView *)superview
 {
     UIView *view = [[UIView alloc] initWithFrame:label.frame];
+    view.userInteractionEnabled = NO;
     view.translatesAutoresizingMaskIntoConstraints = NO;
     view.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
     [superview insertSubview:view belowSubview:label];
@@ -152,7 +154,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     }
     
     if (self.captionLabelBottomConstraint == nil) {
-        self.captionLabelBottomConstraint = [NSLayoutConstraint constraintWithItem:self.captionLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
+        self.captionLabelBottomConstraint = [NSLayoutConstraint constraintWithItem:self.captionLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:-kCaptionLabelBottomPadding];
         [self.captionLabel.superview addConstraint:self.captionLabelBottomConstraint];
     }
     

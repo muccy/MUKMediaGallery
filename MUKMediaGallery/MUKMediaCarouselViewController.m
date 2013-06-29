@@ -8,7 +8,7 @@ static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaPlayerCell";
 static NSString *const kBoundsChangesKVOIdentifier = @"BoundsChangesKVOIdentifier";
 static CGFloat const kLateralPadding = 4.0f;
 
-@interface MUKMediaCarouselViewController ()
+@interface MUKMediaCarouselViewController () <MUKMediaCarouselFullImageCellDelegate>
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
 @property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
@@ -349,7 +349,9 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 }
 
 - (void)configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
-{    
+{
+    cell.delegate = self;
+    
     MUKMediaImageKind foundImageKind = MUKMediaImageKindNone;
     UIImage *image = [self biggestCachedImageOrRequestLoadingForItemAtIndexPath:indexPath foundImageKind:&foundImageKind];
     [self setImage:image ofKind:foundImageKind inFullImageCell:cell];
@@ -415,6 +417,11 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     } // for
 }
 
+- (void)toggleBarsVisibility {
+    BOOL barsHidden = [self areBarsHidden];
+    [self setBarsHidden:!barsHidden animated:YES];
+}
+
 #pragma mark - <UICollectionViewDataSource>
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -457,9 +464,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Toggle bars visibility
-    BOOL barsHidden = [self areBarsHidden];
-    [self setBarsHidden:!barsHidden animated:YES];
+    [self toggleBarsVisibility];
 }
 
 #pragma mark - <UICollectionViewDelegateFlowLayout>
@@ -487,4 +492,10 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
 }
 
+#pragma mark - <MUKMediaCarouselFullImageCellDelegate>
+
+- (void)carouselFullImageCell:(MUKMediaCarouselFullImageCell *)cell imageScrollViewDidReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
+{
+    [self toggleBarsVisibility];
+}
 @end
