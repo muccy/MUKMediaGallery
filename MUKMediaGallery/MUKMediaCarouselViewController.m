@@ -2,6 +2,7 @@
 #import "MUKMediaCarouselFullImageCell.h"
 #import "MUKMediaCarouselPlayerCell.h"
 #import "MUKMediaAttributesCache.h"
+#import "MUKMediaCarouselFlowLayout.h"
 
 static NSString *const kFullImageCellIdentifier = @"MUKMediaFullImageCell";
 static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaPlayerCell";
@@ -50,15 +51,9 @@ static CGFloat const kLateralPadding = 4.0f;
     [super viewDidLoad];
         
     self.collectionView.backgroundColor = [UIColor blackColor];
-    self.collectionView.pagingEnabled = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
-    
-    CGRect frame = self.collectionView.frame;
-    frame.origin.x -= kLateralPadding;
-    frame.size.width += kLateralPadding * 2.0f;
-    self.collectionView.frame = frame;
     
     [self.collectionView registerClass:[MUKMediaCarouselFullImageCell class] forCellWithReuseIdentifier:kFullImageCellIdentifier];
     [self.collectionView registerClass:[MUKMediaCarouselPlayerCell class] forCellWithReuseIdentifier:kMediaPlayerCellIdentifier];
@@ -103,16 +98,14 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController,
 }
 
 static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
-    return indexPath.section;
+    return indexPath.item;
 }
 
 #pragma mark - Private — Layout
 
 + (UICollectionViewLayout *)newCarouselLayout {
-    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.minimumInteritemSpacing = 0.0f;
-    layout.minimumLineSpacing = 0.0f;
+    MUKMediaCarouselFlowLayout *layout = [[MUKMediaCarouselFlowLayout alloc] init];
+    layout.minimumLineSpacing = kLateralPadding * 2.0f;
     return layout;
 }
 
@@ -424,13 +417,9 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 #pragma mark - <UICollectionViewDataSource>
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return [self.delegate numberOfItemsInCarouselViewController:self];
-}
-
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 1;
+    return [self.delegate numberOfItemsInCarouselViewController:self];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -471,25 +460,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGSize size = collectionView.frame.size;
-    
-    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)collectionViewLayout;
-    size.width -= kLateralPadding * 2.0f;
-    
-    return size;
-}
-
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    CGFloat padding;
-    if (section == 0) {
-        padding = kLateralPadding;
-    }
-    else {
-        padding = kLateralPadding * 2.0f;
-    }
-    
-    return UIEdgeInsetsMake(0.0f, padding, 0.0f, 0.0f);
+    return collectionView.frame.size;
 }
 
 #pragma mark - <MUKMediaCarouselFullImageCellDelegate>
@@ -498,4 +469,5 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 {
     [self toggleBarsVisibility];
 }
+
 @end
