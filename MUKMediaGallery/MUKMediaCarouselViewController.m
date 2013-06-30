@@ -45,6 +45,12 @@ static CGFloat const kLateralPadding = 4.0f;
 
 - (void)dealloc {
     [self stopObservingBoundsChangesIfNeeded];
+    
+    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
+        if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+            [self cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell];
+        }
+    } // for
 }
 
 - (void)viewDidLoad {
@@ -302,6 +308,12 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     [self cancelLoadingForImageOfKind:MUKMediaImageKindThumbnail atIndex:index];
 }
 
+#pragma mark - Private — Media Playback
+
+- (void)cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell {
+    [cell setMediaURL:nil];
+}
+
 #pragma mark - Private — Cell
 
 - (UICollectionViewCell *)dequeueCellForMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
@@ -390,7 +402,8 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO
+    NSURL *mediaURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:ItemIndexForIndexPath(indexPath)];
+    [cell setMediaURL:mediaURL];
 }
 
 #pragma mark - Private — Bars
@@ -451,6 +464,10 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [self cancelAllImageLoadingsForItemAtIndex:ItemIndexForIndexPath(indexPath)];
+    
+    if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+        [self cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell];
+    }
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath

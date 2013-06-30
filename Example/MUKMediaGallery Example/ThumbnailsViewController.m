@@ -64,13 +64,6 @@
     NSMutableArray *mediaAssets = [[NSMutableArray alloc] init];
     
     for (NSInteger i=0; i<100; i++) {
-        // http://www.flickr.com/photos/26895569@N07/9134939367/sizes/l/in/explore-2013-06-25/
-        MediaAsset *remoteImageAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindImage];
-        remoteImageAsset.thumbnailURL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_m.jpg"];
-        remoteImageAsset.URL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_b.jpg"]; // [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_5083834193_o.jpg"];
-        remoteImageAsset.caption = @"Castilla entera se desangra, y nadie cierra la herida ni recoge su roja sangre derramada. Quien puede atender tamaña brecha no siente la sangre por sus venas, y deja a su albur sangre y herida. Los cielos que saben de olvidos acercan su luz a esos colores que gritan quedo su agonía. Quien puede encauzar esas arterias, que ponga el color dentro, en las venas, y fluya roja y encendida haciendo de la vida un paraíso.";
-        [mediaAssets addObject:remoteImageAsset];
-        
         MediaAsset *localVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindVideo];
         localVideoAsset.thumbnailURL = [MUK URLForImageFileNamed:@"sea-movie-thumbnail.jpg" bundle:nil];
         localVideoAsset.URL = [[NSBundle mainBundle] URLForResource:@"sea" withExtension:@"mp4"];
@@ -80,6 +73,13 @@
         MediaAsset *remoteVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindVideo];
         remoteVideoAsset.URL = [NSURL URLWithString:@"http://mirrors.creativecommons.org/movingimages/Building_on_the_Past.mp4"];
         [mediaAssets addObject:remoteVideoAsset];
+        
+        // http://www.flickr.com/photos/26895569@N07/9134939367/sizes/l/in/explore-2013-06-25/
+        MediaAsset *remoteImageAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindImage];
+        remoteImageAsset.thumbnailURL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_m.jpg"];
+        remoteImageAsset.URL = [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_228c3d310d_b.jpg"]; // [NSURL URLWithString:@"http://farm3.staticflickr.com/2867/9134939367_5083834193_o.jpg"];
+        remoteImageAsset.caption = @"Castilla entera se desangra, y nadie cierra la herida ni recoge su roja sangre derramada. Quien puede atender tamaña brecha no siente la sangre por sus venas, y deja a su albur sangre y herida. Los cielos que saben de olvidos acercan su luz a esos colores que gritan quedo su agonía. Quien puede encauzar esas arterias, que ponga el color dentro, en las venas, y fluya roja y encendida haciendo de la vida un paraíso.";
+        [mediaAssets addObject:remoteImageAsset];
         
         MediaAsset *localImageAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindImage];
         localImageAsset.thumbnailURL = [MUK URLForImageFileNamed:@"palms-thumbnail.jpg" bundle:nil];

@@ -89,7 +89,8 @@
 
 - (NSURL *)carouselViewController:(MUKMediaCarouselViewController *)viewController mediaURLForItemAtIndex:(NSInteger)idx
 {
-    return nil;
+    MediaAsset *asset = self.mediaAssets[idx];
+    return asset.URL;
 }
 
 @end

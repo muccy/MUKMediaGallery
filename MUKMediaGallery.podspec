@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   }
   s.source_files  = 'MUKMediaGallery/**/*.{h,m}'
   s.requires_arc  = true
-  s.frameworks    = 'QuartzCore'
+  s.frameworks    = 'QuartzCore', 'MediaPlayer'
   s.resource      = 'MUKMediaGallery/MUKMediaGalleryResources.bundle'
   
   s.dependency    'MUKToolkit', '~> 1.1'
