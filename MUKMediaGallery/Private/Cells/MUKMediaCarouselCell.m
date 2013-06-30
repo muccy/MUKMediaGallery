@@ -57,8 +57,15 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
         } completion:^(BOOL finished) {
             if (finished) {
                 [self updateCaptionConstraintsWhenHidden:hidden];
+                
+                // Animate constraints change too, if requested
+                [UIView animateWithDuration:duration animations:^{
+                    [self layoutIfNeeded];
+                } completion:nil];
             }
             
+            // Notify completion immediately, because caption has already
+            // disappeared
             if (completionHandler) {
                 completionHandler(finished);
             }

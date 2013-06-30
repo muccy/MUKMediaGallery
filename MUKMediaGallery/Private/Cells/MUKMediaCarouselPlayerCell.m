@@ -3,6 +3,7 @@
 
 @interface MUKMediaCarouselPlayerCell ()
 @property (nonatomic, readwrite) MPMoviePlayerController *moviePlayerController;
+@property (nonatomic, weak) MUKMediaCarouselPlayerControlsView *playerControlsView;
 @end
 
 @implementation MUKMediaCarouselPlayerCell
@@ -45,6 +46,7 @@
         [self.moviePlayerController.view addSubview:playButton];
         
         MUKMediaCarouselPlayerControlsView *controlsView = [[MUKMediaCarouselPlayerControlsView alloc] initWithFrame:self.moviePlayerController.view.bounds];
+        self.playerControlsView = controlsView;
         [self.moviePlayerController.view addSubview:controlsView];
         
         NSDictionary *viewsDict = @{
@@ -61,6 +63,24 @@
     else {
         self.moviePlayerController.contentURL = mediaURL;
     }
+    
+    // Show
+    [self setPlayerControlsHidden:NO animated:NO completion:nil];
+}
+
+- (void)setPlayerControlsHidden:(BOOL)hidden animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler
+{
+    NSTimeInterval const kDuration = animated ? UINavigationControllerHideShowBarDuration : 0.0;
+    
+    [UIView animateWithDuration:kDuration animations:^{
+        self.playerControlsView.alpha = (hidden ? 0.0f : 1.0f);
+    } completion:^(BOOL finished) {
+        //
+        
+        if (completionHandler) {
+            completionHandler(finished);
+        }
+    }];
 }
 
 #pragma mark - Private
