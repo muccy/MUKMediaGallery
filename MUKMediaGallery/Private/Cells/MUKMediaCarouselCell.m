@@ -1,4 +1,5 @@
 #import "MUKMediaCarouselCell.h"
+#import "MUKMediaGalleryToolbar.h"
 
 static CGFloat const kCaptionLabelMaxHeight = 80.0f;
 static CGFloat const kCaptionLabelLateralPadding = 8.0f;
@@ -121,10 +122,11 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
 - (UIView *)newBottomAttachedBackgroundViewForCaptionLabel:(UILabel *)label inSuperview:(UIView *)superview
 {
-    UIView *view = [[UIView alloc] initWithFrame:label.frame];
+    // A toolbar gives live blurry effect on iOS 7
+    MUKMediaGalleryToolbar *view = [[MUKMediaGalleryToolbar alloc] initWithFrame:label.frame];
     view.userInteractionEnabled = NO;
     view.translatesAutoresizingMaskIntoConstraints = NO;
-    view.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
+    view.barStyle = UIBarStyleBlack;
     [superview insertSubview:view belowSubview:label];
     
     NSDictionary *viewsDict = NSDictionaryOfVariableBindings(view);
