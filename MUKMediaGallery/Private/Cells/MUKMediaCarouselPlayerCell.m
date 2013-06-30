@@ -1,4 +1,5 @@
 #import "MUKMediaCarouselPlayerCell.h"
+#import "MUKMediaCarouselPlayerControlsView.h"
 
 @interface MUKMediaCarouselPlayerCell ()
 @property (nonatomic, readwrite) MPMoviePlayerController *moviePlayerController;
@@ -42,6 +43,20 @@
         playButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin;
         playButton.tintColor = [UIColor greenColor];
         [self.moviePlayerController.view addSubview:playButton];
+        
+        MUKMediaCarouselPlayerControlsView *controlsView = [[MUKMediaCarouselPlayerControlsView alloc] initWithFrame:self.moviePlayerController.view.bounds];
+        [self.moviePlayerController.view addSubview:controlsView];
+        
+        NSDictionary *viewsDict = @{
+            @"controls" : controlsView,
+            @"captionBackground" : self.captionBackgroundView
+        };
+        
+        NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-(0)-[controls]-(0)-|" options:0 metrics:nil views:viewsDict];
+        [self.moviePlayerController.view addConstraints:constraints];
+        
+        constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[controls]-(0)-[captionBackground]" options:0 metrics:nil views:viewsDict];
+        [self.contentView addConstraints:constraints];
     }
     else {
         self.moviePlayerController.contentURL = mediaURL;
