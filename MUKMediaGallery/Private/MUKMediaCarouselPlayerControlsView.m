@@ -12,6 +12,9 @@ static CGFloat const kToolbarHeight = 44.0f;
 @property (nonatomic, weak) UIButton *playPauseButton, *fullscreenButton;
 @property (nonatomic, weak) UISlider *slider;
 @property (nonatomic, weak) UILabel *timeLabel;
+@property (nonatomic) NSTimer *playbackProgressUpdateTimer;
+@property (nonatomic) BOOL isTouchingSlider;
+@property (nonatomic) MPMoviePlaybackState playbackStateBeforeSliderTouches;
 @end
 
 @implementation MUKMediaCarouselPlayerControlsView
@@ -35,10 +38,12 @@ static CGFloat const kToolbarHeight = 44.0f;
         
         UISlider *slider = [self newSliderInSuperview:self afterPlayPauseButton:playPauseButton];
         _slider = slider;
+        [self showSliderProgressForMoviePlayerController:moviePlayerController];
+        [self managePlaybackProgressUpdateTimerForMoviePlayerController:moviePlayerController];
         
         UILabel *timeLabel = [self newTimeLabelInSuperview:self afterSlider:slider];
         _timeLabel = timeLabel;
-        [self showTime:moviePlayerController.duration];
+        [self showTime:moviePlayerController.currentPlaybackTime];
         
         UIButton *fullscreenButton = [self newFullscreenButtonInSuperview:self afterTimeLabel:timeLabel];
         _fullscreenButton = fullscreenButton;
@@ -106,6 +111,11 @@ static CGFloat const kToolbarHeight = 44.0f;
     [slider setThumbImage:thumbImage forState:UIControlStateNormal];
     slider.thumbOffset = CGSizeMake(0.0f, 2.0f);
     [slider setMaximumTrackTintColor:[UIColor colorWithWhite:1.0f alpha:0.5f]];
+    
+    [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [slider addTarget:self action:@selector(sliderTouchedDown:) forControlEvents:UIControlEventTouchDown];
+    [slider addTarget:self action:@selector(sliderBecameUntouched:) forControlEvents:UIControlEventTouchUpInside|UIControlEventTouchUpOutside|UIControlEventTouchCancel];
+    
     [superview addSubview:slider];
     
     NSDictionary *const viewsDict = NSDictionaryOfVariableBindings(slider, playPauseButton);
@@ -161,6 +171,13 @@ static CGFloat const kToolbarHeight = 44.0f;
 
 #pragma mark - Private — Play/Pause
 
+- (BOOL)isPausedMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
+{
+    return (moviePlayerController.playbackState == MPMoviePlaybackStatePaused ||
+            moviePlayerController.playbackState == MPMoviePlaybackStateStopped ||
+            moviePlayerController.playbackState == MPMoviePlaybackStateInterrupted);
+}
+
 - (void)showPauseIcon:(BOOL)showsPauseIcon {
     UIImage *icon;
     if (showsPauseIcon) {
@@ -175,17 +192,16 @@ static CGFloat const kToolbarHeight = 44.0f;
 
 - (void)showPauseIconForMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
 {
-    BOOL showsPause = (moviePlayerController.playbackState == MPMoviePlaybackStatePlaying);
-    [self showPauseIcon:showsPause];
+    [self showPauseIcon:![self isPausedMoviePlayerController:moviePlayerController]];
 }
 
 - (void)playPauseButtonPressed:(id)sender {
-    if (self.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+    if ([self isPausedMoviePlayerController:self.moviePlayerController])
     {
-        [self.moviePlayerController pause];
+        [self.moviePlayerController play];
     }
     else {
-        [self.moviePlayerController play];
+        [self.moviePlayerController pause];
     }
 }
 
@@ -194,7 +210,7 @@ static CGFloat const kToolbarHeight = 44.0f;
 - (void)showTime:(NSTimeInterval)interval {
     NSString *string;
     
-    if (interval > 0.0) {
+    if (interval >= 0.0) {
         string = [MUK stringRepresentationOfTimeInterval:interval];
     }
     else {
@@ -202,6 +218,107 @@ static CGFloat const kToolbarHeight = 44.0f;
     }
     
     self.timeLabel.text = string;
+}
+
+#pragma mark - Private — Slider
+
+- (void)sliderTouchedDown:(id)sender {
+    if (self.isTouchingSlider == NO) {
+        self.isTouchingSlider = YES;
+        [self rememberPlaybackStateBeforeSliderTouchesAndPause];
+    }
+}
+
+- (void)sliderBecameUntouched:(id)sender {
+    self.isTouchingSlider = NO;
+    [self attemptToRestorePlaybackStateBeforeSliderTouches];
+}
+
+- (void)sliderValueChanged:(id)sender {
+    if (self.isTouchingSlider == NO) {
+        self.isTouchingSlider = YES;
+        [self rememberPlaybackStateBeforeSliderTouchesAndPause];
+    }
+    
+    [self setPlaybackForSliderProgress:self.slider.value];
+}
+
+- (void)rememberPlaybackStateBeforeSliderTouchesAndPause {
+    self.playbackStateBeforeSliderTouches = self.moviePlayerController.playbackState;
+    [self.moviePlayerController pause];
+}
+
+- (void)attemptToRestorePlaybackStateBeforeSliderTouches {
+    BOOL canRestorePastPlaybackState = YES;
+    if (self.playbackStateBeforeSliderTouches == MPMoviePlaybackStatePlaying &&
+        self.moviePlayerController.currentPlaybackTime >= self.moviePlayerController.duration)
+    {
+        canRestorePastPlaybackState = NO;
+    }
+    
+    if (canRestorePastPlaybackState) {
+        if (self.playbackStateBeforeSliderTouches == MPMoviePlaybackStatePlaying)
+        {
+            [self.moviePlayerController play];
+        }
+        else {
+            [self.moviePlayerController pause];
+        }
+    }
+}
+
+#pragma mark - Private — Playback Progress
+
+- (void)showSliderProgressForMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
+{
+    float progress = 0.0f;
+    
+    if (moviePlayerController.duration > 0.0){
+        progress = moviePlayerController.currentPlaybackTime/moviePlayerController.duration;
+    }
+    
+    [self.slider setValue:progress animated:NO];
+}
+
+- (void)setPlaybackForSliderProgress:(float)progress {
+    NSTimeInterval playbackTime = 0.0;
+    
+    if (self.moviePlayerController.duration > 0.0) {
+        playbackTime = self.moviePlayerController.duration * progress;
+    }
+    
+    self.moviePlayerController.currentPlaybackTime = playbackTime;
+    [self showTime:playbackTime];
+}
+
+- (void)startPlackbackProgressUpdateTimer {
+    if (![self.playbackProgressUpdateTimer isValid]) {
+        self.playbackProgressUpdateTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(playbackProgressUpdateTimerFired:) userInfo:nil repeats:YES];
+    }
+}
+
+- (void)stopPlaybackProgressUpdateTimer {
+    if ([self.playbackProgressUpdateTimer isValid]) {
+        [self.playbackProgressUpdateTimer invalidate];
+        self.playbackProgressUpdateTimer = nil;
+    }
+}
+
+- (void)managePlaybackProgressUpdateTimerForMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
+{
+    if ([self isPausedMoviePlayerController:moviePlayerController]) {
+        [self stopPlaybackProgressUpdateTimer];
+    }
+    else {
+        [self startPlackbackProgressUpdateTimer];
+    }
+}
+
+- (void)playbackProgressUpdateTimerFired:(NSTimer *)timer {
+    if (self.isTouchingSlider == NO) {
+        [self showTime:self.moviePlayerController.currentPlaybackTime];
+        [self showSliderProgressForMoviePlayerController:self.moviePlayerController];
+    }
 }
 
 #pragma mark - Private — Fullscreen
@@ -223,15 +340,25 @@ static CGFloat const kToolbarHeight = 44.0f;
 - (void)registerToMediaPlayerControllerNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self selector:@selector(playbackStateDidChangeNotification:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:self.moviePlayerController];
+    [nc addObserver:self selector:@selector(durationAvailableNotification:) name:MPMovieDurationAvailableNotification object:self.moviePlayerController];
 }
 
 - (void)unregisterFromMediaPlayerControllerNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+    [nc removeObserver:self name:MPMovieDurationAvailableNotification object:nil];
 }
 
 - (void)playbackStateDidChangeNotification:(NSNotification *)notification {
-    [self showPauseIconForMoviePlayerController:self.moviePlayerController];
+    if (!self.isTouchingSlider) {
+        [self showPauseIconForMoviePlayerController:self.moviePlayerController];
+        [self showTime:self.moviePlayerController.currentPlaybackTime];
+        [self managePlaybackProgressUpdateTimerForMoviePlayerController:self.moviePlayerController];
+    }
+}
+
+- (void)durationAvailableNotification:(NSNotification *)notification {
+    [self showSliderProgressForMoviePlayerController:self.moviePlayerController];
 }
 
 #pragma mark - <UIToolbarDelegate>
