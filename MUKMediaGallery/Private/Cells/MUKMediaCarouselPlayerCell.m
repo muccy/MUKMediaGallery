@@ -36,16 +36,7 @@
         self.moviePlayerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self.contentView insertSubview:self.moviePlayerController.view belowSubview:self.overlayView];
         
-        UIButton *playButton = [UIButton buttonWithType:UIButtonTypeSystem];
-        [playButton setTitle:@"Play/Pause" forState:UIControlStateNormal];
-        [playButton sizeToFit];
-        [playButton addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        playButton.center = self.moviePlayerController.view.center;
-        playButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleLeftMargin;
-        playButton.tintColor = [UIColor greenColor];
-        [self.moviePlayerController.view addSubview:playButton];
-        
-        MUKMediaCarouselPlayerControlsView *controlsView = [[MUKMediaCarouselPlayerControlsView alloc] initWithFrame:self.moviePlayerController.view.bounds];
+        MUKMediaCarouselPlayerControlsView *controlsView = [[MUKMediaCarouselPlayerControlsView alloc] initWithMoviePlayerController:self.moviePlayerController];
         self.playerControlsView = controlsView;
         [self.moviePlayerController.view addSubview:controlsView];
         
@@ -81,18 +72,6 @@
             completionHandler(finished);
         }
     }];
-}
-
-#pragma mark - Private
-
-- (void)playButtonPressed:(id)sender {
-    if (self.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
-    {
-        [self.moviePlayerController pause];
-    }
-    else {
-        [self.moviePlayerController play];
-    }
 }
 
 @end

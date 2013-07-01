@@ -7,6 +7,7 @@
 static CGFloat const kToolbarHeight = 44.0f;
 
 @interface MUKMediaCarouselPlayerControlsView () <UIToolbarDelegate>
+@property (nonatomic, weak) MPMoviePlayerController *moviePlayerController;
 @property (nonatomic, weak) UIView *backgroundView;
 @property (nonatomic, weak) UIButton *playPauseButton, *fullscreenButton;
 @property (nonatomic, weak) UISlider *slider;
@@ -15,35 +16,46 @@ static CGFloat const kToolbarHeight = 44.0f;
 
 @implementation MUKMediaCarouselPlayerControlsView
 
-- (id)initWithFrame:(CGRect)frame
+- (instancetype)initWithMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
 {
-    frame.size.height = kToolbarHeight;
-    
-    self = [super initWithFrame:frame];
+    self = [super initWithFrame:CGRectMake(0.0f, 0.0f, 320.0f, kToolbarHeight)];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = [UIColor clearColor];
         self.tintColor = [UIColor whiteColor];
+        
+        _moviePlayerController = moviePlayerController;
         
         UIView *backgroundView = [self newBackgroundViewInSuperview:self];
         _backgroundView = backgroundView;
         
         UIButton *playPauseButton = [self newPlayPauseButtonInSuperview:self];
         _playPauseButton = playPauseButton;
-        [self showPauseIcon:NO];
+        [self showPauseIconForMoviePlayerController:moviePlayerController];
         
         UISlider *slider = [self newSliderInSuperview:self afterPlayPauseButton:playPauseButton];
         _slider = slider;
         
         UILabel *timeLabel = [self newTimeLabelInSuperview:self afterSlider:slider];
         _timeLabel = timeLabel;
-        [self showTime:-1.0];
+        [self showTime:moviePlayerController.duration];
         
         UIButton *fullscreenButton = [self newFullscreenButtonInSuperview:self afterTimeLabel:timeLabel];
         _fullscreenButton = fullscreenButton;
-        [self showFullscreenIcon:YES];
+        [self showFullscreenIcon:!moviePlayerController.isFullscreen];
+        
+        [self registerToMediaPlayerControllerNotifications];
     }
+    
     return self;
+}
+
+- (id)initWithFrame:(CGRect)frame {
+    return [self initWithMoviePlayerController:nil];
+}
+
+- (void)dealloc {
+    [self unregisterFromMediaPlayerControllerNotifications];
 }
 
 #pragma mark - Overrides
@@ -52,7 +64,7 @@ static CGFloat const kToolbarHeight = 44.0f;
     return CGSizeMake(UIViewNoIntrinsicMetric, self.frame.size.height);
 }
 
-#pragma mark - Private — Views
+#pragma mark - Private — View Building
 
 - (UIView *)newBackgroundViewInSuperview:(UIView *)superview {
     MUKMediaGalleryToolbar *toolbar = [[MUKMediaGalleryToolbar alloc] initWithFrame:superview.bounds];
@@ -68,6 +80,7 @@ static CGFloat const kToolbarHeight = 44.0f;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     button.translatesAutoresizingMaskIntoConstraints = NO;
     button.showsTouchWhenHighlighted = YES;
+    [button addTarget:self action:@selector(playPauseButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     [superview addSubview:button];
     
     CGSize const kMaxButtonSize = CGSizeMake(19.0f, 23.0f);
@@ -160,12 +173,28 @@ static CGFloat const kToolbarHeight = 44.0f;
     [self.playPauseButton setImage:[icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
 
+- (void)showPauseIconForMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
+{
+    BOOL showsPause = (moviePlayerController.playbackState == MPMoviePlaybackStatePlaying);
+    [self showPauseIcon:showsPause];
+}
+
+- (void)playPauseButtonPressed:(id)sender {
+    if (self.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+    {
+        [self.moviePlayerController pause];
+    }
+    else {
+        [self.moviePlayerController play];
+    }
+}
+
 #pragma mark - Private — Time
 
 - (void)showTime:(NSTimeInterval)interval {
     NSString *string;
     
-    if (interval >= 0.0) {
+    if (interval > 0.0) {
         string = [MUK stringRepresentationOfTimeInterval:interval];
     }
     else {
@@ -187,6 +216,22 @@ static CGFloat const kToolbarHeight = 44.0f;
     }
     
     [self.fullscreenButton setImage:[icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+}
+
+#pragma mark - Notifications
+
+- (void)registerToMediaPlayerControllerNotifications {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(playbackStateDidChangeNotification:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:self.moviePlayerController];
+}
+
+- (void)unregisterFromMediaPlayerControllerNotifications {
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+}
+
+- (void)playbackStateDidChangeNotification:(NSNotification *)notification {
+    [self showPauseIconForMoviePlayerController:self.moviePlayerController];
 }
 
 #pragma mark - <UIToolbarDelegate>
