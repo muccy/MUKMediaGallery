@@ -11,7 +11,6 @@
 @property (nonatomic, weak) id<MUKMediaCarouselFullImageCellDelegate>delegate;
 
 @property (nonatomic, weak, readonly) MUKMediaImageScrollView *imageScrollView;
-@property (nonatomic, weak, readonly) UIImageView *thumbnailImageView;
 @property (nonatomic, readonly) MUKMediaImageKind imageKind;
 
 - (void)setImage:(UIImage *)image ofKind:(MUKMediaImageKind)kind;

@@ -11,6 +11,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 @property (nonatomic, weak, readwrite) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, weak, readwrite) UILabel *captionLabel;
 @property (nonatomic, weak, readwrite) UIView *captionBackgroundView;
+@property (nonatomic, weak, readwrite) UIImageView *thumbnailImageView;
 
 @property (nonatomic, strong) NSLayoutConstraint *captionLabelBottomConstraint, *captionLabelTopConstraint, *captionBackgroundViewBottomConstraint, *captionBackgroundViewTopConstraint;
 @end
@@ -80,6 +81,31 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
         [UIView animateWithDuration:duration animations:^{
             [self layoutIfNeeded];
         } completion:completionHandler];
+    }
+}
+
+#pragma mark - Thumbnail
+
+- (void)createThumbnailImageViewIfNeededInSuperview:(UIView *)superview belowSubview:(UIView *)subview
+{
+    if (![self.thumbnailImageView.superview isEqual:superview]) {
+        [self.thumbnailImageView removeFromSuperview];
+        self.thumbnailImageView = nil;
+    }
+    
+    if (self.thumbnailImageView == nil) {
+        UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:superview.bounds];
+        thumbnailImageView.contentMode = UIViewContentModeScaleAspectFit;
+        thumbnailImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        
+        if (subview) {
+            [superview insertSubview:thumbnailImageView belowSubview:subview];
+        }
+        else {
+            [superview addSubview:thumbnailImageView];
+        }
+        
+        self.thumbnailImageView = thumbnailImageView;
     }
 }
 

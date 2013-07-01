@@ -3,7 +3,6 @@
 
 @interface MUKMediaCarouselFullImageCell () <MUKMediaImageScrollViewDelegate>
 @property (nonatomic, weak, readwrite) MUKMediaImageScrollView *imageScrollView;
-@property (nonatomic, weak, readwrite) UIImageView *thumbnailImageView;
 @property (nonatomic, readwrite) MUKMediaImageKind imageKind;
 @end
 
@@ -34,7 +33,7 @@
             }
             
             // Remove thumbnail
-            [self.thumbnailImageView removeFromSuperview];
+            self.thumbnailImageView.image = nil;
             
             // Display image
             [self.imageScrollView displayImage:image];
@@ -43,19 +42,11 @@
         }
             
         case MUKMediaImageKindThumbnail: {
-            // Create image view if needed
-            if (self.thumbnailImageView == nil) {
-                UIImageView *thumbnailImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-                thumbnailImageView.contentMode = UIViewContentModeScaleAspectFit;
-                thumbnailImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-                [self.contentView insertSubview:thumbnailImageView belowSubview:self.overlayView];
-                self.thumbnailImageView = thumbnailImageView;
-            }
-            
             // Remove full image
             [self.imageScrollView removeFromSuperview];
             
             // Display image
+            [self createThumbnailImageViewIfNeededInSuperview:self.contentView belowSubview:self.overlayView];
             self.thumbnailImageView.image = image;
             
             break;
@@ -64,7 +55,7 @@
         default: {
             // Remove all
             [self.imageScrollView removeFromSuperview];
-            [self.thumbnailImageView removeFromSuperview];
+            self.thumbnailImageView.image = nil;
             break;
         }
     }
