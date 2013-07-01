@@ -43,7 +43,7 @@ static CGFloat const kToolbarHeight = 44.0f;
         
         UILabel *timeLabel = [self newTimeLabelInSuperview:self afterSlider:slider];
         _timeLabel = timeLabel;
-        [self showTime:moviePlayerController.currentPlaybackTime];
+        [self showPlaybackTimeAndDurationForMoviePlayerController:self.moviePlayerController];
 
         [self registerToMediaPlayerControllerNotifications];
     }
@@ -181,17 +181,35 @@ static CGFloat const kToolbarHeight = 44.0f;
 
 #pragma mark - Private — Time
 
-- (void)showTime:(NSTimeInterval)interval {
-    NSString *string;
+- (void)showPlaybackTime:(NSTimeInterval)playbackTime duration:(NSTimeInterval)duration
+{
+    NSMutableAttributedString *fullAttributedString = [[NSMutableAttributedString alloc] init];
     
-    if (interval >= 0.0) {
-        string = [MUK stringRepresentationOfTimeInterval:interval];
+    // First part: playback time
+    NSString *string;
+    if (playbackTime >= 0.0) {
+        string = [MUK stringRepresentationOfTimeInterval:playbackTime];
     }
     else {
         string = @"--:--";
     }
     
-    self.timeLabel.text = string;
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:string attributes:@{ NSForegroundColorAttributeName : [UIColor whiteColor] }];
+    [fullAttributedString appendAttributedString:attributedString];
+    
+    // Second part: duration
+    if (duration > 0.0) {
+        string = [@"/" stringByAppendingString:[MUK stringRepresentationOfTimeInterval:duration]];
+        attributedString = [[NSAttributedString alloc] initWithString:string attributes:@{ NSForegroundColorAttributeName : [UIColor colorWithWhite:1.0f alpha:0.5f] }];
+        [fullAttributedString appendAttributedString:attributedString];
+    }
+    
+    self.timeLabel.attributedText = fullAttributedString;
+}
+
+- (void)showPlaybackTimeAndDurationForMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
+{
+    [self showPlaybackTime:moviePlayerController.currentPlaybackTime duration:moviePlayerController.duration];
 }
 
 #pragma mark - Private — Slider
@@ -262,7 +280,7 @@ static CGFloat const kToolbarHeight = 44.0f;
     }
     
     self.moviePlayerController.currentPlaybackTime = playbackTime;
-    [self showTime:playbackTime];
+    [self showPlaybackTimeAndDurationForMoviePlayerController:self.moviePlayerController];
 }
 
 - (void)startPlackbackProgressUpdateTimer {
@@ -290,7 +308,7 @@ static CGFloat const kToolbarHeight = 44.0f;
 
 - (void)playbackProgressUpdateTimerFired:(NSTimer *)timer {
     if (self.isTouchingSlider == NO) {
-        [self showTime:self.moviePlayerController.currentPlaybackTime];
+        [self showPlaybackTimeAndDurationForMoviePlayerController:self.moviePlayerController];
         [self showSliderProgressForMoviePlayerController:self.moviePlayerController];
     }
 }
@@ -312,7 +330,7 @@ static CGFloat const kToolbarHeight = 44.0f;
 - (void)playbackStateDidChangeNotification:(NSNotification *)notification {
     if (!self.isTouchingSlider) {
         [self showPauseIconForMoviePlayerController:self.moviePlayerController];
-        [self showTime:self.moviePlayerController.currentPlaybackTime];
+        [self showPlaybackTimeAndDurationForMoviePlayerController:self.moviePlayerController];
         [self managePlaybackProgressUpdateTimerForMoviePlayerController:self.moviePlayerController];
     }
 }
