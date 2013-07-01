@@ -11,6 +11,10 @@
     return self;
 }
 
++ (CGFloat)fullPageWidthForFrame:(CGRect)frame spacing:(CGFloat)spacing {
+    return frame.size.width + spacing;
+}
+
 #pragma mark - Overrides
 
 // I need this method because standard UIScrollView pagination is buggy: when
@@ -21,7 +25,7 @@
 {
     CGPoint targetOffset = [super targetContentOffsetForProposedContentOffset:proposedContentOffset withScrollingVelocity:velocity];
     
-    CGFloat pageWidth = self.collectionView.frame.size.width + self.minimumLineSpacing;
+    CGFloat pageWidth = [[self class] fullPageWidthForFrame:self.collectionView.frame spacing:self.minimumLineSpacing];
     NSInteger minPage = self.collectionView.contentOffset.x/pageWidth;
 
     NSInteger targetPage;

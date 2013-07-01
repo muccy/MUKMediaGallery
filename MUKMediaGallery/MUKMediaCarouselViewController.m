@@ -15,6 +15,8 @@ static CGFloat const kLateralPadding = 4.0f;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
 @property (nonatomic) CGRect lastCollectionViewBounds;
 @property (nonatomic) BOOL isObservingBoundsChanges;
+@property (nonatomic) NSInteger itemIndexToMantainAfterBoundsChange;
+@property (nonatomic) BOOL hasPendingScrollToItem;
 @end
 
 @implementation MUKMediaCarouselViewController
@@ -64,6 +66,11 @@ static CGFloat const kLateralPadding = 4.0f;
     [self.collectionView registerClass:[MUKMediaCarouselFullImageCell class] forCellWithReuseIdentifier:kFullImageCellIdentifier];
     [self.collectionView registerClass:[MUKMediaCarouselPlayerCell class] forCellWithReuseIdentifier:kMediaPlayerCellIdentifier];
     
+    if (self.hasPendingScrollToItem) {
+        self.hasPendingScrollToItem = NO;
+        [self scrollToItemAtIndex:self.itemIndexToMantainAfterBoundsChange animated:NO];
+    }
+
     // This adjust things prior rotation
     [self beginObservingBoundsChanges];
 }
@@ -83,6 +90,19 @@ static CGFloat const kLateralPadding = 4.0f;
     return self.navigationController.isNavigationBarHidden;
 }
 
+#pragma mark - Methods
+
+- (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated {
+    if (![self isViewLoaded]) {
+        self.hasPendingScrollToItem = YES;
+        self.itemIndexToMantainAfterBoundsChange = index;
+        return;
+    }
+
+    CGFloat pageWidth = [MUKMediaCarouselFlowLayout fullPageWidthForFrame:self.collectionView.frame spacing:kLateralPadding * 2.0f];
+    [self.collectionView setContentOffset:CGPointMake(pageWidth * index, 0.0f) animated:animated];
+}
+
 #pragma mark - Private
 
 static void CommonInitialization(MUKMediaCarouselViewController *viewController, UICollectionViewLayout *layout)
@@ -97,6 +117,7 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController,
     viewController.loadingThumbnailImageIndexes = [[NSMutableIndexSet alloc] init];
     
     viewController.lastCollectionViewBounds = CGRectNull;
+    viewController.itemIndexToMantainAfterBoundsChange = 0;
     
     if (layout) {
         viewController.collectionView.collectionViewLayout = layout;
@@ -115,14 +136,35 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return layout;
 }
 
+- (void)viewBoundsCouldChangeFromSize:(CGSize)oldSize {
+    if (!self.hasPendingScrollToItem) {
+        self.itemIndexToMantainAfterBoundsChange = [self currentPageIndex];
+    }
+}
+
 - (void)viewBoundsDidChangeFromSize:(CGSize)oldSize toNewSize:(CGSize)newSize {
     [self.collectionView.collectionViewLayout invalidateLayout];
+    [self scrollToItemAtIndex:self.itemIndexToMantainAfterBoundsChange animated:NO];
+}
+
+- (NSInteger)currentPageIndex {
+    CGFloat pageWidth = [MUKMediaCarouselFlowLayout fullPageWidthForFrame:self.collectionView.frame spacing:kLateralPadding * 2.0f];
+    NSInteger index = self.collectionView.contentOffset.x/pageWidth;
+    
+    if (index < 0) {
+        index = 0;
+    }
+    else if (index >= [self.collectionView numberOfItemsInSection:0]) {
+        index = [self.collectionView numberOfItemsInSection:0] - 1;
+    }
+    
+    return index;
 }
 
 #pragma mark - Private — KVO
 
 - (void)beginObservingBoundsChanges {
-    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:(__bridge void *)kBoundsChangesKVOIdentifier];
+    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld|NSKeyValueObservingOptionPrior context:(__bridge void *)kBoundsChangesKVOIdentifier];
     self.isObservingBoundsChanges = YES;
 }
 
@@ -135,11 +177,18 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (kBoundsChangesKVOIdentifier == (__bridge NSString *)context) {        
+    if (kBoundsChangesKVOIdentifier == (__bridge NSString *)context) {
+        BOOL isPrior = [change[NSKeyValueChangeNotificationIsPriorKey] boolValue];
         CGRect old = [change[NSKeyValueChangeOldKey] CGRectValue];
-        CGRect new = [change[NSKeyValueChangeNewKey] CGRectValue];
-        if (!CGSizeEqualToSize(old.size, new.size)) {
-            [self viewBoundsDidChangeFromSize:old.size toNewSize:new.size];
+        
+        if (isPrior) {
+            [self viewBoundsCouldChangeFromSize:old.size];
+        }
+        else {
+            CGRect new = [change[NSKeyValueChangeNewKey] CGRectValue];
+            if (!CGSizeEqualToSize(old.size, new.size)) {
+                [self viewBoundsDidChangeFromSize:old.size toNewSize:new.size];
+            }
         }
     }
 }
@@ -393,7 +442,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)configureCell:(UICollectionViewCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
 {
-    cell.backgroundColor = [UIColor colorWithRed:(float)(arc4random()%255)/255.0f green:(float)(arc4random()%255)/255.0f blue:(float)(arc4random()%255)/255.0f alpha:0.7f];
+    cell.backgroundColor = [UIColor blackColor];
     
     if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
         MUKMediaCarouselCell *carouselCell = (MUKMediaCarouselCell *)cell;

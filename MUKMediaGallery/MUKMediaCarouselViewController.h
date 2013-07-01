@@ -22,4 +22,6 @@
 
 @interface MUKMediaCarouselViewController : UICollectionViewController
 @property (nonatomic, weak) id<MUKMediaCarouselViewControllerDelegate> delegate;
+
+- (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated;
 @end
