@@ -577,6 +577,19 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    // Show movie controls if bars are hidden and current item is an audio/video
+    // Hide movie controls if bars are shows and current item is already playing
+    MUKMediaCarouselPlayerCell *cell = (MUKMediaCarouselPlayerCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+        if ([self areBarsHidden]) {
+            [cell setPlayerControlsHidden:NO animated:YES completion:nil];
+        }
+        else if (cell.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+        {
+            [cell setPlayerControlsHidden:YES animated:YES completion:nil];
+        }
+    }
+    
     [self toggleBarsVisibility];
 }
 

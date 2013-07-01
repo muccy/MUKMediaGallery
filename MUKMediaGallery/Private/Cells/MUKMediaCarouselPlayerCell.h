@@ -12,4 +12,5 @@
 @property (nonatomic, readonly) MPMoviePlayerController *moviePlayerController;
 
 - (void)setMediaURL:(NSURL *)mediaURL;
+- (void)setPlayerControlsHidden:(BOOL)hidden animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler;
 @end

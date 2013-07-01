@@ -5,11 +5,13 @@
 @property (nonatomic, readwrite) MPMoviePlayerController *moviePlayerController;
 @property (nonatomic, weak) MUKMediaCarouselPlayerControlsView *playerControlsView;
 @property (nonatomic, getter = isRegisteredToMoviePlayerControllerNotifications) BOOL registeredToMoviePlayerControllerNotifications;
+@property (nonatomic) NSTimer *playerControlsHideTimer;
 @end
 
 @implementation MUKMediaCarouselPlayerCell
 
 - (void)dealloc {
+    [self cancelPlayerControlsHideTimer];
     [self unregisterFromMoviePlayerControllerNotifications];
 }
 
@@ -70,17 +72,32 @@
 
 - (void)setPlayerControlsHidden:(BOOL)hidden animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler
 {
+    // Requested action invalidates automatic one
+    [self cancelPlayerControlsHideTimer];
+    
     NSTimeInterval const kDuration = animated ? UINavigationControllerHideShowBarDuration : 0.0;
     
     [UIView animateWithDuration:kDuration animations:^{
         self.playerControlsView.alpha = (hidden ? 0.0f : 1.0f);
-    } completion:^(BOOL finished) {
-        //
-        
-        if (completionHandler) {
-            completionHandler(finished);
-        }
-    }];
+    } completion:completionHandler];
+}
+
+#pragma mark - Private — Player Controls
+
+- (void)startPlayerControlsHideTimer {
+    [self cancelPlayerControlsHideTimer];
+    self.playerControlsHideTimer = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(playerControlsHideTimerFired:) userInfo:nil repeats:NO];
+}
+
+- (void)cancelPlayerControlsHideTimer {
+    if ([self.playerControlsHideTimer isValid]) {
+        [self.playerControlsHideTimer invalidate];
+        self.playerControlsHideTimer = nil;
+    }
+}
+
+- (void)playerControlsHideTimerFired:(NSTimer *)timer {
+    [self setPlayerControlsHidden:YES animated:YES completion:nil];
 }
 
 #pragma mark - Private — Movie Player Controller Notifications
@@ -112,6 +129,15 @@
 - (void)moviePlayerControllerPlaybackStateDidChangeNotification:(NSNotification *)notifcation
 {
     [self.delegate carouselPlayerCellDidChangePlaybackState:self];
+    
+    // When media starts playing, hide controls after a while
+    if (self.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+    {
+        [self startPlayerControlsHideTimer];
+    }
+    else {
+        [self cancelPlayerControlsHideTimer];
+    }
 }
 
 @end
