@@ -9,7 +9,7 @@ static CGFloat const kToolbarHeight = 44.0f;
 @interface MUKMediaCarouselPlayerControlsView () <UIToolbarDelegate>
 @property (nonatomic, weak) MPMoviePlayerController *moviePlayerController;
 @property (nonatomic, weak) UIView *backgroundView;
-@property (nonatomic, weak) UIButton *playPauseButton, *fullscreenButton;
+@property (nonatomic, weak) UIButton *playPauseButton;
 @property (nonatomic, weak) UISlider *slider;
 @property (nonatomic, weak) UILabel *timeLabel;
 @property (nonatomic) NSTimer *playbackProgressUpdateTimer;
@@ -44,11 +44,7 @@ static CGFloat const kToolbarHeight = 44.0f;
         UILabel *timeLabel = [self newTimeLabelInSuperview:self afterSlider:slider];
         _timeLabel = timeLabel;
         [self showTime:moviePlayerController.currentPlaybackTime];
-        
-        UIButton *fullscreenButton = [self newFullscreenButtonInSuperview:self afterTimeLabel:timeLabel];
-        _fullscreenButton = fullscreenButton;
-        [self showFullscreenIcon:!moviePlayerController.isFullscreen];
-        
+
         [self registerToMediaPlayerControllerNotifications];
     }
     
@@ -138,35 +134,13 @@ static CGFloat const kToolbarHeight = 44.0f;
     [superview addSubview:label];
     
     NSDictionary *const viewsDict = NSDictionaryOfVariableBindings(slider, label);
-    NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[slider]-(6)-[label(>=20)]" options:0 metrics:nil views:viewsDict];
+    NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[slider]-(6)-[label(>=20)]-(6)-|" options:0 metrics:nil views:viewsDict];
     [superview addConstraints:constraints];
     
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:slider attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:2.0f];
     [superview addConstraint:constraint];
     
     return label;
-}
-
-- (UIButton *)newFullscreenButtonInSuperview:(UIView *)superview afterTimeLabel:(UILabel *)timeLabel
-{
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.translatesAutoresizingMaskIntoConstraints = NO;
-    button.showsTouchWhenHighlighted = YES;
-    [superview addSubview:button];
-    
-    CGSize const kMaxButtonSize = CGSizeMake(32.0f, 31.0f);
-    
-    NSDictionary *const viewsDict = NSDictionaryOfVariableBindings(button, timeLabel);
-    NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[timeLabel]-(>=5)-[button(==w)]-(6)-|" options:0 metrics:@{ @"w" : @(kMaxButtonSize.width) } views:viewsDict];
-    [superview addConstraints:constraints];
-    
-    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0.0f];
-    [superview addConstraint:constraint];
-    
-    constraint = [NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:0.0f constant:kMaxButtonSize.height];
-    [superview addConstraint:constraint];
-    
-    return button;
 }
 
 #pragma mark - Private — Play/Pause
@@ -319,20 +293,6 @@ static CGFloat const kToolbarHeight = 44.0f;
         [self showTime:self.moviePlayerController.currentPlaybackTime];
         [self showSliderProgressForMoviePlayerController:self.moviePlayerController];
     }
-}
-
-#pragma mark - Private — Fullscreen
-
-- (void)showFullscreenIcon:(BOOL)showsFullscreenIcon {
-    UIImage *icon;
-    if (showsFullscreenIcon) {
-        icon = [MUKMediaGalleryUtils imageNamed:@"mediaPlayer_scaleToFill"];
-    }
-    else {
-        icon = [MUKMediaGalleryUtils imageNamed:@"mediaPlayer_scaleToFit"];
-    }
-    
-    [self.fullscreenButton setImage:[icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
 }
 
 #pragma mark - Notifications

@@ -36,6 +36,12 @@
         self.moviePlayerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self.contentView insertSubview:self.moviePlayerController.view belowSubview:self.overlayView];
         
+        // This disables two finger gesture to enter fullscreen
+        UIView *coverView = [[UIView alloc] initWithFrame:self.moviePlayerController.view.bounds];
+        coverView.backgroundColor = [UIColor clearColor];
+        coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        [self.moviePlayerController.view addSubview:coverView];
+        
         MUKMediaCarouselPlayerControlsView *controlsView = [[MUKMediaCarouselPlayerControlsView alloc] initWithMoviePlayerController:self.moviePlayerController];
         self.playerControlsView = controlsView;
         [self.moviePlayerController.view addSubview:controlsView];
