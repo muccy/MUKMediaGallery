@@ -4,17 +4,13 @@
 @interface MUKMediaCarouselPlayerCell ()
 @property (nonatomic, readwrite) MPMoviePlayerController *moviePlayerController;
 @property (nonatomic, weak) MUKMediaCarouselPlayerControlsView *playerControlsView;
+@property (nonatomic, getter = isRegisteredToMoviePlayerControllerNotifications) BOOL registeredToMoviePlayerControllerNotifications;
 @end
 
 @implementation MUKMediaCarouselPlayerCell
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
+- (void)dealloc {
+    [self unregisterFromMoviePlayerControllerNotifications];
 }
 
 #pragma mark - Methods
@@ -42,6 +38,7 @@
         coverView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         [self.moviePlayerController.view addSubview:coverView];
         
+        // Create custom controls
         MUKMediaCarouselPlayerControlsView *controlsView = [[MUKMediaCarouselPlayerControlsView alloc] initWithMoviePlayerController:self.moviePlayerController];
         self.playerControlsView = controlsView;
         [self.moviePlayerController.view addSubview:controlsView];
@@ -56,6 +53,12 @@
         
         constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[controls]-(0)-[captionBackground]" options:0 metrics:nil views:viewsDict];
         [self.contentView addConstraints:constraints];
+        
+        // Create room for thumbnail
+        [self createThumbnailImageViewIfNeededInSuperview:self.moviePlayerController.view belowSubview:self.playerControlsView];
+        
+        // Register to notifications
+        [self registerToMoviePlayerControllerNotifications:self.moviePlayerController];
     }
     else {
         self.moviePlayerController.contentURL = mediaURL;
@@ -78,6 +81,37 @@
             completionHandler(finished);
         }
     }];
+}
+
+#pragma mark - Private — Movie Player Controller Notifications
+
+- (void)registerToMoviePlayerControllerNotifications:(MPMoviePlayerController *)moviePlayerController
+{
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(moviePlayerControllerNowPlayingMovieChangedNotification:) name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:moviePlayerController];
+    [nc addObserver:self selector:@selector(moviePlayerControllerPlaybackStateDidChangeNotification:) name:MPMoviePlayerPlaybackStateDidChangeNotification object:moviePlayerController];
+    
+    self.registeredToMoviePlayerControllerNotifications = YES;
+}
+
+- (void)unregisterFromMoviePlayerControllerNotifications {
+    if (self.isRegisteredToMoviePlayerControllerNotifications) {
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc removeObserver:self name:MPMoviePlayerNowPlayingMovieDidChangeNotification object:nil];
+        [nc removeObserver:self name:MPMoviePlayerPlaybackStateDidChangeNotification object:nil];
+        
+        self.registeredToMoviePlayerControllerNotifications = NO;
+    }
+}
+
+- (void)moviePlayerControllerNowPlayingMovieChangedNotification:(NSNotification *)notification
+{
+    [self.delegate carouselPlayerCellDidChangeNowPlayingMovie:self];
+}
+
+- (void)moviePlayerControllerPlaybackStateDidChangeNotification:(NSNotification *)notifcation
+{
+    [self.delegate carouselPlayerCellDidChangePlaybackState:self];
 }
 
 @end

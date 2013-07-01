@@ -9,7 +9,7 @@ static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaPlayerCell";
 static NSString *const kBoundsChangesKVOIdentifier = @"BoundsChangesKVOIdentifier";
 static CGFloat const kLateralPadding = 4.0f;
 
-@interface MUKMediaCarouselViewController () <MUKMediaCarouselFullImageCellDelegate>
+@interface MUKMediaCarouselViewController () <MUKMediaCarouselFullImageCellDelegate, MUKMediaCarouselPlayerCellDelegate>
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
 @property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
@@ -144,6 +144,20 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     }
 }
 
+#pragma mark - Private — Media Attributes
+
+- (MUKMediaAttributes *)mediaAttributesForItemAtIndex:(NSInteger)idx {
+    return [self.mediaAttributesCache mediaAttributesAtIndex:idx cacheIfNeeded:YES loadingHandler:^MUKMediaAttributes *
+    {
+        if ([self.delegate respondsToSelector:@selector(carouselViewController:attributesForItemAtIndex:)])
+        {
+            return [self.delegate carouselViewController:self attributesForItemAtIndex:idx];
+        }
+      
+        return nil;
+    }];
+}
+
 #pragma mark - Private — Images
 
 - (MUKMediaModelCache *)cacheForImageKind:(MUKMediaImageKind)kind {
@@ -221,7 +235,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     
     // No full image in cache :(
     // We need to request full image loading to delegate
-    [self loadImageOfKind:MUKMediaImageKindFullSize forItemAtIndexPath:indexPath];
+    [self loadImageOfKind:MUKMediaImageKindFullSize forItemAtIndexPath:indexPath inNextRunLoop:YES];
     
     // Try to load thumbnail to appeal user eye from cache
     UIImage *thumbnail = [[self cacheForImageKind:MUKMediaImageKindThumbnail] objectAtIndex:kImageIndex isNull:NULL];
@@ -237,7 +251,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     
     // Thumbnail is not available, too :(
     // Request it to delegate!
-    [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndexPath:indexPath];
+    [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndexPath:indexPath inNextRunLoop:YES];
     
     // No image in memory
     if (foundImageKind != NULL) {
@@ -247,7 +261,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return nil;
 }
 
-- (void)loadImageOfKind:(MUKMediaImageKind)imageKind forItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)loadImageOfKind:(MUKMediaImageKind)imageKind forItemAtIndexPath:(NSIndexPath *)indexPath inNextRunLoop:(BOOL)useNextRunLoop
 {
     NSInteger const kImageIndex = ItemIndexForIndexPath(indexPath);
     
@@ -269,17 +283,40 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
             [[self cacheForImageKind:imageKind] setObject:image atIndex:kImageIndex];
             
             // Get actual cell
-            MUKMediaCarouselFullImageCell *cell = (MUKMediaCarouselFullImageCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
-                        
+            MUKMediaCarouselCell *cell = (MUKMediaCarouselCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+            
             // Set image if needed
-            if ([self shouldSetLoadedImageOfKind:imageKind intoFullImageCell:cell atIndexPath:indexPath])
-            {
-                [self setImage:image ofKind:imageKind inFullImageCell:cell];
+            if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
+                MUKMediaCarouselFullImageCell *fullImageCell = (MUKMediaCarouselFullImageCell *)cell;
+                
+                if ([self shouldSetLoadedImageOfKind:imageKind intoFullImageCell:fullImageCell atIndexPath:indexPath])
+                {
+                    [self setImage:image ofKind:imageKind inFullImageCell:fullImageCell];
+                }
+            }
+            else if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+                MUKMediaCarouselPlayerCell *playerCell = (MUKMediaCarouselPlayerCell *)cell;
+                if ([self shouldSetLoadedImageOfKind:imageKind intoPlayerCell:playerCell atIndexPath:indexPath])
+                {
+                    [self setThumbnailImage:image inPlayerCell:playerCell hideActivityIndicator:YES];
+                }
             }
         } // if isLoadingImageKind
     }; // completionHandler
     
-    [self.delegate carouselViewController:self loadImageOfKind:imageKind forItemAtIndex:kImageIndex completionHandler:completionHandler];
+    // Call delegate in next run loop when we need cell enters in reuse queue
+    // In completionHandler we have [self.collectionView cellForItemAtIndexPath:indexPath]
+    // which fill nil if is called inside -collectionView:cellForItemAtIndexPath:
+    // and this is the case when completionHandler is invoked synchrounosly (say
+    // user has a nil thumbnail
+    if (useNextRunLoop) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.delegate carouselViewController:self loadImageOfKind:imageKind forItemAtIndex:kImageIndex completionHandler:completionHandler];
+        });
+    }
+    else {
+        [self.delegate carouselViewController:self loadImageOfKind:imageKind forItemAtIndex:kImageIndex completionHandler:completionHandler];
+    }
 }
 
 - (void)cancelLoadingForImageOfKind:(MUKMediaImageKind)imageKind atIndex:(NSInteger)index
@@ -312,6 +349,31 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell {
     [cell setMediaURL:nil];
+}
+
+- (BOOL)shouldDismissThumbnailAsNewPlaybackStartsInPlayerCell:(MUKMediaCarouselPlayerCell *)cell forItemAtIndex:(NSInteger)index
+{
+    // Load attributes
+    MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:index];
+    
+    BOOL shouldDismissThumbnail;
+    
+    // Keep thumbnail for audio tracks
+    if (attributes.kind == MUKMediaKindAudio) {
+        shouldDismissThumbnail = NO;
+    }
+    else {
+        if (cell.moviePlayerController.playbackState != MPMoviePlaybackStateStopped ||
+            cell.moviePlayerController.playbackState != MPMoviePlaybackStatePaused)
+        {
+            shouldDismissThumbnail = YES;
+        }
+        else {
+            shouldDismissThumbnail = NO;
+        }
+    }
+    
+    return shouldDismissThumbnail;
 }
 
 #pragma mark - Private — Cell
@@ -402,8 +464,59 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
 {
+    cell.delegate = self;
+    
+    // Set media URL (this will create room for thumbnail)
     NSURL *mediaURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:ItemIndexForIndexPath(indexPath)];
     [cell setMediaURL:mediaURL];
+    
+    // Try to load thumbnail to appeal user eye, from cache
+    UIImage *thumbnail = [[self cacheForImageKind:MUKMediaImageKindThumbnail] objectAtIndex:ItemIndexForIndexPath(indexPath) isNull:NULL];
+    
+    // Thumbnail available: display it
+    if (thumbnail) {
+        [self setThumbnailImage:thumbnail inPlayerCell:cell hideActivityIndicator:YES];
+    }
+    
+    // Thumbnail unavailable: request to delegate
+    else {
+        [cell.activityIndicatorView startAnimating];
+        [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndexPath:indexPath inNextRunLoop:YES];
+    }
+}
+
+- (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoPlayerCell:(MUKMediaCarouselPlayerCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    if (!cell || !indexPath) return NO;
+    
+    BOOL shouldSetImage = NO;
+    
+    // Only thumbnails and when cell is still visible
+    if (imageKind == MUKMediaImageKindThumbnail &&
+        [[self.collectionView indexPathsForVisibleItems] containsObject:indexPath])
+    {
+        shouldSetImage = YES;
+    }
+    
+    return shouldSetImage;
+}
+
+- (void)setThumbnailImage:(UIImage *)image inPlayerCell:(MUKMediaCarouselPlayerCell *)cell hideActivityIndicator:(BOOL)hideActivityIndicator
+{
+    if (hideActivityIndicator) {
+        [cell.activityIndicatorView stopAnimating];
+    }
+
+    cell.thumbnailImageView.image = image;
+}
+
+- (void)dismissThumbnailInPlayerCell:(MUKMediaCarouselPlayerCell *)cell forItemAtIndex:(NSInteger)index
+{
+    // Cancel thumbnail loading
+    [self cancelAllImageLoadingsForItemAtIndex:index];
+    
+    // Hide thumbnail
+    [self setThumbnailImage:nil inPlayerCell:cell hideActivityIndicator:YES];
 }
 
 #pragma mark - Private — Bars
@@ -440,15 +553,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // Load attributes
-    MUKMediaAttributes *attributes = [self.mediaAttributesCache mediaAttributesAtIndex:ItemIndexForIndexPath(indexPath) cacheIfNeeded:YES loadingHandler:^MUKMediaAttributes *
-    {
-        if ([self.delegate respondsToSelector:@selector(carouselViewController:attributesForItemAtIndex:)])
-        {
-            return [self.delegate carouselViewController:self attributesForItemAtIndex:ItemIndexForIndexPath(indexPath)];
-        }
-        
-        return nil;
-    }];
+    MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:ItemIndexForIndexPath(indexPath)];
     
     // Create cell
     UICollectionViewCell *cell = [self dequeueCellForMediaAttributes:attributes atIndexPath:indexPath];
@@ -493,6 +598,33 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 - (void)carouselFullImageCell:(MUKMediaCarouselFullImageCell *)cell imageScrollViewDidReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
 {
     [self toggleBarsVisibility];
+}
+
+#pragma mark - <MUKMediaCarouselPlayerCellDelegate>
+
+- (void)carouselPlayerCellDidChangeNowPlayingMovie:(MUKMediaCarouselPlayerCell *)cell
+{
+    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    if (indexPath == nil) {
+        return;
+    }
+    
+    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
+
+    // Dismiss thumbnail (if needed) when new playback starts (or begins scrubbing)
+    if ([self shouldDismissThumbnailAsNewPlaybackStartsInPlayerCell:cell forItemAtIndex:kItemIndex])
+    {
+        [self dismissThumbnailInPlayerCell:cell forItemAtIndex:kItemIndex];
+    }
+}
+
+- (void)carouselPlayerCellDidChangePlaybackState:(MUKMediaCarouselPlayerCell *)cell
+{
+    // Hide bars when playback starts
+    if (cell.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+    {
+        [self setBarsHidden:YES animated:YES];
+    }
 }
 
 @end
