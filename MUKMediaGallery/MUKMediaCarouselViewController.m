@@ -1,19 +1,25 @@
 #import "MUKMediaCarouselViewController.h"
 #import "MUKMediaCarouselFullImageCell.h"
 #import "MUKMediaCarouselPlayerCell.h"
+#import "MUKMediaCarouselYouTubePlayerCell.h"
 #import "MUKMediaAttributesCache.h"
 #import "MUKMediaCarouselFlowLayout.h"
 #import "MUKMediaGalleryUtils.h"
+#import "LBYouTubeExtractor.h"
 
-static NSString *const kFullImageCellIdentifier = @"MUKMediaFullImageCell";
-static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaPlayerCell";
+#define DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL    1
+
+static NSString *const kFullImageCellIdentifier = @"MUKMediaCarouselFullImageCell";
+static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaCarouselPlayerCell";
+static NSString *const kYouTubePlayerCellIdentifier = @"MUKMediaCarouselYouTubePlayerCell";
 static NSString *const kBoundsChangesKVOIdentifier = @"BoundsChangesKVOIdentifier";
 static CGFloat const kLateralPadding = 4.0f;
 
-@interface MUKMediaCarouselViewController () <MUKMediaCarouselFullImageCellDelegate, MUKMediaCarouselPlayerCellDelegate>
+@interface MUKMediaCarouselViewController () <MUKMediaCarouselFullImageCellDelegate, MUKMediaCarouselPlayerCellDelegate, MUKMediaCarouselYouTubePlayerCellDelegate, LBYouTubeExtractorDelegate>
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
-@property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache;
+@property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache, *youTubeDecodedURLCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
+@property (nonatomic) NSMutableDictionary *runningYouTubeExtractors;
 @property (nonatomic) CGRect lastCollectionViewBounds;
 @property (nonatomic) BOOL isObservingBoundsChanges;
 @property (nonatomic) NSInteger itemIndexToMantainAfterBoundsChange;
@@ -66,6 +72,7 @@ static CGFloat const kLateralPadding = 4.0f;
     
     [self.collectionView registerClass:[MUKMediaCarouselFullImageCell class] forCellWithReuseIdentifier:kFullImageCellIdentifier];
     [self.collectionView registerClass:[MUKMediaCarouselPlayerCell class] forCellWithReuseIdentifier:kMediaPlayerCellIdentifier];
+    [self.collectionView registerClass:[MUKMediaCarouselYouTubePlayerCell class] forCellWithReuseIdentifier:kYouTubePlayerCellIdentifier];
     
     if (self.hasPendingScrollToItem) {
         self.hasPendingScrollToItem = NO;
@@ -117,6 +124,9 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController,
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
     viewController.loadingThumbnailImageIndexes = [[NSMutableIndexSet alloc] init];
     
+    viewController.youTubeDecodedURLCache = [[MUKMediaModelCache alloc] initWithCountLimit:7 cacheNulls:YES];
+    viewController.runningYouTubeExtractors = [[NSMutableDictionary alloc] init];
+    
     viewController.lastCollectionViewBounds = CGRectNull;
     viewController.itemIndexToMantainAfterBoundsChange = 0;
     
@@ -127,6 +137,10 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController,
 
 static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return indexPath.item;
+}
+
+static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
+    return [NSIndexPath indexPathForItem:index inSection:0];
 }
 
 #pragma mark - Private — Layout
@@ -429,6 +443,10 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell {
     [cell setMediaURL:nil];
+    
+    if ([cell isKindOfClass:[MUKMediaCarouselYouTubePlayerCell class]]) {
+        [(MUKMediaCarouselYouTubePlayerCell *)cell setYouTubeURL:nil];
+    }
 }
 
 - (BOOL)shouldDismissThumbnailAsNewPlaybackStartsInPlayerCell:(MUKMediaCarouselPlayerCell *)cell forItemAtIndex:(NSInteger)index
@@ -456,16 +474,72 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return shouldDismissThumbnail;
 }
 
+#pragma mark - Private — YouTube
+
+- (BOOL)isDecodingMovieURLFromYouTubeForItemAtIndex:(NSInteger)index {
+    return [[self.runningYouTubeExtractors allKeys] containsObject:@(index)];
+}
+
+- (void)beginDecodingMovieURLFromYouTubeURL:(NSURL *)youTubeURL forItemAtIndex:(NSInteger)index
+{
+    if (!youTubeURL || [self isDecodingMovieURLFromYouTubeForItemAtIndex:index]) {
+        return;
+    }
+    
+    LBYouTubeExtractor *extractor = [[LBYouTubeExtractor alloc] initWithURL:youTubeURL quality:LBYouTubeVideoQualityLarge];
+    extractor.delegate = self;
+    
+    self.runningYouTubeExtractors[@(index)] = extractor;
+    [extractor startExtracting];
+}
+
+- (void)cancelDecodingMovieURLFromYouTubeForItemAtIndex:(NSInteger)index {
+    LBYouTubeExtractor *extractor = self.runningYouTubeExtractors[@(index)];
+    extractor.delegate = nil;
+    [extractor stopExtracting];
+    
+    [self.runningYouTubeExtractors removeObjectForKey:@(index)];
+}
+
+- (NSInteger)indexOfRunningYouTubeMovieURLExtractor:(LBYouTubeExtractor *)extractor
+{
+    if (!extractor) {
+        return NSNotFound;
+    }
+    
+    NSSet *keys = [self.runningYouTubeExtractors keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop)
+    {
+        if ([obj isEqual:extractor]) {
+            *stop = YES;
+            return YES;
+        }
+        
+        return NO;
+    }];
+    
+    return ([keys count] ? [[keys anyObject] integerValue] : NSNotFound);
+}
+
 #pragma mark - Private — Cell
 
 - (UICollectionViewCell *)dequeueCellForMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *identifier;
-    if (attributes && attributes.kind != MUKMediaKindImage) {
-        identifier = kMediaPlayerCellIdentifier;
-    }
-    else {
-        identifier = kFullImageCellIdentifier;
+    NSString *identifier = kFullImageCellIdentifier;
+    
+    if (attributes) {
+        switch (attributes.kind) {
+            case MUKMediaKindAudio:
+            case MUKMediaKindVideo:
+                identifier = kMediaPlayerCellIdentifier;
+                break;
+                
+            case MUKMediaKindYouTubeVideo:
+                identifier = kYouTubePlayerCellIdentifier;
+                break;
+                
+            default:
+                break;
+        }
     }
     
     return [self.collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
@@ -486,11 +560,15 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
             [carouselCell setCaptionHidden:YES animated:NO completion:nil];
         }
         
-        if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
+        if ([cell isMemberOfClass:[MUKMediaCarouselFullImageCell class]]) {
             [self configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
         }
-        else if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+        else if ([cell isMemberOfClass:[MUKMediaCarouselPlayerCell class]]) {
             [self configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
+        }
+        else if ([cell isMemberOfClass:[MUKMediaCarouselYouTubePlayerCell class]])
+        {
+            [self configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
         }
     }
 }
@@ -544,11 +622,18 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
 {
+    NSURL *mediaURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:ItemIndexForIndexPath(indexPath)];
+    [self configureMediaPlayerCell:cell mediaURL:mediaURL forMediaAttributes:attributes atIndexPath:indexPath];
+}
+
+- (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell mediaURL:(NSURL *)mediaURL forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
+{
     cell.delegate = self;
     
     // Set media URL (this will create room for thumbnail)
-    NSURL *mediaURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:ItemIndexForIndexPath(indexPath)];
-    [cell setMediaURL:mediaURL];
+    if (mediaURL) {
+        [cell setMediaURL:mediaURL];
+    }
     
     // Nullify existing thumbnail
     cell.thumbnailImageView.image = nil;
@@ -612,6 +697,47 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     [self setThumbnailImage:nil stock:NO inPlayerCell:cell hideActivityIndicator:YES];
 }
 
+- (void)configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
+{
+    cell.delegate = self;
+    
+    BOOL isNull = NO;
+    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
+    NSURL *decodedMediaURL = [self.youTubeDecodedURLCache objectAtIndex:kItemIndex isNull:&isNull];
+    
+    BOOL isUsingWebView = NO;
+    if (decodedMediaURL == nil) {
+        NSURL *youTubeURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:kItemIndex];
+        
+        if (isNull) {
+            // Go straight with web view
+            isUsingWebView = YES;
+            [self configureYouTubePlayerCell:cell forMediaAttributes:attributes undecodableYouTubeURL:youTubeURL atIndexPath:indexPath];
+        }
+        else {
+            // No cached URL, but try to decode
+            [self beginDecodingMovieURLFromYouTubeURL:youTubeURL forItemAtIndex:kItemIndex];
+        }
+    }
+    
+    // Call full configuration if needed
+    if (isUsingWebView == NO) {
+        [self configureYouTubePlayerCell:cell forMediaAttributes:attributes decodedMediaURL:decodedMediaURL atIndexPath:indexPath];
+    }
+}
+
+- (void)configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes decodedMediaURL:(NSURL *)mediaURL atIndexPath:(NSIndexPath *)indexPath
+{
+    // Anyway, call plain media player method
+    [self configureMediaPlayerCell:cell mediaURL:mediaURL forMediaAttributes:attributes atIndexPath:indexPath];
+}
+
+- (void)configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes undecodableYouTubeURL:(NSURL *)youTubeURL atIndexPath:(NSIndexPath *)indexPath
+{
+    // Show web view
+    [cell setYouTubeURL:youTubeURL];
+}
+
 #pragma mark - Private — Bars
 
 - (BOOL)areBarsHidden {
@@ -661,7 +787,9 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self cancelAllImageLoadingsForItemAtIndex:ItemIndexForIndexPath(indexPath)];
+    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
+    [self cancelAllImageLoadingsForItemAtIndex:kItemIndex];
+    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
     
     if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
         [self cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell];
@@ -730,6 +858,64 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     if (cell.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
     {
         [self setBarsHidden:YES animated:YES];
+    }
+}
+
+#pragma mark - <MUKMediaCarouselYouTubePlayerCellDelegate>
+
+- (void)carouselYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell webView:(UIWebView *)webView didReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
+{
+    [self toggleBarsVisibility];
+}
+
+#pragma mark - <LBYouTubeExtractorDelegate>
+
+- (void)youTubeExtractor:(LBYouTubeExtractor *)extractor didSuccessfullyExtractYouTubeURL:(NSURL *)videoURL
+{
+#if DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL
+    [self youTubeExtractor:extractor failedExtractingYouTubeURLWithError:nil];
+    return;
+#endif
+    
+    // Get item index
+    NSInteger const kItemIndex = [self indexOfRunningYouTubeMovieURLExtractor:extractor];
+    if (kItemIndex == NSNotFound) return;
+    
+    // Cache it
+    [self.youTubeDecodedURLCache setObject:videoURL atIndex:kItemIndex];
+    
+    // Set as not running
+    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
+    
+    // Get & configure cell
+    NSIndexPath *const kIndexPath = IndexPathForItemIndex(kItemIndex);
+    MUKMediaCarouselYouTubePlayerCell *cell = (MUKMediaCarouselYouTubePlayerCell *)[self.collectionView cellForItemAtIndexPath:kIndexPath];
+    
+    if ([cell isMemberOfClass:[MUKMediaCarouselYouTubePlayerCell class]]) {
+        MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kItemIndex];
+        [self configureYouTubePlayerCell:cell forMediaAttributes:attributes decodedMediaURL:videoURL atIndexPath:kIndexPath];
+    }
+}
+
+- (void)youTubeExtractor:(LBYouTubeExtractor *)extractor failedExtractingYouTubeURLWithError:(NSError *)error
+{
+    // Get item index
+    NSInteger const kItemIndex = [self indexOfRunningYouTubeMovieURLExtractor:extractor];
+    if (kItemIndex == NSNotFound) return;
+    
+    // Cache it
+    [self.youTubeDecodedURLCache setObject:nil atIndex:kItemIndex];
+    
+    // Set as not running
+    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
+    
+    // Get & configure cell
+    NSIndexPath *const kIndexPath = IndexPathForItemIndex(kItemIndex);
+    MUKMediaCarouselYouTubePlayerCell *cell = (MUKMediaCarouselYouTubePlayerCell *)[self.collectionView cellForItemAtIndexPath:kIndexPath];
+    
+    if ([cell isMemberOfClass:[MUKMediaCarouselYouTubePlayerCell class]]) {
+        MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kItemIndex];        
+        [self configureYouTubePlayerCell:cell forMediaAttributes:attributes undecodableYouTubeURL:extractor.youTubeURL atIndexPath:kIndexPath];
     }
 }
 

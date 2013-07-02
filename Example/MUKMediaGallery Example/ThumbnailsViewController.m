@@ -64,6 +64,13 @@
     NSMutableArray *mediaAssets = [[NSMutableArray alloc] init];
     
     for (NSInteger i=0; i<100; i++) {
+        MediaAsset *youTubeVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindYouTubeVideo];
+        youTubeVideoAsset.duration = 906; // 15:06
+        youTubeVideoAsset.thumbnailURL = [NSURL URLWithString:@"http://i2.ytimg.com/vi/UF8uR6Z6KLc/default.jpg"];
+        youTubeVideoAsset.URL = [NSURL URLWithString:@"http://www.youtube.com/watch?v=UF8uR6Z6KLc"];
+        youTubeVideoAsset.caption = @"Steve Jobs at Stanford";
+        [mediaAssets addObject:youTubeVideoAsset];
+        
         MediaAsset *localVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindVideo];
         localVideoAsset.thumbnailURL = [MUK URLForImageFileNamed:@"sea-movie-thumbnail.jpg" bundle:nil];
         localVideoAsset.URL = [[NSBundle mainBundle] URLForResource:@"sea" withExtension:@"mp4"];
@@ -91,13 +98,6 @@
         localAudioAsset.thumbnailURL = [NSURL URLWithString:@"http://farm6.staticflickr.com/5178/5500963965_2776bf6a98_t.jpg"];
         localAudioAsset.URL = [[NSBundle mainBundle] URLForResource:@"SexForModerns-StopTheClock_64kb" withExtension:@"mp3"];
         [mediaAssets addObject:localAudioAsset];
-        
-        MediaAsset *youTubeVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindYouTubeVideo];
-        youTubeVideoAsset.duration = 906; // 15:06
-        youTubeVideoAsset.thumbnailURL = [NSURL URLWithString:@"http://i2.ytimg.com/vi/UF8uR6Z6KLc/default.jpg"];
-        youTubeVideoAsset.URL = [NSURL URLWithString:@"http://www.youtube.com/watch?v=UF8uR6Z6KLc"];
-        youTubeVideoAsset.caption = @"Steve Jobs at Stanford";
-        [mediaAssets addObject:youTubeVideoAsset];
         
         MediaAsset *remoteAudioAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindAudio];
         remoteAudioAsset.duration = 332.0; // 05:32

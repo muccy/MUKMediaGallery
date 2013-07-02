@@ -18,4 +18,5 @@ Pod::Spec.new do |s|
   s.resource      = 'MUKMediaGallery/MUKMediaGalleryResources.bundle'
   
   s.dependency    'MUKToolkit', '~> 1.1'
+  s.dependency    'LBYouTubeView', '~> 0.0'
 end

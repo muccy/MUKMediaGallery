@@ -1,6 +1,8 @@
 PODS:
   - AFNetworking (1.3.1)
+  - LBYouTubeView (0.0.1)
   - MUKMediaGallery (2.0.0):
+    - LBYouTubeView (~> 0.0)
     - MUKToolkit (~> 1.1)
   - MUKToolkit (1.1.0)
 
@@ -15,7 +17,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: 9ec8aafb9269236a7630bd8d9838ce2ba30fa2a0
-  MUKMediaGallery: 85dcaa0af6ad5bdd8aa4e1e2eb8052ddd9287fb9
+  LBYouTubeView: f4b750e734df5097391361663ca56f037cd751a1
+  MUKMediaGallery: a3f1c08057ec35ea7c04d464d90c4e2a01148cbb
   MUKToolkit: 4819735294185275c137865d5aafbcf1a8a7354f
 
 COCOAPODS: 0.20.2
