@@ -3,6 +3,7 @@
 #import "MUKMediaCarouselPlayerCell.h"
 #import "MUKMediaAttributesCache.h"
 #import "MUKMediaCarouselFlowLayout.h"
+#import "MUKMediaGalleryUtils.h"
 
 static NSString *const kFullImageCellIdentifier = @"MUKMediaFullImageCell";
 static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaPlayerCell";
@@ -347,7 +348,16 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
                 MUKMediaCarouselPlayerCell *playerCell = (MUKMediaCarouselPlayerCell *)cell;
                 if ([self shouldSetLoadedImageOfKind:imageKind intoPlayerCell:playerCell atIndexPath:indexPath])
                 {
-                    [self setThumbnailImage:image inPlayerCell:playerCell hideActivityIndicator:YES];
+                    BOOL stock = NO;
+                    
+                    if (!image) {
+                        // Use stock thumbnail
+                        MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kImageIndex];
+                        image = [self stockThumbnailForMediaKind:attributes.kind];
+                        stock = YES;
+                    }
+                    
+                    [self setThumbnailImage:image stock:stock inPlayerCell:playerCell hideActivityIndicator:YES];
                 }
             }
         } // if isLoadingImageKind
@@ -392,6 +402,27 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 - (void)cancelAllImageLoadingsForItemAtIndex:(NSInteger)index {
     [self cancelLoadingForImageOfKind:MUKMediaImageKindFullSize atIndex:index];
     [self cancelLoadingForImageOfKind:MUKMediaImageKindThumbnail atIndex:index];
+}
+
+- (UIImage *)stockThumbnailForMediaKind:(MUKMediaKind)mediaKind {
+    UIImage *thumbnail;
+    
+    switch (mediaKind) {
+        case MUKMediaKindAudio:
+            thumbnail = [[MUKMediaGalleryUtils imageNamed:@"audio_big_transparent"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            break;
+            
+        case MUKMediaKindVideo:
+        case MUKMediaKindYouTubeVideo:
+            thumbnail = [[MUKMediaGalleryUtils imageNamed:@"video_big_transparent"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            break;
+            
+        default:
+            thumbnail = nil;
+            break;
+    }
+    
+    return thumbnail;
 }
 
 #pragma mark - Private — Media Playback
@@ -519,18 +550,30 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     NSURL *mediaURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:ItemIndexForIndexPath(indexPath)];
     [cell setMediaURL:mediaURL];
     
+    // Nullify existing thumbnail
+    cell.thumbnailImageView.image = nil;
+    
     // Try to load thumbnail to appeal user eye, from cache
     UIImage *thumbnail = [[self cacheForImageKind:MUKMediaImageKindThumbnail] objectAtIndex:ItemIndexForIndexPath(indexPath) isNull:NULL];
     
     // Thumbnail available: display it
     if (thumbnail) {
-        [self setThumbnailImage:thumbnail inPlayerCell:cell hideActivityIndicator:YES];
+        [self setThumbnailImage:thumbnail stock:NO inPlayerCell:cell hideActivityIndicator:YES];
     }
     
     // Thumbnail unavailable: request to delegate
     else {
+        // Show loading
         [cell.activityIndicatorView startAnimating];
+        
+        // Request loading
         [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndexPath:indexPath inNextRunLoop:YES];
+        
+        // Use stock thumbnail in the meanwhile
+        if (cell.thumbnailImageView.image == nil) {
+            thumbnail = [self stockThumbnailForMediaKind:attributes.kind];
+            [self setThumbnailImage:thumbnail stock:YES inPlayerCell:cell hideActivityIndicator:NO];
+        }
     }
 }
 
@@ -550,13 +593,14 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     return shouldSetImage;
 }
 
-- (void)setThumbnailImage:(UIImage *)image inPlayerCell:(MUKMediaCarouselPlayerCell *)cell hideActivityIndicator:(BOOL)hideActivityIndicator
+- (void)setThumbnailImage:(UIImage *)image stock:(BOOL)isStock inPlayerCell:(MUKMediaCarouselPlayerCell *)cell hideActivityIndicator:(BOOL)hideActivityIndicator
 {
     if (hideActivityIndicator) {
         [cell.activityIndicatorView stopAnimating];
     }
 
     cell.thumbnailImageView.image = image;
+    cell.thumbnailImageView.contentMode = (isStock ? UIViewContentModeCenter : UIViewContentModeScaleAspectFit);
 }
 
 - (void)dismissThumbnailInPlayerCell:(MUKMediaCarouselPlayerCell *)cell forItemAtIndex:(NSInteger)index
@@ -565,7 +609,7 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
     [self cancelAllImageLoadingsForItemAtIndex:index];
     
     // Hide thumbnail
-    [self setThumbnailImage:nil inPlayerCell:cell hideActivityIndicator:YES];
+    [self setThumbnailImage:nil stock:NO inPlayerCell:cell hideActivityIndicator:YES];
 }
 
 #pragma mark - Private — Bars
