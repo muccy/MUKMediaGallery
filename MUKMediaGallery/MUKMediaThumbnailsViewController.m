@@ -19,7 +19,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 @property (nonatomic) UIBarStyle previousNavigationBarStyle;
 @property (nonatomic) UIStatusBarStyle previousStatusBarStyle;
 @property (nonatomic) BOOL isTransitioningWithCarouselViewController;
-@property (nonatomic) BOOL isObservingChangesToAdjustTopPadding;
+@property (nonatomic) UINavigationBar *observedNavigationBar;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -48,9 +48,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 }
 
 - (void)dealloc {
-    if (self.isObservingChangesToAdjustTopPadding) {
-        [self stopObservingChangesToAdjustTopPadding];
-    }
+    [self stopObservingChangesToAdjustTopPadding];
 }
 
 - (void)viewDidLoad {
@@ -240,13 +238,13 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 #pragma mark - Private — KVO
 
 - (void)beginObservingChangesToAdjustTopPadding {
-    self.isObservingChangesToAdjustTopPadding = YES;
-    [self.navigationController addObserver:self forKeyPath:@"navigationBar.bounds" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:(__bridge void *)kNavigationBarBoundsKVOIdentifier];
+    self.observedNavigationBar = self.navigationController.navigationBar;
+    [self.observedNavigationBar addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:(__bridge void *)kNavigationBarBoundsKVOIdentifier];
 }
 
 - (void)stopObservingChangesToAdjustTopPadding {
-    self.isObservingChangesToAdjustTopPadding = NO;
-    [self.navigationController removeObserver:self forKeyPath:@"navigationBar.bounds"];
+    [self.observedNavigationBar removeObserver:self forKeyPath:@"bounds"];
+    self.observedNavigationBar = nil;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
