@@ -19,4 +19,16 @@ static NSString *const kResourcesBundleName = @"MUKMediaGalleryResources";
     return [UIImage imageNamed:[kResourcesBundleName stringByAppendingFormat:@".bundle/%@", name]];
 }
 
++ (MUKMediaGalleryUIParadigm)defaultUIParadigm {
+    static MUKMediaGalleryUIParadigm paradigm;
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSInteger deviceSystemMajorVersion = [[[[UIDevice currentDevice] systemVersion] componentsSeparatedByString:@"."][0] integerValue];
+        paradigm = (deviceSystemMajorVersion < 7 ? MUKMediaGalleryUIParadigmGlossy : MUKMediaGalleryUIParadigmLayered);
+    });
+    
+    return paradigm;
+}
+
 @end

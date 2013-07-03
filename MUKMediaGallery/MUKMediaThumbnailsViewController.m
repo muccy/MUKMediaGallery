@@ -13,6 +13,10 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
 @property (nonatomic) CGRect lastCollectionViewBounds;
 @property (nonatomic) NSOperationQueue *thumbnailResizeQueue;
+
+@property (nonatomic) UIBarStyle previousNavigationBarStyle;
+@property (nonatomic) UIStatusBarStyle previousStatusBarStyle;
+@property (nonatomic) BOOL isTransitioningWithCarouselViewController;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -49,7 +53,43 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    
+    if (!self.isTransitioningWithCarouselViewController) {
+        // if not coming from carousel, save past bar styles
+        self.previousNavigationBarStyle = self.navigationController.navigationBar.barStyle;
+        self.previousNavigationBarStyle = [[UIApplication sharedApplication] statusBarStyle];
+    }
+    else {
+        // if coming from carousel, say is not coming from carousel anymore
+        self.isTransitioningWithCarouselViewController = NO;
+    }
+    
+    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmGlossy)
+    {
+        self.wantsFullScreenLayout = YES;
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:animated];
+    }
+    else {
+        self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (!self.isTransitioningWithCarouselViewController) {
+        // If not transitioning to carousel, reset past bar values
+        
+        if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmGlossy)
+        {
+            self.navigationController.navigationBar.barStyle = self.previousNavigationBarStyle;
+            [[UIApplication sharedApplication] setStatusBarStyle:self.previousStatusBarStyle animated:animated];
+        }
+        else {
+            self.navigationController.navigationBar.barStyle = self.previousNavigationBarStyle;
+        }
+    }
 }
 
 - (void)viewWillLayoutSubviews {
@@ -340,6 +380,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
         [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO];
         
         if (carouselViewController) {
+            self.isTransitioningWithCarouselViewController = YES;
             [self.navigationController pushViewController:carouselViewController animated:YES];
         }
     }
