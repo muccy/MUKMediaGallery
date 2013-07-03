@@ -7,6 +7,8 @@
 
 static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 
+static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameKVOIdentifier";
+
 @interface MUKMediaThumbnailsViewController () <MUKMediaGalleryImageResizeOperationDrawingDelegate>
 @property (nonatomic) MUKMediaModelCache *imagesCache;
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
@@ -17,6 +19,7 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
 @property (nonatomic) UIBarStyle previousNavigationBarStyle;
 @property (nonatomic) UIStatusBarStyle previousStatusBarStyle;
 @property (nonatomic) BOOL isTransitioningWithCarouselViewController;
+@property (nonatomic) BOOL isObservingChangesToAdjustTopPadding;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -44,11 +47,22 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
     return [self initWithCollectionViewLayout:nil];
 }
 
+- (void)dealloc {
+    if (self.isObservingChangesToAdjustTopPadding) {
+        [self stopObservingChangesToAdjustTopPadding];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     self.collectionView.backgroundColor = [UIColor whiteColor];
     [self.collectionView registerClass:[MUKMediaThumbnailCell class] forCellWithReuseIdentifier:kCellIdentifier];
+    
+    if (![self automaticallyAdjustsTopPadding]) {
+        [self adjustTopPadding];
+        [self beginObservingChangesToAdjustTopPadding];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -100,9 +114,16 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
         {
             CGFloat const ratio = self.collectionView.bounds.size.height/self.lastCollectionViewBounds.size.height;
             
-            // Value stored in self.collectionView.contentOffset is already
-            // changed at this moment: use bounds instead
-            CGPoint offset = self.lastCollectionViewBounds.origin;
+            CGPoint offset;
+            if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
+            {
+                // Value stored in self.collectionView.contentOffset is already
+                // changed at this moment: use bounds instead (on iOS 7 and over)
+                offset = self.lastCollectionViewBounds.origin;
+            }
+            else {
+                offset = self.collectionView.contentOffset;
+            }
             
             // Don't include insets into calculations
             offset.y = ((offset.y + self.collectionView.contentInset.top) * ratio) - self.collectionView.contentInset.top;
@@ -115,6 +136,10 @@ static NSString *const kCellIdentifier = @"MUKMediaThumbnailCell";
     }
     
     self.lastCollectionViewBounds = self.collectionView.bounds;
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    
 }
 
 #pragma mark - Methods
@@ -172,6 +197,68 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 + (CGSize)thumbnailSize {
     return CGSizeMake(75.0f, 75.0f);
+}
+
+- (BOOL)automaticallyAdjustsTopPadding {
+    if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)])
+    {
+        return self.automaticallyAdjustsScrollViewInsets;
+    }
+    
+    return NO;
+}
+
+- (CGFloat)topPadding {
+    CGFloat statusBarHeight;
+    if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+    {
+        statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    }
+    else {
+        statusBarHeight = [[UIApplication sharedApplication] statusBarFrame].size.width;
+    }
+    
+    CGFloat topPadding = statusBarHeight + self.navigationController.navigationBar.bounds.size.height;
+    return topPadding;
+}
+
+- (void)adjustTopPadding {
+    CGFloat topPadding = [self topPadding];
+    CGFloat diff = topPadding - self.collectionView.contentInset.top;
+    
+    if (ABS(diff) > 0.0f) {
+        UIEdgeInsets insets = UIEdgeInsetsMake(topPadding, 0.0f, 0.0f, 0.0f);
+        self.collectionView.contentInset = insets;
+        self.collectionView.scrollIndicatorInsets = insets;
+        
+        CGPoint offset = self.collectionView.contentOffset;
+        offset.y -= diff;
+        self.collectionView.contentOffset = offset;
+    }
+}
+
+#pragma mark - Private — KVO
+
+- (void)beginObservingChangesToAdjustTopPadding {
+    self.isObservingChangesToAdjustTopPadding = YES;
+    [self.navigationController addObserver:self forKeyPath:@"navigationBar.bounds" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld context:(__bridge void *)kNavigationBarBoundsKVOIdentifier];
+}
+
+- (void)stopObservingChangesToAdjustTopPadding {
+    self.isObservingChangesToAdjustTopPadding = NO;
+    [self.navigationController removeObserver:self forKeyPath:@"navigationBar.bounds"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context == (__bridge void *)kNavigationBarBoundsKVOIdentifier) {
+        CGRect old = [change[NSKeyValueChangeOldKey] CGRectValue];
+        CGRect new = [change[NSKeyValueChangeNewKey] CGRectValue];
+        
+        if (!CGSizeEqualToSize(old.size, new.size)) {
+            [self adjustTopPadding];
+        }
+    }
 }
 
 #pragma mark - Private — Images

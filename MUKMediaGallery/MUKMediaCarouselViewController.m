@@ -115,7 +115,10 @@ static CGFloat const kLateralPadding = 4.0f;
 
 static void CommonInitialization(MUKMediaCarouselViewController *viewController, UICollectionViewLayout *layout)
 {
-    viewController.automaticallyAdjustsScrollViewInsets = NO;
+    if ([viewController respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)])
+    {
+        viewController.automaticallyAdjustsScrollViewInsets = NO;
+    }
     
     viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:3 cacheNulls:NO];
     viewController.thumbnailImagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:7 cacheNulls:NO];
