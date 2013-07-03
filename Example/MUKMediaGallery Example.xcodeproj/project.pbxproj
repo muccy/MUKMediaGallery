@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0622F5E4178460B4000C1382 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0622F5E2178460B4000C1382 /* RootViewController.m */; };
+		0622F5E5178460B4000C1382 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0622F5E3178460B4000C1382 /* RootViewController.xib */; };
 		063F7C47177ACB55005C0BD2 /* MediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 063F7C46177ACB55005C0BD2 /* MediaAsset.m */; };
 		063F7C51177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */; };
 		063F7C52177ACCE6005C0BD2 /* palms-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4C177ACCE6005C0BD2 /* palms-thumbnail.jpg */; };
@@ -40,6 +42,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0622F5E1178460B4000C1382 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		0622F5E2178460B4000C1382 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		0622F5E3178460B4000C1382 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		063F7C45177ACB55005C0BD2 /* MediaAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaAsset.h; sourceTree = "<group>"; };
 		063F7C46177ACB55005C0BD2 /* MediaAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaAsset.m; sourceTree = "<group>"; };
 		063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "SexForModerns-StopTheClock_64kb.mp3"; sourceTree = "<group>"; };
@@ -168,6 +173,9 @@
 			children = (
 				069F683217772E8400AD3399 /* AppDelegate.h */,
 				069F683317772E8400AD3399 /* AppDelegate.m */,
+				0622F5E1178460B4000C1382 /* RootViewController.h */,
+				0622F5E2178460B4000C1382 /* RootViewController.m */,
+				0622F5E3178460B4000C1382 /* RootViewController.xib */,
 				06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */,
 				06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */,
 				06807E5D177C260F00AF0BC8 /* CarouselViewController.h */,
@@ -290,6 +298,7 @@
 				063F7C53177ACCE6005C0BD2 /* palms.jpg in Resources */,
 				063F7C54177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg in Resources */,
 				063F7C55177ACCE6005C0BD2 /* sea.mp4 in Resources */,
+				0622F5E5178460B4000C1382 /* RootViewController.xib in Resources */,
 				063F7C51177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */,
 				069F682E17772E8400AD3399 /* InfoPlist.strings in Resources */,
 			);
@@ -343,6 +352,7 @@
 			files = (
 				06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */,
 				069F683417772E8400AD3399 /* AppDelegate.m in Sources */,
+				0622F5E4178460B4000C1382 /* RootViewController.m in Sources */,
 				06807E5F177C260F00AF0BC8 /* CarouselViewController.m in Sources */,
 				069F683017772E8400AD3399 /* main.m in Sources */,
 				063F7C47177ACB55005C0BD2 /* MediaAsset.m in Sources */,

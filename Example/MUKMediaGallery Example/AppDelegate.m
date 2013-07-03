@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ThumbnailsViewController.h"
+#import "RootViewController.h"
 
 @implementation AppDelegate
 
@@ -17,8 +17,8 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    ThumbnailsViewController *thumbnailsViewController = [[ThumbnailsViewController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:thumbnailsViewController];
+    RootViewController *viewController = [[RootViewController alloc] init];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     self.window.rootViewController = navController;
     
     self.window.backgroundColor = [UIColor whiteColor];
