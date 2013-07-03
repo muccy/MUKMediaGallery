@@ -1,6 +1,6 @@
 #import "MUKMediaCarouselYouTubePlayerCell.h"
 
-@interface MUKMediaCarouselYouTubePlayerCell () <UIGestureRecognizerDelegate>
+@interface MUKMediaCarouselYouTubePlayerCell () <UIGestureRecognizerDelegate, UIWebViewDelegate>
 @property (nonatomic, weak, readwrite) UIWebView *webView;
 @property (nonatomic) CGRect lastWebViewBounds;
 @end
@@ -54,8 +54,19 @@
         webView.opaque = NO;
         webView.backgroundColor = [UIColor clearColor];
         webView.multipleTouchEnabled = NO;
+        webView.scrollView.scrollEnabled = NO;
+        webView.delegate = self;
+        
+        UIView *relativeView;
+        if ([self.thumbnailImageView.superview isEqual:self.contentView])
+        {
+            relativeView = self.thumbnailImageView;
+        }
+        else {
+            relativeView = self.overlayView;
+        }
 
-        [self.contentView insertSubview:webView belowSubview:self.overlayView];
+        [self.contentView insertSubview:webView belowSubview:relativeView];
         self.webView = webView;
         
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleWebViewTap:)];
@@ -64,9 +75,6 @@
     }
     
     self.lastWebViewBounds = self.webView.bounds;
-    
-    // Remove thumbnail image
-    self.thumbnailImageView.image = nil;
     
     // Load HTML embed
     NSString *html = [self youTubeEmbedForURL:youTubeURL size:self.contentView.bounds.size];
@@ -93,6 +101,7 @@
 
 - (void)disposeWebView {
     [self.webView loadHTMLString:@"<html></html>" baseURL:nil];
+    self.webView.delegate = nil;
     [self.webView removeFromSuperview];
     self.webView = nil;
 }
@@ -136,6 +145,17 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     return YES;
+}
+
+#pragma mark - <UIWebViewDelegate>
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    [self.delegate carouselYouTubePlayerCell:self didFinishLoadingWebView:webView error:nil];
+}
+
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    [self.delegate carouselYouTubePlayerCell:self didFinishLoadingWebView:webView error:error];
 }
 
 @end

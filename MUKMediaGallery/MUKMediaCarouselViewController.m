@@ -7,7 +7,7 @@
 #import "MUKMediaGalleryUtils.h"
 #import "LBYouTubeExtractor.h"
 
-#define DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL    1
+#define DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL    0
 
 static NSString *const kFullImageCellIdentifier = @"MUKMediaCarouselFullImageCell";
 static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaCarouselPlayerCell";
@@ -378,7 +378,13 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
                         stock = YES;
                     }
                     
-                    [self setThumbnailImage:image stock:stock inPlayerCell:playerCell hideActivityIndicator:YES];
+                    BOOL hideActivityIndicator = YES;
+                    if ([cell isKindOfClass:[MUKMediaCarouselYouTubePlayerCell class]])
+                    {
+                        hideActivityIndicator = NO;
+                    }
+                    
+                    [self setThumbnailImage:image stock:stock inPlayerCell:playerCell hideActivityIndicator:hideActivityIndicator];
                 }
             }
         } // if isLoadingImageKind
@@ -751,11 +757,20 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
 {
     // Anyway, call plain media player method
     [self configureMediaPlayerCell:cell mediaURL:mediaURL forMediaAttributes:attributes atIndexPath:indexPath];
+    
+    // Show spinner if no media has been set
+    if (!mediaURL) {
+        [cell.activityIndicatorView startAnimating];
+    }
 }
 
 - (void)configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes undecodableYouTubeURL:(NSURL *)youTubeURL atIndexPath:(NSIndexPath *)indexPath
 {
-    // Show web view
+    // Anyway, call plain media player method
+    [self configureMediaPlayerCell:cell mediaURL:nil forMediaAttributes:attributes atIndexPath:indexPath];
+    
+    // Show web view with spinner
+    [cell.activityIndicatorView startAnimating];
     [cell setYouTubeURL:youTubeURL];
 }
 
@@ -907,6 +922,12 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
 - (void)carouselYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell webView:(UIWebView *)webView didReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
 {
     [self toggleBarsVisibility];
+}
+
+- (void)carouselYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell didFinishLoadingWebView:(UIWebView *)webView error:(NSError *)error
+{
+    cell.thumbnailImageView.image = nil;
+    [cell.activityIndicatorView stopAnimating];
 }
 
 #pragma mark - <LBYouTubeExtractorDelegate>
