@@ -104,7 +104,8 @@
     <embed id=\"yt\" src=\"%@\" type=\"application/x-shockwave-flash\" \
     width=\"%0.0f\" height=\"%0.0f\"></embed></body></html>";
     
-    return [NSString stringWithFormat:kEmbedHTMLMask, [url absoluteString], size.width, size.height];
+    NSString *URLString = [[url absoluteString] stringByReplacingOccurrencesOfString:@"watch?v=" withString:@"v/"];
+    return [NSString stringWithFormat:kEmbedHTMLMask, URLString, size.width, size.height];
 }
 
 - (void)updateYouTubeEmbedInWebView:(UIWebView *)webView toSize:(CGSize)size {

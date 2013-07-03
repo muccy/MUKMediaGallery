@@ -1,12 +1,13 @@
 #import "MUKMediaCarouselCell.h"
 #import "MUKMediaGalleryToolbar.h"
+#import "MUKMediaGalleryUtils.h"
 
 static CGFloat const kCaptionLabelMaxHeight = 80.0f;
 static CGFloat const kCaptionLabelLateralPadding = 8.0f;
 static CGFloat const kCaptionLabelBottomPadding = 5.0f;
 static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
-@interface MUKMediaCarouselCell ()
+@interface MUKMediaCarouselCell () <UIToolbarDelegate>
 @property (nonatomic, weak, readwrite) UIView *overlayView;
 @property (nonatomic, weak, readwrite) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, weak, readwrite) UILabel *captionLabel;
@@ -137,7 +138,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 20.0f, 20.0f)];
     label.userInteractionEnabled = NO;
     label.textColor = [UIColor whiteColor];
-    label.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    label.font = [[self class] defaultCaptionLabelFont];
     label.numberOfLines = 0;
     label.backgroundColor = [UIColor clearColor];
     label.translatesAutoresizingMaskIntoConstraints = NO;
@@ -155,11 +156,23 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
 - (UIView *)newBottomAttachedBackgroundViewForCaptionLabel:(UILabel *)label inSuperview:(UIView *)superview
 {
-    // A toolbar gives live blurry effect on iOS 7
-    MUKMediaGalleryToolbar *view = [[MUKMediaGalleryToolbar alloc] initWithFrame:label.frame];
+    UIView *view;
+    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
+    {
+        // A toolbar gives live blurry effect on iOS 7
+        MUKMediaGalleryToolbar *toolbar = [[MUKMediaGalleryToolbar alloc] initWithFrame:label.frame];
+        toolbar.barStyle = UIBarStyleBlack;
+        toolbar.delegate = self;
+
+        view = toolbar;
+    }
+    else {
+        view = [[UIView alloc] initWithFrame:label.frame];
+        view.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
+    }
+    
     view.userInteractionEnabled = NO;
     view.translatesAutoresizingMaskIntoConstraints = NO;
-    view.barStyle = UIBarStyleBlack;
     [superview insertSubview:view belowSubview:label];
     
     NSDictionary *viewsDict = NSDictionaryOfVariableBindings(view);
@@ -217,21 +230,47 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     [self setNeedsUpdateConstraints];
 }
 
-#pragma mark - Notifications
+#pragma mark - Private — Notifications
 
 - (void)registerToContentSizeCategoryNotifications {
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc addObserver:self selector:@selector(contentSizeCategoryDidChangeNotification:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    if (&UIContentSizeCategoryDidChangeNotification != NULL) {
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc addObserver:self selector:@selector(contentSizeCategoryDidChangeNotification:) name:UIContentSizeCategoryDidChangeNotification object:nil];
+    }
 }
 
 - (void)unregisterFromContentSizeCategoryNotifications {
-    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc removeObserver:self name:UIContentSizeCategoryDidChangeNotification object:nil];
+    if (&UIContentSizeCategoryDidChangeNotification != NULL) {
+        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+        [nc removeObserver:self name:UIContentSizeCategoryDidChangeNotification object:nil];
+    }
 }
 
 - (void)contentSizeCategoryDidChangeNotification:(NSNotification *)notification
 {
-    self.captionLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    self.captionLabel.font = [[self class] defaultCaptionLabelFont];
+}
+
+#pragma mark - Private — Fonts
+
++ (UIFont *)defaultCaptionLabelFont {
+    UIFont *font;
+    
+    if ([[UIFont class] respondsToSelector:@selector(preferredFontForTextStyle:)])
+    {
+        font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
+    }
+    else {
+        font = [UIFont systemFontOfSize:12.0f];
+    }
+    
+    return font;
+}
+
+#pragma mark - <UIToolbarDelegate>
+
+- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
+    return UIBarPositionBottom;
 }
 
 @end

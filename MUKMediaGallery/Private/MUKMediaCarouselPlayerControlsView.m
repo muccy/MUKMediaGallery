@@ -25,8 +25,7 @@ static CGFloat const kToolbarHeight = 44.0f;
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.backgroundColor = [UIColor clearColor];
-        self.tintColor = [UIColor whiteColor];
-        
+
         _moviePlayerController = moviePlayerController;
         
         UIView *backgroundView = [self newBackgroundViewInSuperview:self];
@@ -68,13 +67,25 @@ static CGFloat const kToolbarHeight = 44.0f;
 #pragma mark - Private — View Building
 
 - (UIView *)newBackgroundViewInSuperview:(UIView *)superview {
-    MUKMediaGalleryToolbar *toolbar = [[MUKMediaGalleryToolbar alloc] initWithFrame:superview.bounds];
-    toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    toolbar.barStyle = UIBarStyleBlack;
-    toolbar.delegate = self;
-    [superview addSubview:toolbar];
+    UIView *view;
+    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
+    {
+        // A toolbar gives live blurry effect on iOS 7
+        MUKMediaGalleryToolbar *toolbar = [[MUKMediaGalleryToolbar alloc] initWithFrame:superview.bounds];
+        toolbar.barStyle = UIBarStyleBlack;
+        toolbar.delegate = self;
+        
+        view = toolbar;
+    }
+    else {
+        view = [[UIView alloc] initWithFrame:superview.bounds];
+        view.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
+    }
+    
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    [superview addSubview:view];
 
-    return toolbar;
+    return view;
 }
 
 - (UIButton *)newPlayPauseButtonInSuperview:(UIView *)superview {
@@ -160,8 +171,8 @@ static CGFloat const kToolbarHeight = 44.0f;
     else {
         icon = [MUKMediaGalleryUtils imageNamed:@"mediaPlayer_play"];
     }
-    
-    [self.playPauseButton setImage:[icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+
+    [self.playPauseButton setImage:icon forState:UIControlStateNormal];
 }
 
 - (void)showPauseIconForMoviePlayerController:(MPMoviePlayerController *)moviePlayerController
@@ -313,7 +324,7 @@ static CGFloat const kToolbarHeight = 44.0f;
     }
 }
 
-#pragma mark - Notifications
+#pragma mark - Private — Notifications
 
 - (void)registerToMediaPlayerControllerNotifications {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];

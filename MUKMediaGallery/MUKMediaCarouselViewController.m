@@ -20,7 +20,6 @@ static CGFloat const kLateralPadding = 4.0f;
 @property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache, *youTubeDecodedURLCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
 @property (nonatomic) NSMutableDictionary *runningYouTubeExtractors;
-@property (nonatomic) CGRect lastCollectionViewBounds;
 @property (nonatomic) BOOL isObservingBoundsChanges;
 @property (nonatomic) NSInteger itemIndexToMantainAfterBoundsChange;
 @property (nonatomic) BOOL hasPendingScrollToItem;
@@ -79,13 +78,18 @@ static CGFloat const kLateralPadding = 4.0f;
         [self scrollToItemAtIndex:self.itemIndexToMantainAfterBoundsChange animated:NO];
     }
 
-    // This adjust things prior rotation
+    // This adjust things prior rotation and starts mechanism to preserve position
+    // after bounds changes
     [self beginObservingBoundsChanges];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    
+    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
+    {
+        self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -115,6 +119,7 @@ static CGFloat const kLateralPadding = 4.0f;
 
 static void CommonInitialization(MUKMediaCarouselViewController *viewController, UICollectionViewLayout *layout)
 {
+    viewController.wantsFullScreenLayout = YES;
     if ([viewController respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)])
     {
         viewController.automaticallyAdjustsScrollViewInsets = NO;
@@ -130,7 +135,6 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController,
     viewController.youTubeDecodedURLCache = [[MUKMediaModelCache alloc] initWithCountLimit:7 cacheNulls:YES];
     viewController.runningYouTubeExtractors = [[NSMutableDictionary alloc] init];
     
-    viewController.lastCollectionViewBounds = CGRectNull;
     viewController.itemIndexToMantainAfterBoundsChange = 0;
     
     if (layout) {
@@ -425,14 +429,28 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     UIImage *thumbnail;
     
     switch (mediaKind) {
-        case MUKMediaKindAudio:
-            thumbnail = [[MUKMediaGalleryUtils imageNamed:@"audio_big_transparent"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        case MUKMediaKindAudio: {
+            thumbnail = [MUKMediaGalleryUtils imageNamed:@"audio_big_transparent"];
+            
+            if ([thumbnail respondsToSelector:@selector(imageWithRenderingMode:)]) {
+                
+                thumbnail = [thumbnail imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            }
+            
             break;
+        }
             
         case MUKMediaKindVideo:
-        case MUKMediaKindYouTubeVideo:
-            thumbnail = [[MUKMediaGalleryUtils imageNamed:@"video_big_transparent"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        case MUKMediaKindYouTubeVideo: {
+            thumbnail = [MUKMediaGalleryUtils imageNamed:@"video_big_transparent"];
+            
+            if ([thumbnail respondsToSelector:@selector(imageWithRenderingMode:)])
+            {
+                thumbnail = [thumbnail imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            }
+            
             break;
+        }
             
         default:
             thumbnail = nil;
@@ -748,8 +766,28 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
 }
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated {
+    BOOL automaticallyManagesStatusBar = [self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
+    
+    if (!automaticallyManagesStatusBar) {
+        UIStatusBarAnimation animation = UIStatusBarAnimationNone;
+        
+        if (animated) {
+            if (hidden) {
+                animation = UIStatusBarAnimationSlide;
+            }
+            else {
+                animation = UIStatusBarAnimationFade;
+            }
+        }
+        
+        [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:animation];
+    }
+    
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    [self setNeedsStatusBarAppearanceUpdate];
+    
+    if (automaticallyManagesStatusBar) {
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
     
     for (MUKMediaCarouselCell *cell in [self.collectionView visibleCells]) {
         if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
