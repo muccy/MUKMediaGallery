@@ -1,0 +1,24 @@
+PODS:
+  - AFNetworking (1.3.1)
+  - LBYouTubeView (0.0.1)
+  - MUKMediaGallery (2.0.0):
+    - LBYouTubeView (~> 0.0)
+    - MUKToolkit (~> 1.1)
+  - MUKToolkit (1.1.0)
+
+DEPENDENCIES:
+  - AFNetworking (~> 1.3)
+  - MUKMediaGallery (from `..`)
+  - MUKToolkit (~> 1.1)
+
+EXTERNAL SOURCES:
+  MUKMediaGallery:
+    :path: ..
+
+SPEC CHECKSUMS:
+  AFNetworking: 9ec8aafb9269236a7630bd8d9838ce2ba30fa2a0
+  LBYouTubeView: f4b750e734df5097391361663ca56f037cd751a1
+  MUKMediaGallery: 906064d900bf91205c567bafdae686befafb9aa3
+  MUKToolkit: 4819735294185275c137865d5aafbcf1a8a7354f
+
+COCOAPODS: 0.20.2

@@ -1,0 +1,4 @@
+platform :ios, '6.0'
+pod 'MUKMediaGallery', :path => '..'
+pod 'MUKToolkit', '~> 1.1'
+pod 'AFNetworking', '~> 1.3'

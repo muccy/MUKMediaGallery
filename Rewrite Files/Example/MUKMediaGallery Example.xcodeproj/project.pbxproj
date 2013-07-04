@@ -1,0 +1,573 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0622F5E4178460B4000C1382 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0622F5E2178460B4000C1382 /* RootViewController.m */; };
+		0622F5E5178460B4000C1382 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0622F5E3178460B4000C1382 /* RootViewController.xib */; };
+		063F7C47177ACB55005C0BD2 /* MediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 063F7C46177ACB55005C0BD2 /* MediaAsset.m */; };
+		063F7C51177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */; };
+		063F7C52177ACCE6005C0BD2 /* palms-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4C177ACCE6005C0BD2 /* palms-thumbnail.jpg */; };
+		063F7C53177ACCE6005C0BD2 /* palms.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4D177ACCE6005C0BD2 /* palms.jpg */; };
+		063F7C54177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */; };
+		063F7C55177ACCE6005C0BD2 /* sea.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C50177ACCE6005C0BD2 /* sea.mp4 */; };
+		06807E5F177C260F00AF0BC8 /* CarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06807E5E177C260F00AF0BC8 /* CarouselViewController.m */; };
+		069F682417772E8400AD3399 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682317772E8400AD3399 /* Foundation.framework */; };
+		069F682617772E8400AD3399 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682517772E8400AD3399 /* CoreGraphics.framework */; };
+		069F682817772E8400AD3399 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682717772E8400AD3399 /* UIKit.framework */; };
+		069F682E17772E8400AD3399 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 069F682C17772E8400AD3399 /* InfoPlist.strings */; };
+		069F683017772E8400AD3399 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 069F682F17772E8400AD3399 /* main.m */; };
+		069F683417772E8400AD3399 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 069F683317772E8400AD3399 /* AppDelegate.m */; };
+		069F683D17772E8400AD3399 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F683C17772E8400AD3399 /* XCTest.framework */; };
+		069F683E17772E8400AD3399 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682317772E8400AD3399 /* Foundation.framework */; };
+		069F683F17772E8400AD3399 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682717772E8400AD3399 /* UIKit.framework */; };
+		069F684717772E8400AD3399 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 069F684517772E8400AD3399 /* InfoPlist.strings */; };
+		069F684917772E8400AD3399 /* MUKMediaGallery_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */; };
+		06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */; };
+		0D17421BA3704DB7A2B7332B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 952A425C2DF643CE80F8276B /* libPods.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		069F684017772E8400AD3399 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 069F681817772E8400AD3399 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 069F681F17772E8400AD3399;
+			remoteInfo = "MUKMediaGallery Example";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0622F5E1178460B4000C1382 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
+		0622F5E2178460B4000C1382 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
+		0622F5E3178460B4000C1382 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		063F7C45177ACB55005C0BD2 /* MediaAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaAsset.h; sourceTree = "<group>"; };
+		063F7C46177ACB55005C0BD2 /* MediaAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaAsset.m; sourceTree = "<group>"; };
+		063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "SexForModerns-StopTheClock_64kb.mp3"; sourceTree = "<group>"; };
+		063F7C4C177ACCE6005C0BD2 /* palms-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "palms-thumbnail.jpg"; sourceTree = "<group>"; };
+		063F7C4D177ACCE6005C0BD2 /* palms.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = palms.jpg; sourceTree = "<group>"; };
+		063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "sea-movie-thumbnail.jpg"; sourceTree = "<group>"; };
+		063F7C50177ACCE6005C0BD2 /* sea.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sea.mp4; sourceTree = "<group>"; };
+		06807E5D177C260F00AF0BC8 /* CarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselViewController.h; sourceTree = "<group>"; };
+		06807E5E177C260F00AF0BC8 /* CarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselViewController.m; sourceTree = "<group>"; };
+		069F682017772E8400AD3399 /* MUKMediaGallery Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MUKMediaGallery Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		069F682317772E8400AD3399 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		069F682517772E8400AD3399 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		069F682717772E8400AD3399 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		069F682B17772E8400AD3399 /* MUKMediaGallery Example-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGallery Example-Info.plist"; sourceTree = "<group>"; };
+		069F682D17772E8400AD3399 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		069F682F17772E8400AD3399 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		069F683117772E8400AD3399 /* MUKMediaGallery Example-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MUKMediaGallery Example-Prefix.pch"; sourceTree = "<group>"; };
+		069F683217772E8400AD3399 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		069F683317772E8400AD3399 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		069F683B17772E8400AD3399 /* MUKMediaGallery ExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MUKMediaGallery ExampleTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		069F683C17772E8400AD3399 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		069F684417772E8400AD3399 /* MUKMediaGallery ExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MUKMediaGallery ExampleTests-Info.plist"; sourceTree = "<group>"; };
+		069F684617772E8400AD3399 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGallery_ExampleTests.m; sourceTree = "<group>"; };
+		06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailsViewController.h; sourceTree = "<group>"; };
+		06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailsViewController.m; sourceTree = "<group>"; };
+		952A425C2DF643CE80F8276B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA50E93CF31544A68881F4C4 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		069F681D17772E8400AD3399 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				069F682617772E8400AD3399 /* CoreGraphics.framework in Frameworks */,
+				069F682817772E8400AD3399 /* UIKit.framework in Frameworks */,
+				069F682417772E8400AD3399 /* Foundation.framework in Frameworks */,
+				0D17421BA3704DB7A2B7332B /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		069F683817772E8400AD3399 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				069F683D17772E8400AD3399 /* XCTest.framework in Frameworks */,
+				069F683F17772E8400AD3399 /* UIKit.framework in Frameworks */,
+				069F683E17772E8400AD3399 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		063F7C48177ACCE6005C0BD2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				063F7C49177ACCE6005C0BD2 /* Audio */,
+				063F7C4B177ACCE6005C0BD2 /* Images */,
+				063F7C4F177ACCE6005C0BD2 /* Movies */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		063F7C49177ACCE6005C0BD2 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		063F7C4B177ACCE6005C0BD2 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				063F7C4C177ACCE6005C0BD2 /* palms-thumbnail.jpg */,
+				063F7C4D177ACCE6005C0BD2 /* palms.jpg */,
+				063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		063F7C4F177ACCE6005C0BD2 /* Movies */ = {
+			isa = PBXGroup;
+			children = (
+				063F7C50177ACCE6005C0BD2 /* sea.mp4 */,
+			);
+			path = Movies;
+			sourceTree = "<group>";
+		};
+		069F681717772E8400AD3399 = {
+			isa = PBXGroup;
+			children = (
+				069F682917772E8400AD3399 /* MUKMediaGallery Example */,
+				069F684217772E8400AD3399 /* MUKMediaGallery ExampleTests */,
+				069F682217772E8400AD3399 /* Frameworks */,
+				069F682117772E8400AD3399 /* Products */,
+				CA50E93CF31544A68881F4C4 /* Pods.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		069F682117772E8400AD3399 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				069F682017772E8400AD3399 /* MUKMediaGallery Example.app */,
+				069F683B17772E8400AD3399 /* MUKMediaGallery ExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		069F682217772E8400AD3399 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				069F682317772E8400AD3399 /* Foundation.framework */,
+				069F682517772E8400AD3399 /* CoreGraphics.framework */,
+				069F682717772E8400AD3399 /* UIKit.framework */,
+				069F683C17772E8400AD3399 /* XCTest.framework */,
+				952A425C2DF643CE80F8276B /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		069F682917772E8400AD3399 /* MUKMediaGallery Example */ = {
+			isa = PBXGroup;
+			children = (
+				069F683217772E8400AD3399 /* AppDelegate.h */,
+				069F683317772E8400AD3399 /* AppDelegate.m */,
+				0622F5E1178460B4000C1382 /* RootViewController.h */,
+				0622F5E2178460B4000C1382 /* RootViewController.m */,
+				0622F5E3178460B4000C1382 /* RootViewController.xib */,
+				06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */,
+				06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */,
+				06807E5D177C260F00AF0BC8 /* CarouselViewController.h */,
+				06807E5E177C260F00AF0BC8 /* CarouselViewController.m */,
+				063F7C45177ACB55005C0BD2 /* MediaAsset.h */,
+				063F7C46177ACB55005C0BD2 /* MediaAsset.m */,
+				069F682A17772E8400AD3399 /* Supporting Files */,
+			);
+			path = "MUKMediaGallery Example";
+			sourceTree = "<group>";
+		};
+		069F682A17772E8400AD3399 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				063F7C48177ACCE6005C0BD2 /* Resources */,
+				069F682B17772E8400AD3399 /* MUKMediaGallery Example-Info.plist */,
+				069F682C17772E8400AD3399 /* InfoPlist.strings */,
+				069F682F17772E8400AD3399 /* main.m */,
+				069F683117772E8400AD3399 /* MUKMediaGallery Example-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		069F684217772E8400AD3399 /* MUKMediaGallery ExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */,
+				069F684317772E8400AD3399 /* Supporting Files */,
+			);
+			path = "MUKMediaGallery ExampleTests";
+			sourceTree = "<group>";
+		};
+		069F684317772E8400AD3399 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				069F684417772E8400AD3399 /* MUKMediaGallery ExampleTests-Info.plist */,
+				069F684517772E8400AD3399 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		069F681F17772E8400AD3399 /* MUKMediaGallery Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 069F684C17772E8400AD3399 /* Build configuration list for PBXNativeTarget "MUKMediaGallery Example" */;
+			buildPhases = (
+				B6D0B3FFE13C427081892DD7 /* Check Pods Manifest.lock */,
+				069F681C17772E8400AD3399 /* Sources */,
+				069F681D17772E8400AD3399 /* Frameworks */,
+				069F681E17772E8400AD3399 /* Resources */,
+				F2F6732C6E934DA2958AA37D /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MUKMediaGallery Example";
+			productName = "MUKMediaGallery Example";
+			productReference = 069F682017772E8400AD3399 /* MUKMediaGallery Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		069F683A17772E8400AD3399 /* MUKMediaGallery ExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 069F684F17772E8400AD3399 /* Build configuration list for PBXNativeTarget "MUKMediaGallery ExampleTests" */;
+			buildPhases = (
+				069F683717772E8400AD3399 /* Sources */,
+				069F683817772E8400AD3399 /* Frameworks */,
+				069F683917772E8400AD3399 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				069F684117772E8400AD3399 /* PBXTargetDependency */,
+			);
+			name = "MUKMediaGallery ExampleTests";
+			productName = "MUKMediaGallery ExampleTests";
+			productReference = 069F683B17772E8400AD3399 /* MUKMediaGallery ExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		069F681817772E8400AD3399 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = MeLive;
+				TargetAttributes = {
+					069F683A17772E8400AD3399 = {
+						TestTargetID = 069F681F17772E8400AD3399;
+					};
+				};
+			};
+			buildConfigurationList = 069F681B17772E8400AD3399 /* Build configuration list for PBXProject "MUKMediaGallery Example" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 069F681717772E8400AD3399;
+			productRefGroup = 069F682117772E8400AD3399 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				069F681F17772E8400AD3399 /* MUKMediaGallery Example */,
+				069F683A17772E8400AD3399 /* MUKMediaGallery ExampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		069F681E17772E8400AD3399 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				063F7C52177ACCE6005C0BD2 /* palms-thumbnail.jpg in Resources */,
+				063F7C53177ACCE6005C0BD2 /* palms.jpg in Resources */,
+				063F7C54177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg in Resources */,
+				063F7C55177ACCE6005C0BD2 /* sea.mp4 in Resources */,
+				0622F5E5178460B4000C1382 /* RootViewController.xib in Resources */,
+				063F7C51177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */,
+				069F682E17772E8400AD3399 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		069F683917772E8400AD3399 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				069F684717772E8400AD3399 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B6D0B3FFE13C427081892DD7 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+		};
+		F2F6732C6E934DA2958AA37D /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		069F681C17772E8400AD3399 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */,
+				069F683417772E8400AD3399 /* AppDelegate.m in Sources */,
+				0622F5E4178460B4000C1382 /* RootViewController.m in Sources */,
+				06807E5F177C260F00AF0BC8 /* CarouselViewController.m in Sources */,
+				069F683017772E8400AD3399 /* main.m in Sources */,
+				063F7C47177ACB55005C0BD2 /* MediaAsset.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		069F683717772E8400AD3399 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				069F684917772E8400AD3399 /* MUKMediaGallery_ExampleTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		069F684117772E8400AD3399 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 069F681F17772E8400AD3399 /* MUKMediaGallery Example */;
+			targetProxy = 069F684017772E8400AD3399 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		069F682C17772E8400AD3399 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				069F682D17772E8400AD3399 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		069F684517772E8400AD3399 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				069F684617772E8400AD3399 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		069F684A17772E8400AD3399 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		069F684B17772E8400AD3399 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		069F684D17772E8400AD3399 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA50E93CF31544A68881F4C4 /* Pods.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MUKMediaGallery Example/MUKMediaGallery Example-Prefix.pch";
+				INFOPLIST_FILE = "MUKMediaGallery Example/MUKMediaGallery Example-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		069F684E17772E8400AD3399 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA50E93CF31544A68881F4C4 /* Pods.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MUKMediaGallery Example/MUKMediaGallery Example-Prefix.pch";
+				INFOPLIST_FILE = "MUKMediaGallery Example/MUKMediaGallery Example-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		069F685017772E8400AD3399 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MUKMediaGallery Example.app/MUKMediaGallery Example";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MUKMediaGallery Example/MUKMediaGallery Example-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "MUKMediaGallery ExampleTests/MUKMediaGallery ExampleTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		069F685117772E8400AD3399 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MUKMediaGallery Example.app/MUKMediaGallery Example";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(SYSTEM_APPS_DIR)/Xcode5-DP.app/Contents/Developer/Library/Frameworks",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MUKMediaGallery Example/MUKMediaGallery Example-Prefix.pch";
+				INFOPLIST_FILE = "MUKMediaGallery ExampleTests/MUKMediaGallery ExampleTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		069F681B17772E8400AD3399 /* Build configuration list for PBXProject "MUKMediaGallery Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				069F684A17772E8400AD3399 /* Debug */,
+				069F684B17772E8400AD3399 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		069F684C17772E8400AD3399 /* Build configuration list for PBXNativeTarget "MUKMediaGallery Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				069F684D17772E8400AD3399 /* Debug */,
+				069F684E17772E8400AD3399 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		069F684F17772E8400AD3399 /* Build configuration list for PBXNativeTarget "MUKMediaGallery ExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				069F685017772E8400AD3399 /* Debug */,
+				069F685117772E8400AD3399 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 069F681817772E8400AD3399 /* Project object */;
+}
