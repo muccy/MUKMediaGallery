@@ -16,7 +16,7 @@ profile
 *.moved-aside
 DerivedData
 .idea/
-
+*.xccheckout
 
 # Cocoapods
 Pods
