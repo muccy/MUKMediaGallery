@@ -164,9 +164,19 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 
 static void CommonInitialization(MUKMediaThumbnailsViewController *viewController, UICollectionViewLayout *layout)
 {
-    // One screen contains ~28 thumbnails: cache more than 5 screens
-    viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:150 cacheNulls:NO];
-    viewController.mediaAttributesCache = [[MUKMediaAttributesCache alloc] initWithCountLimit:150 cacheNulls:YES];
+    // One screen contains ~28 thumbnails on phones: cache more than 5 screens
+    // One screen contains ~70 thumbnails on pads: cache more than 3 screens
+    NSInteger countLimit;
+    if (UIUserInterfaceIdiomPad == [[UIDevice currentDevice] userInterfaceIdiom])
+    {
+        countLimit = 250;
+    }
+    else {
+        countLimit = 150;
+    }
+    
+    viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:countLimit cacheNulls:NO];
+    viewController.mediaAttributesCache = [[MUKMediaAttributesCache alloc] initWithCountLimit:countLimit cacheNulls:YES];
     
     viewController.loadingImageIndexes = [[NSMutableIndexSet alloc] init];
     
@@ -186,15 +196,39 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 + (UICollectionViewFlowLayout *)newGridLayout {
     UICollectionViewFlowLayout *grid = [[UICollectionViewFlowLayout alloc] init];
     grid.itemSize = [self thumbnailSize];
-    grid.minimumInteritemSpacing = 4.0f;
-    grid.minimumLineSpacing = 4.0f;
-    grid.sectionInset = UIEdgeInsetsMake(4.0f, 4.0f, 4.0f, 4.0f);
+    grid.minimumInteritemSpacing = [self thumbnailSpacing];
+    grid.minimumLineSpacing = grid.minimumInteritemSpacing;
+    grid.sectionInset = UIEdgeInsetsMake(grid.minimumInteritemSpacing, grid.minimumInteritemSpacing, grid.minimumInteritemSpacing, grid.minimumInteritemSpacing);
     
     return grid;
 }
 
 + (CGSize)thumbnailSize {
-    return CGSizeMake(75.0f, 75.0f);
+    CGSize size;
+    
+    if (UIUserInterfaceIdiomPad == [[UIDevice currentDevice] userInterfaceIdiom])
+    {
+        size = CGSizeMake(104, 104);
+    }
+    else {
+        size = CGSizeMake(75, 75);
+    }
+    
+    return size;
+}
+
++ (CGFloat)thumbnailSpacing {
+    CGFloat spacing;
+    
+    if (UIUserInterfaceIdiomPad == [[UIDevice currentDevice] userInterfaceIdiom])
+    {
+        spacing = 5.0f;
+    }
+    else {
+        spacing = 4.0f;
+    }
+    
+    return spacing;
 }
 
 - (BOOL)automaticallyAdjustsTopPadding {
