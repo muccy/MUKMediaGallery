@@ -29,6 +29,12 @@ Pod::Spec.new do |s|
   s.frameworks          = 'QuartzCore', 'MediaPlayer'
   s.resource            = 'MUKMediaGallery/MUKMediaGalleryResources.bundle'
   
-  s.dependency    'MUKToolkit', '~> 1.1'
-  s.dependency    'LBYouTubeView', '~> 0.0'
+  s.dependency          'MUKToolkit',     '~> 1.1'
+  s.dependency          'LBYouTubeView',  '~> 0.0'
+  
+  s.subspec "ImageScrollView" do |sp|
+    sp.source_files        = 'MUKMediaGallery/MUKMediaImageScrollView.{h,m}'
+    sp.public_header_files = 'MUKMediaGallery/MUKMediaImageScrollView.h'
+    sp.requires_arc        = true
+  end
 end
