@@ -12,10 +12,11 @@ Pod::Spec.new do |s|
     :git => '.',
     :tag => s.version.to_s
   }
-  s.source_files  = 'MUKMediaGallery/**/*.{h,m}'
-  s.requires_arc  = true
-  s.frameworks    = 'QuartzCore', 'MediaPlayer'
-  s.resource      = 'MUKMediaGallery/MUKMediaGalleryResources.bundle'
+  s.source_files        = 'MUKMediaGallery/**/*.{h,m}'
+  s.public_header_files = 'MUKMediaGallery/*.h'
+  s.requires_arc        = true
+  s.frameworks          = 'QuartzCore', 'MediaPlayer'
+  s.resource            = 'MUKMediaGallery/MUKMediaGalleryResources.bundle'
   
   s.dependency    'MUKToolkit', '~> 1.1'
   s.dependency    'LBYouTubeView', '~> 0.0'

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <Group
+      location = "group:MUKMediaGallery"
+      name = "MUKMediaGallery">
+      <FileRef
+         location = "group:MUKMediaAttributes.h">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaAttributes.m">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaCarouselViewController.h">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaCarouselViewController.m">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaGallery.h">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaGalleryResources.bundle">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaImageKind.h">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaImageScrollView.h">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaImageScrollView.m">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaThumbnailsViewController.h">
+      </FileRef>
+      <FileRef
+         location = "group:MUKMediaThumbnailsViewController.m">
+      </FileRef>
+      <Group
+         location = "group:Private"
+         name = "Private">
+         <Group
+            location = "group:Model"
+            name = "Model">
+            <FileRef
+               location = "group:MUKMediaAttributesCache.h">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaAttributesCache.m">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaModelCache.h">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaModelCache.m">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:MUKMediaCarouselFlowLayout.h">
+         </FileRef>
+         <FileRef
+            location = "group:MUKMediaCarouselFlowLayout.m">
+         </FileRef>
+         <FileRef
+            location = "group:MUKMediaGalleryImageResizeOperation.h">
+         </FileRef>
+         <FileRef
+            location = "group:MUKMediaGalleryImageResizeOperation.m">
+         </FileRef>
+         <FileRef
+            location = "group:MUKMediaGalleryUtils.h">
+         </FileRef>
+         <FileRef
+            location = "group:MUKMediaGalleryUtils.m">
+         </FileRef>
+         <Group
+            location = "group:Views"
+            name = "Views">
+            <Group
+               location = "group:Cells"
+               name = "Cells">
+               <FileRef
+                  location = "group:MUKMediaCarouselCell.h">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselCell.m">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselFullImageCell.h">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselFullImageCell.m">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselPlayerCell.h">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselPlayerCell.m">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselYouTubePlayerCell.h">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselYouTubePlayerCell.m">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaThumbnailCell.h">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaThumbnailCell.m">
+               </FileRef>
+            </Group>
+            <FileRef
+               location = "group:MUKMediaCarouselPlayerControlsView.h">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaCarouselPlayerControlsView.m">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaGallerySlider.h">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaGallerySlider.m">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaGalleryToolbar.h">
+            </FileRef>
+            <FileRef
+               location = "group:MUKMediaGalleryToolbar.m">
+            </FileRef>
+         </Group>
+      </Group>
+   </Group>
+   <FileRef
+      location = "group:Example/MUKMediaGallery Example.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Example/Pods/Pods.xcodeproj">
+   </FileRef>
+</Workspace>
