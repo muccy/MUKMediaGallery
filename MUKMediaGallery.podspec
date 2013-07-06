@@ -12,6 +12,17 @@ Pod::Spec.new do |s|
     :git => '.',
     :tag => s.version.to_s
   }
+  
+  # Used by CocoaDocs
+  s.documentation = { :appledoc => [
+    '--no-repeat-first-par',
+    '--no-warn-invalid-crossref',
+    '--project-company "MeLive"',
+    '--company-id "it.melive"'
+    ]
+  }
+  
+  s.compiler_flags      = '-Wdocumentation'
   s.source_files        = 'MUKMediaGallery/**/*.{h,m}'
   s.public_header_files = 'MUKMediaGallery/*.h'
   s.requires_arc        = true

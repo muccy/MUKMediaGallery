@@ -496,11 +496,14 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:carouselToPushAfterSelectingItemAtIndex:)])
     {
         MUKMediaCarouselViewController *carouselViewController = [self.delegate thumbnailsViewController:self carouselToPushAfterSelectingItemAtIndex:indexPath.item];
-        [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO];
         
         if (carouselViewController) {
-            self.isTransitioningWithCarouselViewController = YES;
-            [self.navigationController pushViewController:carouselViewController animated:YES];
+            [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO];
+            
+            if (carouselViewController) {
+                self.isTransitioningWithCarouselViewController = YES;
+                [self.navigationController pushViewController:carouselViewController animated:YES];
+            }
         }
     }
 }
