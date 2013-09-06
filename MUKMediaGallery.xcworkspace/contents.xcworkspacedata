@@ -20,9 +20,6 @@
          location = "group:MUKMediaGallery.h">
       </FileRef>
       <FileRef
-         location = "group:MUKMediaGalleryResources.bundle">
-      </FileRef>
-      <FileRef
          location = "group:MUKMediaImageKind.h">
       </FileRef>
       <FileRef
