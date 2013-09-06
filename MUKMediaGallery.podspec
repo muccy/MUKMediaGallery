@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
     'Marco Muccinelli' => 'muccymac@gmail.com'
   }
   s.source = {
-    :git => '.',
+    :git => 'https://muccy@bitbucket.org/muccy/mukmediagallery.git',
     :tag => s.version.to_s
   } 
   s.compiler_flags      = '-Wdocumentation'
