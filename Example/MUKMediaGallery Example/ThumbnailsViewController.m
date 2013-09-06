@@ -165,7 +165,7 @@
     return attributes;
 }
 
-- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPushAfterSelectingItemAtIndex:(NSInteger)idx
+- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPresentAfterSelectingItemAtIndex:(NSInteger)idx
 {
     CarouselViewController *carouselViewController = [[CarouselViewController alloc] initWithCollectionViewLayout:nil];
     carouselViewController.mediaAssets = self.mediaAssets;

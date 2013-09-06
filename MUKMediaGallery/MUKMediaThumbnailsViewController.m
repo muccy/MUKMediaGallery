@@ -493,16 +493,50 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {    
-    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:carouselToPushAfterSelectingItemAtIndex:)])
+    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:carouselToPresentAfterSelectingItemAtIndex:)])
     {
-        MUKMediaCarouselViewController *carouselViewController = [self.delegate thumbnailsViewController:self carouselToPushAfterSelectingItemAtIndex:indexPath.item];
+        MUKMediaCarouselViewController *carouselViewController = [self.delegate thumbnailsViewController:self carouselToPresentAfterSelectingItemAtIndex:indexPath.item];
         
         if (carouselViewController) {
             [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO];
             
-            if (carouselViewController) {
-                self.isTransitioningWithCarouselViewController = YES;
-                [self.navigationController pushViewController:carouselViewController animated:YES];
+            self.isTransitioningWithCarouselViewController = YES;
+            
+            MUKMediaThumbnailsViewControllerToCarouselTransition transition = MUKMediaThumbnailsViewControllerToCarouselTransitionPush;
+            if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:transitionToPresentCarouselViewController:forItemAtIndex:)])
+            {
+                transition = [self.delegate thumbnailsViewController:self transitionToPresentCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+            }
+            
+            if (transition == MUKMediaThumbnailsViewControllerToCarouselTransitionPush)
+            {
+                UINavigationController *navController = nil;
+                if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+                {
+                    navController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                }
+                
+                if (![navController respondsToSelector:@selector(pushViewController:animated:)])
+                {
+                    navController = self.navigationController;
+                }
+                
+                [navController pushViewController:carouselViewController animated:YES];
+            }
+            else {
+                UIViewController *presentationViewController = nil;
+             
+                if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+                {
+                    presentationViewController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                }
+                
+                if (![presentationViewController respondsToSelector:@selector(presentViewController:animated:completion:)])
+                {
+                    presentationViewController = self;
+                }
+                
+                [presentationViewController presentViewController:carouselViewController animated:YES completion:nil];
             }
         }
     }

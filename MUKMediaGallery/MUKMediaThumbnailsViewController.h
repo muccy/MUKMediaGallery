@@ -1,5 +1,11 @@
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
+{
+    MUKMediaThumbnailsViewControllerToCarouselTransitionPush,
+    MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical
+};
+
 @class MUKMediaThumbnailsViewController;
 @class MUKMediaCarouselViewController;
 @class MUKMediaAttributes;
@@ -55,11 +61,33 @@
  @param viewController The thumbnails view controller which requests this info.
  @param idx Media item index in carousel.
  @return An initialized carousel view controller. If this method is not implemented
- (or it returns nil), no carousel will be pushed.
+ (or it returns nil), no carousel will be presented.
  -[MUKMediaCarouselViewController scrollToItemAtIndex:animated:] is automatically
  called on returned instance.
  */
-- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPushAfterSelectingItemAtIndex:(NSInteger)idx;
+- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPresentAfterSelectingItemAtIndex:(NSInteger)idx;
+
+/**
+ How do you want to present carousel? You can choose here.
+ 
+ @param viewController The thumbnails view controller which requests this info.
+ @param carouselViewController The carousel view controller which
+ will be presented.
+ @param idx Media item index in carousel.
+ @return Transition style.
+ */
+- (MUKMediaThumbnailsViewControllerToCarouselTransition)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController transitionToPresentCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
+
+/**
+ Where transition is applied.
+ @param viewController The thumbnails view controller which requests this info.
+ @param carouselViewController The carousel view controller which
+ will be presented.
+ @param idx Media item index in carousel.
+ @return A navigation controller if you have chosen a push style.
+ A generic view controller if you have chosen a cover vertical style.
+ */
+- (id)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController presentationViewControllerForCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
 
 @end
 
