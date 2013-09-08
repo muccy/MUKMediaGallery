@@ -10,6 +10,7 @@
 @end
 
 @interface MUKMediaCarouselCell (Caption)
+- (BOOL)isCaptionHidden;
 - (void)setCaptionHidden:(BOOL)hidden animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler;
 @end
 

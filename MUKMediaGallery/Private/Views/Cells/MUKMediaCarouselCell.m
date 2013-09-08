@@ -48,6 +48,10 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
 #pragma mark - Caption
 
+- (BOOL)isCaptionHidden {
+    return self.captionBackgroundView.alpha < 1.0f;
+}
+
 - (void)setCaptionHidden:(BOOL)hidden animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler
 {
     NSTimeInterval const duration = animated ? UINavigationControllerHideShowBarDuration : 0.0;
