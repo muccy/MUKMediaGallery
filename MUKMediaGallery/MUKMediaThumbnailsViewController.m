@@ -49,6 +49,11 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 
 - (void)dealloc {
     [self stopObservingChangesToAdjustTopPadding];
+    
+    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
+    {
+        [self requestLoadingCancellationForImageAtIndexPath:indexPath];
+    }
 }
 
 - (void)viewDidLoad {
@@ -189,6 +194,24 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     if (layout) {
         viewController.collectionView.collectionViewLayout = layout;
     }
+}
+
+- (void)requestLoadingCancellationForImageAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
+    {
+        NSInteger const kImageIndex = indexPath.item;
+        
+        if ([self isLoadingImageAtIndex:kImageIndex]) {
+            [self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:kImageIndex];
+            
+            // Mark as not loading
+            [self setLoading:NO imageAtIndex:kImageIndex];
+            
+            // Cancel image resizing
+            [self cancelImageResizingForItemAtIndexPath:indexPath];
+            
+        } // if -isLoadingImageAtIndex:
+    } // if delegate responds
 }
 
 #pragma mark - Private — Layout
@@ -474,21 +497,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
-    {
-        NSInteger const kImageIndex = indexPath.item;
-
-        if ([self isLoadingImageAtIndex:kImageIndex]) {
-            [self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:kImageIndex];
-            
-            // Mark as not loading
-            [self setLoading:NO imageAtIndex:kImageIndex];
-            
-            // Cancel image resizing
-            [self cancelImageResizingForItemAtIndexPath:indexPath];
-            
-        } // if -isLoadingImageAtIndex:
-    } // if delegate responds
+    [self requestLoadingCancellationForImageAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath

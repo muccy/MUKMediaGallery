@@ -54,11 +54,10 @@ static CGFloat const kLateralPadding = 4.0f;
 - (void)dealloc {
     [self stopObservingBoundsChangesIfNeeded];
     
-    for (UICollectionViewCell *cell in [self.collectionView visibleCells]) {
-        if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
-            [self cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell];
-        }
-    } // for
+    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
+    {
+        [self cancelAllLoadingsForCellAdIndexPath:indexPath cell:nil];
+    }
 }
 
 - (void)viewDidLoad {
@@ -148,6 +147,22 @@ static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
 
 static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     return [NSIndexPath indexPathForItem:index inSection:0];
+}
+
+- (void)cancelAllLoadingsForCellAdIndexPath:(NSIndexPath *)indexPath cell:(UICollectionViewCell *)cell
+{
+    if (!indexPath) {
+        return;
+    }
+    
+    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
+    [self cancelAllImageLoadingsForItemAtIndex:kItemIndex];
+    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
+    
+    cell = cell ?: [self.collectionView cellForItemAtIndexPath:indexPath];
+    if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+        [self cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell];
+    }
 }
 
 #pragma mark - Private — Layout
@@ -843,13 +858,7 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
-    [self cancelAllImageLoadingsForItemAtIndex:kItemIndex];
-    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
-    
-    if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
-        [self cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell];
-    }
+    [self cancelAllLoadingsForCellAdIndexPath:indexPath cell:cell];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
