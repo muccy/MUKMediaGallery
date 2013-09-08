@@ -6,6 +6,7 @@
 #import "MUKMediaCarouselFlowLayout.h"
 #import "MUKMediaGalleryUtils.h"
 #import "LBYouTubeExtractor.h"
+#import <QuartzCore/QuartzCore.h>
 
 #define DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL    0
 
@@ -93,6 +94,43 @@ static CGFloat const kLateralPadding = 4.0f;
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    // Snapshot view controller
+    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, 0.0);
+    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    UIImageView *snapshotImageView = [[UIImageView alloc] initWithImage:image];
+    snapshotImageView.backgroundColor = self.collectionView.backgroundColor;
+    
+    BOOL isBecomingWider;
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) &&
+        UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
+    {
+        isBecomingWider = YES;
+    }
+    else {
+        isBecomingWider = NO;
+    }
+    
+    snapshotImageView.contentMode = isBecomingWider ? UIViewContentModeScaleAspectFill : UIViewContentModeScaleAspectFit;
+    
+    // Insert snapshot
+    snapshotImageView.frame = self.view.bounds;
+    snapshotImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    [self.view addSubview:snapshotImageView];
+    
+    // Remove snapshot
+    [UIView animateWithDuration:1.3 * duration delay:0.1 * duration options:0 animations:^
+    {
+        snapshotImageView.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [snapshotImageView removeFromSuperview];
+    }];
 }
 
 #pragma mark - Overrides
