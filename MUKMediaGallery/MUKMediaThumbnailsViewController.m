@@ -20,6 +20,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 @property (nonatomic) UIStatusBarStyle previousStatusBarStyle;
 @property (nonatomic) BOOL isTransitioningWithCarouselViewController;
 @property (nonatomic) UINavigationBar *observedNavigationBar;
+@property (nonatomic, weak) UIViewController *carouselPresentationViewController;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -479,6 +480,13 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     return icon;
 }
 
+#pragma mark - Private — Carousel
+
+- (void)carouselViewControllerDoneBarButtonItemPressed:(id)sender {
+    [self.carouselPresentationViewController dismissViewControllerAnimated:YES completion:nil];
+    self.carouselPresentationViewController = nil;
+}
+
 #pragma mark - <UICollectionViewDataSource>
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -517,36 +525,57 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                 transition = [self.delegate thumbnailsViewController:self transitionToPresentCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
             }
             
-            if (transition == MUKMediaThumbnailsViewControllerToCarouselTransitionPush)
-            {
-                UINavigationController *navController = nil;
-                if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+            switch (transition) {
+                case MUKMediaThumbnailsViewControllerToCarouselTransitionPush:
                 {
-                    navController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                    UINavigationController *navController = nil;
+                    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+                    {
+                        navController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                    }
+                    
+                    if (![navController respondsToSelector:@selector(pushViewController:animated:)])
+                    {
+                        navController = self.navigationController;
+                    }
+                    
+                    [navController pushViewController:carouselViewController animated:YES];
+                    
+                    break;
                 }
-                
-                if (![navController respondsToSelector:@selector(pushViewController:animated:)])
+                    
+                case MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical:
                 {
-                    navController = self.navigationController;
+                    UIViewController *presentationViewController = nil;
+                    
+                    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+                    {
+                        presentationViewController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                    }
+                    
+                    if (![presentationViewController respondsToSelector:@selector(presentViewController:animated:completion:)])
+                    {
+                        presentationViewController = self;
+                    }
+                    
+                    // Create a button to close modal presentation
+                    UIBarButtonItem *doneBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(carouselViewControllerDoneBarButtonItemPressed:)];
+                    carouselViewController.navigationItem.leftBarButtonItem = doneBarButtonItem;
+                    
+                    // Embed in navigation controller
+                    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:carouselViewController];
+                    navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+                    
+                    // Present it!
+                    self.carouselPresentationViewController = presentationViewController;
+                    [presentationViewController presentViewController:navController animated:YES completion:nil];
+                    
+                    break;
                 }
-                
-                [navController pushViewController:carouselViewController animated:YES];
-            }
-            else {
-                UIViewController *presentationViewController = nil;
-             
-                if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
-                {
-                    presentationViewController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
-                }
-                
-                if (![presentationViewController respondsToSelector:@selector(presentViewController:animated:completion:)])
-                {
-                    presentationViewController = self;
-                }
-                
-                [presentationViewController presentViewController:carouselViewController animated:YES completion:nil];
-            }
+                    
+                default:
+                    break;
+            } // switch
         }
     }
 }

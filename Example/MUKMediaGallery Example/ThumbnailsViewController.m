@@ -172,4 +172,9 @@
     return carouselViewController;
 }
 
+- (MUKMediaThumbnailsViewControllerToCarouselTransition)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController transitionToPresentCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx
+{
+    return MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical;
+}
+
 @end
