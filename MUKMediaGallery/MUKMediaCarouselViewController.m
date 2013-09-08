@@ -24,6 +24,7 @@ static CGFloat const kLateralPadding = 4.0f;
 @property (nonatomic) BOOL isObservingBoundsChanges;
 @property (nonatomic) NSInteger itemIndexToMantainAfterBoundsChange;
 @property (nonatomic) BOOL hasPendingScrollToItem;
+@property (nonatomic) BOOL viewDidAppearInvoked;
 @end
 
 @implementation MUKMediaCarouselViewController
@@ -92,12 +93,17 @@ static CGFloat const kLateralPadding = 4.0f;
     }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.viewDidAppearInvoked = YES;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
+    if (!self.viewDidAppearInvoked) {
+        return;
+    }
+    
     // Snapshot view controller
     UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, 0.0);
     [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
