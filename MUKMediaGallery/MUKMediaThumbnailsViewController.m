@@ -21,6 +21,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 @property (nonatomic) BOOL isTransitioningWithCarouselViewController;
 @property (nonatomic) UINavigationBar *observedNavigationBar;
 @property (nonatomic, weak) UIViewController *carouselPresentationViewController;
+@property (nonatomic) BOOL shouldReloadDataInViewWillAppear;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -50,11 +51,6 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 
 - (void)dealloc {
     [self stopObservingChangesToAdjustTopPadding];
-    
-    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
-    {
-        [self requestLoadingCancellationForImageAtIndexPath:indexPath];
-    }
 }
 
 - (void)viewDidLoad {
@@ -91,6 +87,11 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     else {
         self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
     }
+    
+    if (self.shouldReloadDataInViewWillAppear) {
+        self.shouldReloadDataInViewWillAppear = NO;
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -107,6 +108,16 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
         else {
             self.navigationController.navigationBar.barStyle = self.previousNavigationBarStyle;
         }
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
+    {
+        [self requestLoadingCancellationForImageAtIndexPath:indexPath];
+        self.shouldReloadDataInViewWillAppear = YES;
     }
 }
 
@@ -348,11 +359,17 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
             
             // This block is called by delegate which can give back an image
             // asynchronously
+            __weak MUKMediaThumbnailsViewController *weakSelf = self;
             void (^completionHandler)(UIImage *) = ^(UIImage *image) {
+                MUKMediaThumbnailsViewController *strongSelf = weakSelf;
+                if (!strongSelf) {
+                    return;
+                }
+                
                 // If it is still loading...
-                if ([self isLoadingImageAtIndex:kImageIndex]) {
+                if ([strongSelf isLoadingImageAtIndex:kImageIndex]) {
                     // Resize image in a detached queue
-                    [self beginResizingImage:image toThumbnailSize:[[self class] thumbnailSize] forItemAtIndexPath:indexPath];
+                    [strongSelf beginResizingImage:image toThumbnailSize:[[strongSelf class] thumbnailSize] forItemAtIndexPath:indexPath];
                 }
             };
             
