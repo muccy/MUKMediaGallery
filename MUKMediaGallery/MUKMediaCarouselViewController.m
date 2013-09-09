@@ -25,6 +25,7 @@ static CGFloat const kLateralPadding = 4.0f;
 @property (nonatomic) NSInteger itemIndexToMantainAfterBoundsChange;
 @property (nonatomic) BOOL hasPendingScrollToItem;
 @property (nonatomic) BOOL viewDidAppearInvoked;
+@property (nonatomic) BOOL shouldReloadDataInViewWillAppear;
 @end
 
 @implementation MUKMediaCarouselViewController
@@ -55,11 +56,6 @@ static CGFloat const kLateralPadding = 4.0f;
 
 - (void)dealloc {
     [self stopObservingBoundsChangesIfNeeded];
-    
-    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
-    {
-        [self cancelAllLoadingsForCellAdIndexPath:indexPath cell:nil];
-    }
 }
 
 - (void)viewDidLoad {
@@ -91,11 +87,24 @@ static CGFloat const kLateralPadding = 4.0f;
     {
         self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
     }
+    
+    if (self.shouldReloadDataInViewWillAppear) {
+        self.shouldReloadDataInViewWillAppear = NO;
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.viewDidAppearInvoked = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
+    {
+        [self cancelAllLoadingsForCellAdIndexPath:indexPath cell:nil];
+        self.shouldReloadDataInViewWillAppear = YES;
+    }
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -400,40 +409,46 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     
     // This block is called by delegate which can give back an image
     // asynchronously
+    __weak MUKMediaCarouselViewController *weakSelf = self;
     void (^completionHandler)(UIImage *) = ^(UIImage *image) {
+        MUKMediaCarouselViewController *strongSelf = weakSelf;
+        if (!strongSelf) {
+            return;
+        }
+        
         // If it's still loading
-        if ([self isLoadingImageOfKind:imageKind atIndex:kImageIndex]) {
+        if ([strongSelf isLoadingImageOfKind:imageKind atIndex:kImageIndex]) {
             // Mark as not loading
-            [self setLoading:NO imageOfKind:imageKind atIndex:kImageIndex];
+            [strongSelf setLoading:NO imageOfKind:imageKind atIndex:kImageIndex];
             
             // Stop smaller loading
-            [self cancelImageLoadingSmallerThanKind:imageKind atIndexPath:indexPath];
+            [strongSelf cancelImageLoadingSmallerThanKind:imageKind atIndexPath:indexPath];
             
             // Cache image
-            [[self cacheForImageKind:imageKind] setObject:image atIndex:kImageIndex];
+            [[strongSelf cacheForImageKind:imageKind] setObject:image atIndex:kImageIndex];
             
             // Get actual cell
-            MUKMediaCarouselCell *cell = (MUKMediaCarouselCell *)[self.collectionView cellForItemAtIndexPath:indexPath];
+            MUKMediaCarouselCell *cell = (MUKMediaCarouselCell *)[strongSelf.collectionView cellForItemAtIndexPath:indexPath];
             
             // Set image if needed
             if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
                 MUKMediaCarouselFullImageCell *fullImageCell = (MUKMediaCarouselFullImageCell *)cell;
                 
-                if ([self shouldSetLoadedImageOfKind:imageKind intoFullImageCell:fullImageCell atIndexPath:indexPath])
+                if ([strongSelf shouldSetLoadedImageOfKind:imageKind intoFullImageCell:fullImageCell atIndexPath:indexPath])
                 {
-                    [self setImage:image ofKind:imageKind inFullImageCell:fullImageCell];
+                    [strongSelf setImage:image ofKind:imageKind inFullImageCell:fullImageCell];
                 }
             }
             else if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
                 MUKMediaCarouselPlayerCell *playerCell = (MUKMediaCarouselPlayerCell *)cell;
-                if ([self shouldSetLoadedImageOfKind:imageKind intoPlayerCell:playerCell atIndexPath:indexPath])
+                if ([strongSelf shouldSetLoadedImageOfKind:imageKind intoPlayerCell:playerCell atIndexPath:indexPath])
                 {
                     BOOL stock = NO;
                     
                     if (!image) {
                         // Use stock thumbnail
-                        MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kImageIndex];
-                        image = [self stockThumbnailForMediaKind:attributes.kind];
+                        MUKMediaAttributes *attributes = [strongSelf mediaAttributesForItemAtIndex:kImageIndex];
+                        image = [strongSelf stockThumbnailForMediaKind:attributes.kind];
                         stock = YES;
                     }
                     
@@ -443,7 +458,7 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
                         hideActivityIndicator = NO;
                     }
                     
-                    [self setThumbnailImage:image stock:stock inPlayerCell:playerCell hideActivityIndicator:hideActivityIndicator];
+                    [strongSelf setThumbnailImage:image stock:stock inPlayerCell:playerCell hideActivityIndicator:hideActivityIndicator];
                 }
             }
         } // if isLoadingImageKind
