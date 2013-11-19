@@ -2,7 +2,7 @@
 #import <MediaPlayer/MediaPlayer.h>
 
 @class MUKMediaCarouselPlayerViewController;
-@protocol MUKMediaCarouselPlayerViewControllerDelegate <NSObject>
+@protocol MUKMediaCarouselPlayerViewControllerDelegate <MUKMediaCarouselItemViewControllerDelegate>
 - (void)carouselPlayerViewControllerDidChangeNowPlayingMovie:(MUKMediaCarouselPlayerViewController *)viewController;
 - (void)carouselPlayerViewControllerDidChangePlaybackState:(MUKMediaCarouselPlayerViewController *)viewController;
 @end

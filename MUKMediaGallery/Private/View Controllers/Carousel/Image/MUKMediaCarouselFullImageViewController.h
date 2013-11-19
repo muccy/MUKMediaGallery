@@ -3,7 +3,7 @@
 
 @class MUKMediaImageScrollView;
 @class MUKMediaCarouselFullImageViewController;
-@protocol MUKMediaCarouselFullImageViewControllerDelegate <NSObject>
+@protocol MUKMediaCarouselFullImageViewControllerDelegate <MUKMediaCarouselItemViewControllerDelegate>
 - (void)carouselFullImageViewController:(MUKMediaCarouselFullImageViewController *)viewController imageScrollViewDidReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer;
 @end
 

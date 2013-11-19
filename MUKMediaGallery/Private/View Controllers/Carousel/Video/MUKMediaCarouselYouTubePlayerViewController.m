@@ -11,6 +11,15 @@
     [self disposeWebView];
 }
 
+- (instancetype)initWithMediaIndex:(NSInteger)idx {
+    self = [super initWithMediaIndex:idx];
+    if (self) {
+        _lastWebViewBounds = CGRectNull;
+    }
+    
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self createThumbnailImageViewIfNeededInSuperview:self.view belowSubview:self.overlayView];
@@ -92,10 +101,6 @@
 }
 
 #pragma mark - Private
-
-static void CommonInit(MUKMediaCarouselYouTubePlayerViewController *vc) {
-    vc->_lastWebViewBounds = CGRectNull;
-}
 
 - (void)disposeWebView {
     [self.webView loadHTMLString:@"<html></html>" baseURL:nil];

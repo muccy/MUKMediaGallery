@@ -11,13 +11,15 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL    0
+#define DEBUG_LOAD_LOGGING                      0
 
-@interface MUKMediaCarouselViewController () <MUKMediaCarouselFullImageViewControllerDelegate, MUKMediaCarouselPlayerViewControllerDelegate, MUKMediaCarouselYouTubePlayerViewControllerDelegate, LBYouTubeExtractorDelegate>
+@interface MUKMediaCarouselViewController () <MUKMediaCarouselItemViewControllerDelegate, MUKMediaCarouselFullImageViewControllerDelegate, MUKMediaCarouselPlayerViewControllerDelegate, MUKMediaCarouselYouTubePlayerViewControllerDelegate, LBYouTubeExtractorDelegate>
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
 @property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache, *youTubeDecodedURLCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
 @property (nonatomic) NSMutableDictionary *runningYouTubeExtractors;
 @property (nonatomic) BOOL shouldReloadDataInViewWillAppear;
+@property (nonatomic) NSMutableArray *pendingViewControllers;
 @end
 
 @implementation MUKMediaCarouselViewController
@@ -61,7 +63,14 @@
     
     if (self.shouldReloadDataInViewWillAppear) {
         self.shouldReloadDataInViewWillAppear = NO;
-        // TODO: reload data after -viewDidDisappear
+        
+        // Reload data after -viewDidDisappear has cancelled all loadings
+        for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
+        {
+            // Load attributes
+            MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:viewController.mediaIndex];
+            [self configureItemViewController:viewController forMediaAttributes:attributes];
+        } // for
     }
 }
 
@@ -172,6 +181,7 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 - (void)configureItemViewController:(MUKMediaCarouselItemViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes
 {
     // Common configuration
+    viewController.delegate = self;
     viewController.view.backgroundColor = self.view.backgroundColor;
     
     viewController.captionLabel.text = attributes.caption;
@@ -209,12 +219,22 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     return nil;
 }
 
+- (MUKMediaCarouselItemViewController *)pendingItemViewControllerForMediaAtIndex:(NSInteger)idx
+{
+    for (MUKMediaCarouselItemViewController *viewController in self.pendingViewControllers)
+    {
+        if (viewController.mediaIndex == idx) {
+            return viewController;
+        }
+    }
+    
+    return nil;
+}
+
 #pragma mark - Private — Full Image View Controllers
 
 - (void)configureFullImageViewController:(MUKMediaCarouselFullImageViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes
 {
-    viewController.delegate = self;
-    
     MUKMediaImageKind foundImageKind = MUKMediaImageKindNone;
     UIImage *image = [self biggestCachedImageOrRequestLoadingForItemAtIndex:viewController.mediaIndex foundImageKind:&foundImageKind];
     [self setImage:image ofKind:foundImageKind inFullImageViewController:viewController];
@@ -239,8 +259,8 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     
     BOOL shouldSetImage = NO;
     
-    // It's still visible
-    if ([self isVisibleItemViewControllerForMediaAtIndex:viewController.mediaIndex])
+    // It's still visible or it will be visible
+    if ([self isVisibleItemViewControllerForMediaAtIndex:viewController.mediaIndex] || [self isPendingItemViewControllerForMediaAtIndex:viewController.mediaIndex])
     {
         // Don't overwrite bigger images
         if (imageKind == MUKMediaImageKindThumbnail &&
@@ -266,8 +286,6 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 
 - (void)configurePlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController mediaURL:(NSURL *)mediaURL forMediaAttributes:(MUKMediaAttributes *)attributes
 {
-    viewController.delegate = self;
-    
     // Set media URL (this will create room for thumbnail)
     if (mediaURL) {
         [viewController setMediaURL:mediaURL];
@@ -306,9 +324,10 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     
     BOOL shouldSetImage = NO;
     
-    // Only thumbnails and when view controller is still visible
+    // Only thumbnails and when view controller is still visible (or
+    // it will be visible soon)
     if (imageKind == MUKMediaImageKindThumbnail &&
-        [self isVisibleItemViewControllerForMediaAtIndex:viewController.mediaIndex])
+        ([self isVisibleItemViewControllerForMediaAtIndex:viewController.mediaIndex] || [self isPendingItemViewControllerForMediaAtIndex:viewController.mediaIndex]))
     {
         shouldSetImage = YES;
     }
@@ -335,12 +354,10 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     [self setThumbnailImage:nil stock:NO inPlayerViewController:viewController hideActivityIndicator:YES];
 }
 
-#pragma mark - YouTube Player View Controllers
+#pragma mark - Private — YouTube Player View Controllers
 
 - (void)configureYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes
 {
-    viewController.delegate = self;
-    
     BOOL isNull = NO;
     NSURL *decodedMediaURL = [self.youTubeDecodedURLCache objectAtIndex:viewController.mediaIndex isNull:&isNull];
     
@@ -387,6 +404,17 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 }
 
 #pragma mark - Private — Current State
+
+- (BOOL)isPendingItemViewControllerForMediaAtIndex:(NSInteger)idx {
+    for (MUKMediaCarouselItemViewController *viewController in self.pendingViewControllers)
+    {
+        if (viewController.mediaIndex == idx) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
 
 - (BOOL)isVisibleItemViewControllerForMediaAtIndex:(NSInteger)idx {
     for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
@@ -478,6 +506,9 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 
 - (UIImage *)biggestCachedImageOrRequestLoadingForItemAtIndex:(NSInteger)idx foundImageKind:(MUKMediaImageKind *)foundImageKind
 {
+#if DEBUG_LOAD_LOGGING
+    NSLog(@"Loading image for media at index %i...", idx);
+#endif
     // Try to load biggest image
     UIImage *fullImage = [[self cacheForImageKind:MUKMediaImageKindFullSize] objectAtIndex:idx isNull:NULL];
     
@@ -486,6 +517,10 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
         if (foundImageKind != NULL) {
             *foundImageKind = MUKMediaImageKindFullSize;
         }
+        
+#if DEBUG_LOAD_LOGGING
+        NSLog(@"Found in cache!");
+#endif
         
         return fullImage;
     }
@@ -543,8 +578,9 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
             // Cache image
             [[strongSelf cacheForImageKind:imageKind] setObject:image atIndex:idx];
             
-            // Get actual item view controller
-            MUKMediaCarouselItemViewController *viewController = [strongSelf visibleItemViewControllerForMediaAtIndex:idx];
+            // Get actual item view controller, searching for it inside visible
+            // view controllers and pending view controllers
+            MUKMediaCarouselItemViewController *viewController = [strongSelf visibleItemViewControllerForMediaAtIndex:idx] ?: [self pendingItemViewControllerForMediaAtIndex:idx];
             
             // Set image if needed
             if ([viewController isKindOfClass:[MUKMediaCarouselFullImageViewController class]])
@@ -789,9 +825,15 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 {
     [self setBarsHidden:YES animated:YES];
     
+    // Save pending view controllers
+    self.pendingViewControllers = [pendingViewControllers mutableCopy];
+    
     // Configure new view controllers
     for (MUKMediaCarouselItemViewController *itemViewController in pendingViewControllers)
     {
+#if DEBUG_LOAD_LOGGING
+        NSLog(@"Configuring media at index %i at -pageViewController:willTransitionToViewControllers:", itemViewController.mediaIndex);
+#endif
         // Load attributes
         MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:itemViewController.mediaIndex];
         [self configureItemViewController:itemViewController forMediaAttributes:attributes];
@@ -800,16 +842,20 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
 {
-    if (completed) {
-        // When view controller disappear, stop loadings
-        for (MUKMediaCarouselItemViewController *previousViewController in previousViewControllers)
+    // When view controller disappear, stop loadings
+    for (MUKMediaCarouselItemViewController *previousViewController in previousViewControllers)
+    {
+        if (![pageViewController.viewControllers containsObject:previousViewController])
         {
-           if (![pageViewController.viewControllers containsObject:previousViewController])
-           {
-               [self cancelAllLoadingsForItemViewController:previousViewController];
-           }
-        } // for
-    } // if
+#if DEBUG_LOAD_LOGGING
+            NSLog(@"Cancel all loadings for media at index %i at -didFinishAnimating:previousViewControllers:transitionCompleted:", previousViewController.mediaIndex);
+#endif
+            [self cancelAllLoadingsForItemViewController:previousViewController];
+        }
+    } // for
+    
+    // Clean pending view controllers
+    self.pendingViewControllers = nil;
 }
 
 #pragma mark - <UIPageViewControllerDataSource>
@@ -839,29 +885,27 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     return [self newItemViewControllerForMediaAtIndex:itemViewController.mediaIndex + 1];
 }
 
+#pragma mark - <MUKMediaCarouselItemViewControllerDelegate>
 
-#pragma mark - <UICollectionViewDelegate>
-// TODO
-/*
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)carouselItemViewControllerDidReceiveTap:(MUKMediaCarouselItemViewController *)viewController
 {
     // Show movie controls if bars are hidden and current item is an audio/video
     // Hide movie controls if bars are shows and current item is already playing
-    MUKMediaCarouselPlayerCell *cell = (MUKMediaCarouselPlayerCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
+    
+    if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]])
+    {
+        MUKMediaCarouselPlayerViewController *playerViewController = (MUKMediaCarouselPlayerViewController *)viewController;
         if ([self areBarsHidden]) {
-            [cell setPlayerControlsHidden:NO animated:YES completion:nil];
+            [playerViewController setPlayerControlsHidden:NO animated:YES completion:nil];
         }
-        else if (cell.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+        else if (playerViewController.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
         {
-            [cell setPlayerControlsHidden:YES animated:YES completion:nil];
+            [playerViewController setPlayerControlsHidden:YES animated:YES completion:nil];
         }
     }
     
     [self toggleBarsVisibility];
 }
- */
-
 
 #pragma mark - <MUKMediaCarouselFullImageViewControllerDelegate>
 

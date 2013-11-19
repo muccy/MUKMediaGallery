@@ -48,8 +48,8 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     self.captionBackgroundView = captionBackgroundView;
     
     [self updateCaptionConstraintsWhenHidden:NO];
-    
     [self registerToContentSizeCategoryNotifications];
+    [self attachTapGestureRecognizer];
 }
 
 #pragma mark - Caption
@@ -275,6 +275,19 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     }
     
     return font;
+}
+
+#pragma mark - Private — Tap Gesture Recognizer
+
+- (void)attachTapGestureRecognizer {
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self.view addGestureRecognizer:gestureRecognizer];
+}
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self.delegate carouselItemViewControllerDidReceiveTap:self];
+    }
 }
 
 #pragma mark - <UIToolbarDelegate>
