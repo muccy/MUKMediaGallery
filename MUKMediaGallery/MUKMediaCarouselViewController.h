@@ -68,12 +68,12 @@
 /**
  A view controller which presents a paginated list of media items.
  */
-@interface MUKMediaCarouselViewController : UICollectionViewController
+@interface MUKMediaCarouselViewController : UIPageViewController <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
 
 /**
  The object that acts as the delegate of the receiving carousel view controller.
  */
-@property (nonatomic, weak) id<MUKMediaCarouselViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<MUKMediaCarouselViewControllerDelegate> carouselDelegate;
 
 /**
  Scrolls the carousel to a media item at given index.
@@ -81,5 +81,5 @@
  @param index Media item index to reveal.
  @param animated If `YES` transition is animated. Otherwise, scroll is immediate.
  */
-- (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler;
 @end

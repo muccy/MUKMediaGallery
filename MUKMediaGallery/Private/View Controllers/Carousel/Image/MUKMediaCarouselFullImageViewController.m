@@ -1,16 +1,15 @@
-#import "MUKMediaCarouselFullImageCell.h"
+#import "MUKMediaCarouselFullImageViewController.h"
 #import "MUKMediaImageScrollView.h"
 
-@interface MUKMediaCarouselFullImageCell () <MUKMediaImageScrollViewDelegate>
+@interface MUKMediaCarouselFullImageViewController () <MUKMediaImageScrollViewDelegate>
 @property (nonatomic, weak, readwrite) MUKMediaImageScrollView *imageScrollView;
 @property (nonatomic, readwrite) MUKMediaImageKind imageKind;
 @end
 
-@implementation MUKMediaCarouselFullImageCell
+@implementation MUKMediaCarouselFullImageViewController
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (instancetype)initWithMediaIndex:(NSInteger)idx {
+    self = [super initWithMediaIndex:idx];
     if (self) {
         _imageKind = MUKMediaImageKindNone;
     }
@@ -25,10 +24,10 @@
         case MUKMediaImageKindFullSize: {
             // Create scroll view if needed
             if (self.imageScrollView == nil) {
-                MUKMediaImageScrollView *imageScrollView = [[MUKMediaImageScrollView alloc] initWithFrame:self.contentView.bounds];
+                MUKMediaImageScrollView *imageScrollView = [[MUKMediaImageScrollView alloc] initWithFrame:self.view.bounds];
                 imageScrollView.imageDelegate = self;
                 imageScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-                [self.contentView insertSubview:imageScrollView belowSubview:self.overlayView];
+                [self.view insertSubview:imageScrollView belowSubview:self.overlayView];
                 self.imageScrollView = imageScrollView;
             }
             
@@ -46,7 +45,7 @@
             [self.imageScrollView removeFromSuperview];
             
             // Display image
-            [self createThumbnailImageViewIfNeededInSuperview:self.contentView belowSubview:self.overlayView];
+            [self createThumbnailImageViewIfNeededInSuperview:self.view belowSubview:self.overlayView];
             self.thumbnailImageView.image = image;
             
             break;
@@ -68,7 +67,7 @@
 - (void)imageScrollView:(MUKMediaImageScrollView *)imageScrollView didReceiveTaps:(NSInteger)tapCount withGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
 {
     if (tapCount == 1) {
-        [self.delegate carouselFullImageCell:self imageScrollViewDidReceiveTapWithGestureRecognizer:gestureRecognizer];
+        [self.delegate carouselFullImageViewController:self imageScrollViewDidReceiveTapWithGestureRecognizer:gestureRecognizer];
     }
 }
 

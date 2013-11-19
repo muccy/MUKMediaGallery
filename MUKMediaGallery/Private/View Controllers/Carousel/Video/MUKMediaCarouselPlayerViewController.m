@@ -1,14 +1,14 @@
-#import "MUKMediaCarouselPlayerCell.h"
+#import "MUKMediaCarouselPlayerViewController.h"
 #import "MUKMediaCarouselPlayerControlsView.h"
 
-@interface MUKMediaCarouselPlayerCell ()
+@interface MUKMediaCarouselPlayerViewController ()
 @property (nonatomic, readwrite) MPMoviePlayerController *moviePlayerController;
 @property (nonatomic, weak) MUKMediaCarouselPlayerControlsView *playerControlsView;
 @property (nonatomic, getter = isRegisteredToMoviePlayerControllerNotifications) BOOL registeredToMoviePlayerControllerNotifications;
 @property (nonatomic) NSTimer *playerControlsHideTimer;
 @end
 
-@implementation MUKMediaCarouselPlayerCell
+@implementation MUKMediaCarouselPlayerViewController
 
 - (void)dealloc {
     [self cancelPlayerControlsHideTimer];
@@ -30,9 +30,9 @@
         self.moviePlayerController.shouldAutoplay = NO;
         self.moviePlayerController.controlStyle = MPMovieControlStyleNone;
         
-        self.moviePlayerController.view.frame = self.contentView.bounds;
+        self.moviePlayerController.view.frame = self.view.bounds;
         self.moviePlayerController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        [self.contentView insertSubview:self.moviePlayerController.view belowSubview:self.overlayView];
+        [self.view insertSubview:self.moviePlayerController.view belowSubview:self.overlayView];
         
         // This disables two finger gesture to enter fullscreen
         UIView *coverView = [[UIView alloc] initWithFrame:self.moviePlayerController.view.bounds];
@@ -46,15 +46,15 @@
         [self.moviePlayerController.view addSubview:controlsView];
         
         NSDictionary *viewsDict = @{
-            @"controls" : controlsView,
-            @"captionBackground" : self.captionBackgroundView
-        };
+                                    @"controls" : controlsView,
+                                    @"captionBackground" : self.captionBackgroundView
+                                    };
         
         NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-(0)-[controls]-(0)-|" options:0 metrics:nil views:viewsDict];
         [self.moviePlayerController.view addConstraints:constraints];
         
         constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[controls]-(0)-[captionBackground]" options:0 metrics:nil views:viewsDict];
-        [self.contentView addConstraints:constraints];
+        [self.view addConstraints:constraints];
         
         // Create room for thumbnail
         [self createThumbnailImageViewIfNeededInSuperview:self.moviePlayerController.view belowSubview:self.playerControlsView];
@@ -123,12 +123,12 @@
 
 - (void)moviePlayerControllerNowPlayingMovieChangedNotification:(NSNotification *)notification
 {
-    [self.delegate carouselPlayerCellDidChangeNowPlayingMovie:self];
+    [self.delegate carouselPlayerViewControllerDidChangeNowPlayingMovie:self];
 }
 
 - (void)moviePlayerControllerPlaybackStateDidChangeNotification:(NSNotification *)notifcation
 {
-    [self.delegate carouselPlayerCellDidChangePlaybackState:self];
+    [self.delegate carouselPlayerViewControllerDidChangePlaybackState:self];
     
     // When media starts playing, hide controls after a while
     if (self.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)

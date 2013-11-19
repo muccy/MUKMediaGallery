@@ -1,7 +1,9 @@
 #import "MUKMediaCarouselViewController.h"
-#import "MUKMediaCarouselFullImageCell.h"
-#import "MUKMediaCarouselPlayerCell.h"
-#import "MUKMediaCarouselYouTubePlayerCell.h"
+
+#import "MUKMediaCarouselFullImageViewController.h"
+#import "MUKMediaCarouselPlayerViewController.h"
+#import "MUKMediaCarouselYouTubePlayerViewController.h"
+
 #import "MUKMediaAttributesCache.h"
 #import "MUKMediaCarouselFlowLayout.h"
 #import "MUKMediaGalleryUtils.h"
@@ -9,23 +11,15 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL    0
+#define DEBUG_LOAD_LOGGING                      0
 
-static NSString *const kFullImageCellIdentifier = @"MUKMediaCarouselFullImageCell";
-static NSString *const kMediaPlayerCellIdentifier = @"MUKMediaCarouselPlayerCell";
-static NSString *const kYouTubePlayerCellIdentifier = @"MUKMediaCarouselYouTubePlayerCell";
-static NSString *const kBoundsChangesKVOIdentifier = @"BoundsChangesKVOIdentifier";
-static CGFloat const kLateralPadding = 4.0f;
-
-@interface MUKMediaCarouselViewController () <MUKMediaCarouselFullImageCellDelegate, MUKMediaCarouselPlayerCellDelegate, MUKMediaCarouselYouTubePlayerCellDelegate, LBYouTubeExtractorDelegate>
+@interface MUKMediaCarouselViewController () <MUKMediaCarouselItemViewControllerDelegate, MUKMediaCarouselFullImageViewControllerDelegate, MUKMediaCarouselPlayerViewControllerDelegate, MUKMediaCarouselYouTubePlayerViewControllerDelegate, LBYouTubeExtractorDelegate>
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
 @property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache, *youTubeDecodedURLCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
 @property (nonatomic) NSMutableDictionary *runningYouTubeExtractors;
-@property (nonatomic) BOOL isObservingBoundsChanges;
-@property (nonatomic) NSInteger itemIndexToMantainAfterBoundsChange;
-@property (nonatomic) BOOL hasPendingScrollToItem;
-@property (nonatomic) BOOL viewDidAppearInvoked;
 @property (nonatomic) BOOL shouldReloadDataInViewWillAppear;
+@property (nonatomic) NSMutableArray *pendingViewControllers;
 @end
 
 @implementation MUKMediaCarouselViewController
@@ -34,50 +28,29 @@ static CGFloat const kLateralPadding = 4.0f;
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        CommonInitialization(self, [[self class] newCarouselLayout]);
+        CommonInitialization(self);
     }
     
     return self;
 }
 
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    layout = [[self class] newCarouselLayout];
-    self = [super initWithCollectionViewLayout:layout];
+- (id)initWithTransitionStyle:(UIPageViewControllerTransitionStyle)style navigationOrientation:(UIPageViewControllerNavigationOrientation)navigationOrientation options:(NSDictionary *)options
+{
+    self = [super initWithTransitionStyle:style navigationOrientation:navigationOrientation options:options];
     if (self) {
-        CommonInitialization(self, nil);
+        CommonInitialization(self);
     }
     
     return self;
 }
 
 - (id)init {
-    return [self initWithCollectionViewLayout:nil];
-}
-
-- (void)dealloc {
-    [self stopObservingBoundsChangesIfNeeded];
+    return [self initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:@{ UIPageViewControllerOptionInterPageSpacingKey : @4.0f }];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
-    self.collectionView.backgroundColor = [UIColor blackColor];
-    self.collectionView.showsHorizontalScrollIndicator = NO;
-    self.collectionView.showsVerticalScrollIndicator = NO;
-    self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
-    
-    [self.collectionView registerClass:[MUKMediaCarouselFullImageCell class] forCellWithReuseIdentifier:kFullImageCellIdentifier];
-    [self.collectionView registerClass:[MUKMediaCarouselPlayerCell class] forCellWithReuseIdentifier:kMediaPlayerCellIdentifier];
-    [self.collectionView registerClass:[MUKMediaCarouselYouTubePlayerCell class] forCellWithReuseIdentifier:kYouTubePlayerCellIdentifier];
-    
-    if (self.hasPendingScrollToItem) {
-        self.hasPendingScrollToItem = NO;
-        [self scrollToItemAtIndex:self.itemIndexToMantainAfterBoundsChange animated:NO];
-    }
-
-    // This adjust things prior rotation and starts mechanism to preserve position
-    // after bounds changes
-    [self beginObservingBoundsChanges];
+    self.view.backgroundColor = [UIColor blackColor];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -90,62 +63,23 @@ static CGFloat const kLateralPadding = 4.0f;
     
     if (self.shouldReloadDataInViewWillAppear) {
         self.shouldReloadDataInViewWillAppear = NO;
-        [self.collectionView reloadData];
+        
+        // Reload data after -viewDidDisappear has cancelled all loadings
+        for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
+        {
+            // Load attributes
+            MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:viewController.mediaIndex];
+            [self configureItemViewController:viewController forMediaAttributes:attributes];
+        } // for
     }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    self.viewDidAppearInvoked = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
-    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
+    for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
     {
-        [self cancelAllLoadingsForCellAdIndexPath:indexPath cell:nil];
+        [self cancelAllLoadingsForItemViewController:viewController];
         self.shouldReloadDataInViewWillAppear = YES;
     }
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    if (!self.viewDidAppearInvoked) {
-        return;
-    }
-    
-    // Snapshot view controller
-    UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, YES, 0.0);
-    [self.view.layer renderInContext:UIGraphicsGetCurrentContext()];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    UIImageView *snapshotImageView = [[UIImageView alloc] initWithImage:image];
-    snapshotImageView.backgroundColor = self.collectionView.backgroundColor;
-    
-    BOOL isBecomingWider;
-    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation) &&
-        UIInterfaceOrientationIsPortrait(self.interfaceOrientation))
-    {
-        isBecomingWider = YES;
-    }
-    else {
-        isBecomingWider = NO;
-    }
-    
-    snapshotImageView.contentMode = isBecomingWider ? UIViewContentModeScaleAspectFill : UIViewContentModeScaleAspectFit;
-    
-    // Insert snapshot
-    snapshotImageView.frame = self.view.bounds;
-    snapshotImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:snapshotImageView];
-    
-    // Remove snapshot
-    [UIView animateWithDuration:1.3 * duration delay:0.1 * duration options:0 animations:^
-    {
-        snapshotImageView.alpha = 0.0f;
-    } completion:^(BOOL finished) {
-        [snapshotImageView removeFromSuperview];
-    }];
 }
 
 #pragma mark - Overrides
@@ -156,28 +90,39 @@ static CGFloat const kLateralPadding = 4.0f;
 
 #pragma mark - Methods
 
-- (void)scrollToItemAtIndex:(NSInteger)index animated:(BOOL)animated {
-    if (![self isViewLoaded]) {
-        self.hasPendingScrollToItem = YES;
-        self.itemIndexToMantainAfterBoundsChange = index;
-        return;
+- (void)scrollToItemAtIndex:(NSInteger)idx animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler
+{
+    MUKMediaCarouselItemViewController *itemViewController = [self newItemViewControllerForMediaAtIndex:idx];
+    MUKMediaCarouselItemViewController *currentViewController = [self firstVisibleItemViewController];
+    
+    UIPageViewControllerNavigationDirection direction = UIPageViewControllerNavigationDirectionForward;
+    if (currentViewController && currentViewController.mediaIndex > itemViewController.mediaIndex)
+    {
+        direction = UIPageViewControllerNavigationDirectionReverse;
     }
-
-    CGFloat pageWidth = [MUKMediaCarouselFlowLayout fullPageWidthForFrame:self.collectionView.frame spacing:kLateralPadding * 2.0f];
-    [self.collectionView setContentOffset:CGPointMake(pageWidth * index, 0.0f) animated:animated];
+    
+    // Load attributes & configure
+    MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:idx];
+    [self configureItemViewController:itemViewController forMediaAttributes:attributes];
+    
+    // Display view controller
+    [self setViewControllers:@[itemViewController] direction:direction animated:animated completion:completionHandler];
 }
 
 #pragma mark - Private
 
-static void CommonInitialization(MUKMediaCarouselViewController *viewController, UICollectionViewLayout *layout)
+static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 {
+    viewController.delegate = viewController;
+    viewController.dataSource = viewController;
+    
     viewController.wantsFullScreenLayout = YES;
     if ([viewController respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)])
     {
         viewController.automaticallyAdjustsScrollViewInsets = NO;
     }
     
-    viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:3 cacheNulls:NO];
+    viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:1 cacheNulls:NO];
     viewController.thumbnailImagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:7 cacheNulls:NO];
     viewController.mediaAttributesCache = [[MUKMediaAttributesCache alloc] initWithCountLimit:7 cacheNulls:YES];
     
@@ -186,101 +131,304 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController,
     
     viewController.youTubeDecodedURLCache = [[MUKMediaModelCache alloc] initWithCountLimit:7 cacheNulls:YES];
     viewController.runningYouTubeExtractors = [[NSMutableDictionary alloc] init];
-    
-    viewController.itemIndexToMantainAfterBoundsChange = 0;
-    
-    if (layout) {
-        viewController.collectionView.collectionViewLayout = layout;
-    }
 }
 
-static inline NSInteger ItemIndexForIndexPath(NSIndexPath *indexPath) {
-    return indexPath.item;
-}
-
-static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
-    return [NSIndexPath indexPathForItem:index inSection:0];
-}
-
-- (void)cancelAllLoadingsForCellAdIndexPath:(NSIndexPath *)indexPath cell:(UICollectionViewCell *)cell
+- (void)cancelAllLoadingsForItemViewController:(MUKMediaCarouselItemViewController *)viewController
 {
-    if (!indexPath) {
-        return;
-    }
+    [self cancelAllImageLoadingsForItemAtIndex:viewController.mediaIndex];
+    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:viewController.mediaIndex];
     
-    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
-    [self cancelAllImageLoadingsForItemAtIndex:kItemIndex];
-    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
+    viewController = viewController ?: [self visibleItemViewControllerForMediaAtIndex:viewController.mediaIndex];
     
-    cell = cell ?: [self.collectionView cellForItemAtIndexPath:indexPath];
-    if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
-        [self cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell];
+    if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]])
+    {
+        [self cancelMediaPlaybackInPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController];
     }
 }
 
-#pragma mark - Private — Layout
+#pragma mark - Private — Item View Controllers
 
-+ (UICollectionViewLayout *)newCarouselLayout {
-    MUKMediaCarouselFlowLayout *layout = [[MUKMediaCarouselFlowLayout alloc] init];
-    layout.minimumLineSpacing = kLateralPadding * 2.0f;
-    return layout;
-}
-
-- (void)viewBoundsCouldChangeFromSize:(CGSize)oldSize {
-    if (!self.hasPendingScrollToItem) {
-        self.itemIndexToMantainAfterBoundsChange = [self currentPageIndex];
-    }
-}
-
-- (void)viewBoundsDidChangeFromSize:(CGSize)oldSize toNewSize:(CGSize)newSize {
-    [self.collectionView.collectionViewLayout invalidateLayout];
-    [self scrollToItemAtIndex:self.itemIndexToMantainAfterBoundsChange animated:NO];
-}
-
-- (NSInteger)currentPageIndex {
-    CGFloat pageWidth = [MUKMediaCarouselFlowLayout fullPageWidthForFrame:self.collectionView.frame spacing:kLateralPadding * 2.0f];
-    NSInteger index = self.collectionView.contentOffset.x/pageWidth;
-    
-    if (index < 0) {
-        index = 0;
-    }
-    else if (index >= [self.collectionView numberOfItemsInSection:0]) {
-        index = [self.collectionView numberOfItemsInSection:0] - 1;
-    }
-    
-    return index;
-}
-
-#pragma mark - Private — KVO
-
-- (void)beginObservingBoundsChanges {
-    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld|NSKeyValueObservingOptionPrior context:(__bridge void *)kBoundsChangesKVOIdentifier];
-    self.isObservingBoundsChanges = YES;
-}
-
-- (void)stopObservingBoundsChangesIfNeeded {
-    if (self.isObservingBoundsChanges) {
-        self.isObservingBoundsChanges = NO;
-        [self.view removeObserver:self forKeyPath:@"frame"];
-    }
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (MUKMediaCarouselItemViewController *)newItemViewControllerForMediaAtIndex:(NSInteger)idx
 {
-    if (kBoundsChangesKVOIdentifier == (__bridge NSString *)context) {
-        BOOL isPrior = [change[NSKeyValueChangeNotificationIsPriorKey] boolValue];
-        CGRect old = [change[NSKeyValueChangeOldKey] CGRectValue];
-        
-        if (isPrior) {
-            [self viewBoundsCouldChangeFromSize:old.size];
+    // Load attributes
+    MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:idx];
+    
+    // Choose the most appropriate class based on media kind
+    Class vcClass = [MUKMediaCarouselFullImageViewController class];
+    
+    if (attributes) {
+        switch (attributes.kind) {
+            case MUKMediaKindAudio:
+            case MUKMediaKindVideo:
+                vcClass = [MUKMediaCarouselPlayerViewController class];
+                break;
+                
+            case MUKMediaKindYouTubeVideo:
+                vcClass = [MUKMediaCarouselYouTubePlayerViewController class];
+                break;
+                
+            default:
+                break;
+        }
+    }
+    
+    // Allocate an instance
+    MUKMediaCarouselItemViewController *viewController = [[vcClass alloc] initWithMediaIndex:idx];
+    
+    return viewController;
+}
+
+- (void)configureItemViewController:(MUKMediaCarouselItemViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes
+{
+    // Common configuration
+    viewController.delegate = self;
+    viewController.view.backgroundColor = self.view.backgroundColor;
+    
+    viewController.captionLabel.text = attributes.caption;
+    if ([attributes.caption length] && ![self areBarsHidden]) {
+        [viewController setCaptionHidden:NO animated:NO completion:nil];
+    }
+    else {
+        [viewController setCaptionHidden:YES animated:NO completion:nil];
+    }
+    
+    // Specific configuration
+    if ([viewController isMemberOfClass:[MUKMediaCarouselFullImageViewController class]])
+    {
+        [self configureFullImageViewController:(MUKMediaCarouselFullImageViewController *)viewController forMediaAttributes:attributes];
+    }
+    else if ([viewController isMemberOfClass:[MUKMediaCarouselPlayerViewController class]])
+    {
+        [self configurePlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController forMediaAttributes:attributes];
+    }
+    else if ([viewController isMemberOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
+    {
+        [self configureYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController forMediaAttributes:attributes];
+    }
+}
+
+- (MUKMediaCarouselItemViewController *)visibleItemViewControllerForMediaAtIndex:(NSInteger)idx
+{
+    for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
+    {
+        if (viewController.mediaIndex == idx) {
+            return viewController;
+        }
+    }
+    
+    return nil;
+}
+
+- (MUKMediaCarouselItemViewController *)pendingItemViewControllerForMediaAtIndex:(NSInteger)idx
+{
+    for (MUKMediaCarouselItemViewController *viewController in self.pendingViewControllers)
+    {
+        if (viewController.mediaIndex == idx) {
+            return viewController;
+        }
+    }
+    
+    return nil;
+}
+
+#pragma mark - Private — Full Image View Controllers
+
+- (void)configureFullImageViewController:(MUKMediaCarouselFullImageViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes
+{
+    MUKMediaImageKind foundImageKind = MUKMediaImageKindNone;
+    UIImage *image = [self biggestCachedImageOrRequestLoadingForItemAtIndex:viewController.mediaIndex foundImageKind:&foundImageKind];
+    [self setImage:image ofKind:foundImageKind inFullImageViewController:viewController];
+}
+
+- (void)setImage:(UIImage *)image ofKind:(MUKMediaImageKind)kind inFullImageViewController:(MUKMediaCarouselFullImageViewController *)viewController
+{
+    BOOL shouldShowActivityIndicator = (kind != MUKMediaImageKindFullSize);
+    if (shouldShowActivityIndicator) {
+        [viewController.activityIndicatorView startAnimating];
+    }
+    else {
+        [viewController.activityIndicatorView stopAnimating];
+    }
+    
+    [viewController setImage:image ofKind:kind];
+}
+
+- (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoFullImageViewController:(MUKMediaCarouselFullImageViewController *)viewController
+{
+    if (!viewController) return NO;
+    
+    BOOL shouldSetImage = NO;
+    
+    // It's still visible or it will be visible
+    if ([self isVisibleItemViewControllerForMediaAtIndex:viewController.mediaIndex] || [self isPendingItemViewControllerForMediaAtIndex:viewController.mediaIndex])
+    {
+        // Don't overwrite bigger images
+        if (imageKind == MUKMediaImageKindThumbnail &&
+            viewController.imageKind == MUKMediaImageKindFullSize)
+        {
+            shouldSetImage = NO;
         }
         else {
-            CGRect new = [change[NSKeyValueChangeNewKey] CGRectValue];
-            if (!CGSizeEqualToSize(old.size, new.size)) {
-                [self viewBoundsDidChangeFromSize:old.size toNewSize:new.size];
-            }
+            shouldSetImage = YES;
         }
     }
+    
+    return shouldSetImage;
+}
+
+#pragma mark - Private — Player View Controllers
+
+- (void)configurePlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes
+{
+    NSURL *mediaURL = [self.carouselDelegate carouselViewController:self mediaURLForItemAtIndex:viewController.mediaIndex];
+    [self configurePlayerViewController:viewController mediaURL:mediaURL forMediaAttributes:attributes];
+}
+
+- (void)configurePlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController mediaURL:(NSURL *)mediaURL forMediaAttributes:(MUKMediaAttributes *)attributes
+{
+    // Set media URL (this will create room for thumbnail)
+    if (mediaURL) {
+        [viewController setMediaURL:mediaURL];
+    }
+    
+    // Nullify existing thumbnail
+    viewController.thumbnailImageView.image = nil;
+    
+    // Try to load thumbnail to appeal user eye, from cache
+    UIImage *thumbnail = [[self cacheForImageKind:MUKMediaImageKindThumbnail] objectAtIndex:viewController.mediaIndex isNull:NULL];
+    
+    // Thumbnail available: display it
+    if (thumbnail) {
+        [self setThumbnailImage:thumbnail stock:NO inPlayerViewController:viewController hideActivityIndicator:YES];
+    }
+    
+    // Thumbnail unavailable: request to delegate
+    else {
+        // Show loading
+        [viewController.activityIndicatorView startAnimating];
+        
+        // Request loading
+        [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndex:viewController.mediaIndex inNextRunLoop:YES];
+        
+        // Use stock thumbnail in the meanwhile
+        if (viewController.thumbnailImageView.image == nil) {
+            thumbnail = [self stockThumbnailForMediaKind:attributes.kind];
+            [self setThumbnailImage:thumbnail stock:YES inPlayerViewController:viewController hideActivityIndicator:NO];
+        }
+    }
+}
+
+- (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController
+{
+    if (!viewController) return NO;
+    
+    BOOL shouldSetImage = NO;
+    
+    // Only thumbnails and when view controller is still visible (or
+    // it will be visible soon)
+    if (imageKind == MUKMediaImageKindThumbnail &&
+        ([self isVisibleItemViewControllerForMediaAtIndex:viewController.mediaIndex] || [self isPendingItemViewControllerForMediaAtIndex:viewController.mediaIndex]))
+    {
+        shouldSetImage = YES;
+    }
+    
+    return shouldSetImage;
+}
+
+- (void)setThumbnailImage:(UIImage *)image stock:(BOOL)isStock inPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController hideActivityIndicator:(BOOL)hideActivityIndicator
+{
+    if (hideActivityIndicator) {
+        [viewController.activityIndicatorView stopAnimating];
+    }
+    
+    viewController.thumbnailImageView.image = image;
+    viewController.thumbnailImageView.contentMode = (isStock ? UIViewContentModeCenter : UIViewContentModeScaleAspectFit);
+}
+
+- (void)dismissThumbnailInPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController
+{
+    // Cancel thumbnail loading
+    [self cancelAllImageLoadingsForItemAtIndex:viewController.mediaIndex];
+    
+    // Hide thumbnail
+    [self setThumbnailImage:nil stock:NO inPlayerViewController:viewController hideActivityIndicator:YES];
+}
+
+#pragma mark - Private — YouTube Player View Controllers
+
+- (void)configureYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes
+{
+    BOOL isNull = NO;
+    NSURL *decodedMediaURL = [self.youTubeDecodedURLCache objectAtIndex:viewController.mediaIndex isNull:&isNull];
+    
+    BOOL isUsingWebView = NO;
+    if (decodedMediaURL == nil) {
+        NSURL *youTubeURL = [self.carouselDelegate carouselViewController:self mediaURLForItemAtIndex:viewController.mediaIndex];
+        
+        if (isNull) {
+            // Go straight with web view
+            isUsingWebView = YES;
+            [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes undecodableYouTubeURL:youTubeURL];
+        }
+        else {
+            // No cached URL, but try to decode
+            [self beginDecodingMovieURLFromYouTubeURL:youTubeURL forItemAtIndex:viewController.mediaIndex];
+        }
+    }
+    
+    // Call full configuration if needed
+    if (isUsingWebView == NO) {
+        [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes decodedMediaURL:decodedMediaURL];
+    }
+}
+
+- (void)configureYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes decodedMediaURL:(NSURL *)mediaURL
+{
+    // Anyway, call plain media player method
+    [self configurePlayerViewController:viewController mediaURL:mediaURL forMediaAttributes:attributes];
+    
+    // Show spinner if no media has been set
+    if (!mediaURL) {
+        [viewController.activityIndicatorView startAnimating];
+    }
+}
+
+- (void)configureYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController forMediaAttributes:(MUKMediaAttributes *)attributes undecodableYouTubeURL:(NSURL *)youTubeURL
+{
+    // Anyway, call plain media player method
+    [self configurePlayerViewController:viewController mediaURL:nil forMediaAttributes:attributes];
+    
+    // Show web view with spinner
+    [viewController.activityIndicatorView startAnimating];
+    [viewController setYouTubeURL:youTubeURL];
+}
+
+#pragma mark - Private — Current State
+
+- (BOOL)isPendingItemViewControllerForMediaAtIndex:(NSInteger)idx {
+    for (MUKMediaCarouselItemViewController *viewController in self.pendingViewControllers)
+    {
+        if (viewController.mediaIndex == idx) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+- (BOOL)isVisibleItemViewControllerForMediaAtIndex:(NSInteger)idx {
+    for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
+    {
+        if (viewController.mediaIndex == idx) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
+
+- (MUKMediaCarouselItemViewController *)firstVisibleItemViewController {
+    return [self.viewControllers firstObject];
 }
 
 #pragma mark - Private — Media Attributes
@@ -290,7 +438,7 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     {
         if ([self.delegate respondsToSelector:@selector(carouselViewController:attributesForItemAtIndex:)])
         {
-            return [self.delegate carouselViewController:self attributesForItemAtIndex:idx];
+            return [self.carouselDelegate carouselViewController:self attributesForItemAtIndex:idx];
         }
       
         return nil;
@@ -339,29 +487,30 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     return indexSet;
 }
 
-- (BOOL)isLoadingImageOfKind:(MUKMediaImageKind)imageKind atIndex:(NSInteger)index
+- (BOOL)isLoadingImageOfKind:(MUKMediaImageKind)imageKind atIndex:(NSInteger)idx
 {
-    return [[self loadingIndexesForImageKind:imageKind] containsIndex:index];
+    return [[self loadingIndexesForImageKind:imageKind] containsIndex:idx];
 }
 
-- (void)setLoading:(BOOL)loading imageOfKind:(MUKMediaImageKind)imageKind atIndex:(NSInteger)index
+- (void)setLoading:(BOOL)loading imageOfKind:(MUKMediaImageKind)imageKind atIndex:(NSInteger)idx
 {
     NSMutableIndexSet *indexSet = [self loadingIndexesForImageKind:imageKind];
     
     if (loading) {
-        [indexSet addIndex:index];
+        [indexSet addIndex:idx];
     }
     else {
-        [indexSet removeIndex:index];
+        [indexSet removeIndex:idx];
     }
 }
 
-- (UIImage *)biggestCachedImageOrRequestLoadingForItemAtIndexPath:(NSIndexPath *)indexPath foundImageKind:(MUKMediaImageKind *)foundImageKind
+- (UIImage *)biggestCachedImageOrRequestLoadingForItemAtIndex:(NSInteger)idx foundImageKind:(MUKMediaImageKind *)foundImageKind
 {
-    NSInteger const kImageIndex = ItemIndexForIndexPath(indexPath);
-
+#if DEBUG_LOAD_LOGGING
+    NSLog(@"Loading image for media at index %i...", idx);
+#endif
     // Try to load biggest image
-    UIImage *fullImage = [[self cacheForImageKind:MUKMediaImageKindFullSize] objectAtIndex:kImageIndex isNull:NULL];
+    UIImage *fullImage = [[self cacheForImageKind:MUKMediaImageKindFullSize] objectAtIndex:idx isNull:NULL];
     
     // If full image is there, we have just finished :)
     if (fullImage) {
@@ -369,15 +518,19 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
             *foundImageKind = MUKMediaImageKindFullSize;
         }
         
+#if DEBUG_LOAD_LOGGING
+        NSLog(@"Found in cache!");
+#endif
+        
         return fullImage;
     }
     
     // No full image in cache :(
     // We need to request full image loading to delegate
-    [self loadImageOfKind:MUKMediaImageKindFullSize forItemAtIndexPath:indexPath inNextRunLoop:YES];
+    [self loadImageOfKind:MUKMediaImageKindFullSize forItemAtIndex:idx inNextRunLoop:YES];
     
     // Try to load thumbnail to appeal user eye from cache
-    UIImage *thumbnail = [[self cacheForImageKind:MUKMediaImageKindThumbnail] objectAtIndex:kImageIndex isNull:NULL];
+    UIImage *thumbnail = [[self cacheForImageKind:MUKMediaImageKindThumbnail] objectAtIndex:idx isNull:NULL];
 
     // Give back thumbnail if it's in memory
     if (thumbnail) {
@@ -390,7 +543,7 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     
     // Thumbnail is not available, too :(
     // Request it to delegate!
-    [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndexPath:indexPath inNextRunLoop:YES];
+    [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndex:idx inNextRunLoop:YES];
     
     // No image in memory
     if (foundImageKind != NULL) {
@@ -400,12 +553,10 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     return nil;
 }
 
-- (void)loadImageOfKind:(MUKMediaImageKind)imageKind forItemAtIndexPath:(NSIndexPath *)indexPath inNextRunLoop:(BOOL)useNextRunLoop
+- (void)loadImageOfKind:(MUKMediaImageKind)imageKind forItemAtIndex:(NSInteger)idx inNextRunLoop:(BOOL)useNextRunLoop
 {
-    NSInteger const kImageIndex = ItemIndexForIndexPath(indexPath);
-    
     // Mark as loading
-    [self setLoading:YES imageOfKind:imageKind atIndex:kImageIndex];
+    [self setLoading:YES imageOfKind:imageKind atIndex:idx];
     
     // This block is called by delegate which can give back an image
     // asynchronously
@@ -417,65 +568,66 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
         }
         
         // If it's still loading
-        if ([strongSelf isLoadingImageOfKind:imageKind atIndex:kImageIndex]) {
+        if ([strongSelf isLoadingImageOfKind:imageKind atIndex:idx]) {
             // Mark as not loading
-            [strongSelf setLoading:NO imageOfKind:imageKind atIndex:kImageIndex];
+            [strongSelf setLoading:NO imageOfKind:imageKind atIndex:idx];
             
             // Stop smaller loading
-            [strongSelf cancelImageLoadingSmallerThanKind:imageKind atIndexPath:indexPath];
+            [strongSelf cancelImageLoadingSmallerThanKind:imageKind atIndex:idx];
             
             // Cache image
-            [[strongSelf cacheForImageKind:imageKind] setObject:image atIndex:kImageIndex];
+            [[strongSelf cacheForImageKind:imageKind] setObject:image atIndex:idx];
             
-            // Get actual cell
-            MUKMediaCarouselCell *cell = (MUKMediaCarouselCell *)[strongSelf.collectionView cellForItemAtIndexPath:indexPath];
+            // Get actual item view controller, searching for it inside visible
+            // view controllers and pending view controllers
+            MUKMediaCarouselItemViewController *viewController = [strongSelf visibleItemViewControllerForMediaAtIndex:idx] ?: [self pendingItemViewControllerForMediaAtIndex:idx];
             
             // Set image if needed
-            if ([cell isKindOfClass:[MUKMediaCarouselFullImageCell class]]) {
-                MUKMediaCarouselFullImageCell *fullImageCell = (MUKMediaCarouselFullImageCell *)cell;
+            if ([viewController isKindOfClass:[MUKMediaCarouselFullImageViewController class]])
+            {
+                MUKMediaCarouselFullImageViewController *fullImageViewController = (MUKMediaCarouselFullImageViewController *)viewController;
                 
-                if ([strongSelf shouldSetLoadedImageOfKind:imageKind intoFullImageCell:fullImageCell atIndexPath:indexPath])
+                if ([strongSelf shouldSetLoadedImageOfKind:imageKind intoFullImageViewController:fullImageViewController])
                 {
-                    [strongSelf setImage:image ofKind:imageKind inFullImageCell:fullImageCell];
+                    [strongSelf setImage:image ofKind:imageKind inFullImageViewController:fullImageViewController];
                 }
             }
-            else if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
-                MUKMediaCarouselPlayerCell *playerCell = (MUKMediaCarouselPlayerCell *)cell;
-                if ([strongSelf shouldSetLoadedImageOfKind:imageKind intoPlayerCell:playerCell atIndexPath:indexPath])
+            
+            // Set video if needed
+            else if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]])
+            {
+                MUKMediaCarouselPlayerViewController *playerViewController = (MUKMediaCarouselPlayerViewController *)viewController;
+                if ([strongSelf shouldSetLoadedImageOfKind:imageKind intoPlayerViewController:playerViewController])
                 {
                     BOOL stock = NO;
                     
                     if (!image) {
                         // Use stock thumbnail
-                        MUKMediaAttributes *attributes = [strongSelf mediaAttributesForItemAtIndex:kImageIndex];
+                        MUKMediaAttributes *attributes = [strongSelf mediaAttributesForItemAtIndex:idx];
                         image = [strongSelf stockThumbnailForMediaKind:attributes.kind];
                         stock = YES;
                     }
                     
                     BOOL hideActivityIndicator = YES;
-                    if ([cell isKindOfClass:[MUKMediaCarouselYouTubePlayerCell class]])
+                    if ([viewController isKindOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
                     {
                         hideActivityIndicator = NO;
                     }
                     
-                    [strongSelf setThumbnailImage:image stock:stock inPlayerCell:playerCell hideActivityIndicator:hideActivityIndicator];
+                    [strongSelf setThumbnailImage:image stock:stock inPlayerViewController:playerViewController hideActivityIndicator:hideActivityIndicator];
                 }
             }
         } // if isLoadingImageKind
     }; // completionHandler
     
-    // Call delegate in next run loop when we need cell enters in reuse queue
-    // In completionHandler we have [self.collectionView cellForItemAtIndexPath:indexPath]
-    // which fill nil if is called inside -collectionView:cellForItemAtIndexPath:
-    // and this is the case when completionHandler is invoked synchrounosly (say
-    // user has a nil thumbnail
+    // Call delegate in next run loop when we need view controller enters in reuse queue
     if (useNextRunLoop) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.delegate carouselViewController:self loadImageOfKind:imageKind forItemAtIndex:kImageIndex completionHandler:completionHandler];
+            [self.carouselDelegate carouselViewController:self loadImageOfKind:imageKind forItemAtIndex:idx completionHandler:completionHandler];
         });
     }
     else {
-        [self.delegate carouselViewController:self loadImageOfKind:imageKind forItemAtIndex:kImageIndex completionHandler:completionHandler];
+        [self.carouselDelegate carouselViewController:self loadImageOfKind:imageKind forItemAtIndex:idx completionHandler:completionHandler];
     }
 }
 
@@ -488,21 +640,21 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
         // Request delegate to abort
         if ([self.delegate respondsToSelector:@selector(carouselViewController:cancelLoadingForImageOfKind:atIndex:)])
         {
-            [self.delegate carouselViewController:self cancelLoadingForImageOfKind:imageKind atIndex:index];
+            [self.carouselDelegate carouselViewController:self cancelLoadingForImageOfKind:imageKind atIndex:index];
         }
     }
 }
 
-- (void)cancelImageLoadingSmallerThanKind:(MUKMediaImageKind)imageKind atIndexPath:(NSIndexPath *)indexPath
+- (void)cancelImageLoadingSmallerThanKind:(MUKMediaImageKind)imageKind atIndex:(NSInteger)idx
 {
     if (imageKind == MUKMediaImageKindFullSize) {
-        [self cancelLoadingForImageOfKind:MUKMediaImageKindThumbnail atIndex:ItemIndexForIndexPath(indexPath)];
+        [self cancelLoadingForImageOfKind:MUKMediaImageKindThumbnail atIndex:idx];
     }
 }
 
-- (void)cancelAllImageLoadingsForItemAtIndex:(NSInteger)index {
-    [self cancelLoadingForImageOfKind:MUKMediaImageKindFullSize atIndex:index];
-    [self cancelLoadingForImageOfKind:MUKMediaImageKindThumbnail atIndex:index];
+- (void)cancelAllImageLoadingsForItemAtIndex:(NSInteger)idx {
+    [self cancelLoadingForImageOfKind:MUKMediaImageKindFullSize atIndex:idx];
+    [self cancelLoadingForImageOfKind:MUKMediaImageKindThumbnail atIndex:idx];
 }
 
 - (UIImage *)stockThumbnailForMediaKind:(MUKMediaKind)mediaKind {
@@ -542,18 +694,20 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
 
 #pragma mark - Private — Media Playback
 
-- (void)cancelMediaPlaybackInPlayerCell:(MUKMediaCarouselPlayerCell *)cell {
-    [cell setMediaURL:nil];
+- (void)cancelMediaPlaybackInPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController
+{
+    [viewController setMediaURL:nil];
     
-    if ([cell isKindOfClass:[MUKMediaCarouselYouTubePlayerCell class]]) {
-        [(MUKMediaCarouselYouTubePlayerCell *)cell setYouTubeURL:nil];
+    if ([viewController isKindOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
+    {
+        [(MUKMediaCarouselYouTubePlayerViewController *)viewController setYouTubeURL:nil];
     }
 }
 
-- (BOOL)shouldDismissThumbnailAsNewPlaybackStartsInPlayerCell:(MUKMediaCarouselPlayerCell *)cell forItemAtIndex:(NSInteger)index
+- (BOOL)shouldDismissThumbnailAsNewPlaybackStartsInPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController
 {
     // Load attributes
-    MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:index];
+    MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:viewController.mediaIndex];
     
     BOOL shouldDismissThumbnail;
     
@@ -562,8 +716,8 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
         shouldDismissThumbnail = NO;
     }
     else {
-        if (cell.moviePlayerController.playbackState != MPMoviePlaybackStateStopped ||
-            cell.moviePlayerController.playbackState != MPMoviePlaybackStatePaused)
+        if (viewController.moviePlayerController.playbackState != MPMoviePlaybackStateStopped ||
+            viewController.moviePlayerController.playbackState != MPMoviePlaybackStatePaused)
         {
             shouldDismissThumbnail = YES;
         }
@@ -621,233 +775,6 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     return ([keys count] ? [[keys anyObject] integerValue] : NSNotFound);
 }
 
-#pragma mark - Private — Cell
-
-- (UICollectionViewCell *)dequeueCellForMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *identifier = kFullImageCellIdentifier;
-    
-    if (attributes) {
-        switch (attributes.kind) {
-            case MUKMediaKindAudio:
-            case MUKMediaKindVideo:
-                identifier = kMediaPlayerCellIdentifier;
-                break;
-                
-            case MUKMediaKindYouTubeVideo:
-                identifier = kYouTubePlayerCellIdentifier;
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-    return [self.collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-}
-
-- (void)configureCell:(UICollectionViewCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
-{
-    cell.backgroundColor = [UIColor blackColor];
-    
-    if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
-        MUKMediaCarouselCell *carouselCell = (MUKMediaCarouselCell *)cell;
-        carouselCell.captionLabel.text = attributes.caption;
-        
-        if ([attributes.caption length] && ![self areBarsHidden]) {
-            [carouselCell setCaptionHidden:NO animated:NO completion:nil];
-        }
-        else {
-            [carouselCell setCaptionHidden:YES animated:NO completion:nil];
-        }
-        
-        if ([cell isMemberOfClass:[MUKMediaCarouselFullImageCell class]]) {
-            [self configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
-        }
-        else if ([cell isMemberOfClass:[MUKMediaCarouselPlayerCell class]]) {
-            [self configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
-        }
-        else if ([cell isMemberOfClass:[MUKMediaCarouselYouTubePlayerCell class]])
-        {
-            [self configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:attributes atIndexPath:indexPath];
-        }
-    }
-}
-
-- (void)configureFullImageCell:(MUKMediaCarouselFullImageCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
-{
-    cell.delegate = self;
-    
-    MUKMediaImageKind foundImageKind = MUKMediaImageKindNone;
-    UIImage *image = [self biggestCachedImageOrRequestLoadingForItemAtIndexPath:indexPath foundImageKind:&foundImageKind];
-    [self setImage:image ofKind:foundImageKind inFullImageCell:cell];
-    
-    
-}
-
-- (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoFullImageCell:(MUKMediaCarouselFullImageCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    if (!cell || !indexPath) return NO;
-    
-    BOOL shouldSetImage = NO;
-    
-    // It's still visible
-    if ([[self.collectionView indexPathsForVisibleItems] containsObject:indexPath])
-    {
-        // Don't overwrite bigger images
-        if (imageKind == MUKMediaImageKindThumbnail &&
-            cell.imageKind == MUKMediaImageKindFullSize)
-        {
-            shouldSetImage = NO;
-        }
-        else {
-            shouldSetImage = YES;
-        }
-    }
-    
-    return shouldSetImage;
-}
-
-- (void)setImage:(UIImage *)image ofKind:(MUKMediaImageKind)kind inFullImageCell:(MUKMediaCarouselFullImageCell *)cell
-{
-    BOOL shouldShowActivityIndicator = (kind != MUKMediaImageKindFullSize);
-    if (shouldShowActivityIndicator) {
-        [cell.activityIndicatorView startAnimating];
-    }
-    else {
-        [cell.activityIndicatorView stopAnimating];
-    }
-    
-    [cell setImage:image ofKind:kind];
-}
-
-- (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
-{
-    NSURL *mediaURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:ItemIndexForIndexPath(indexPath)];
-    [self configureMediaPlayerCell:cell mediaURL:mediaURL forMediaAttributes:attributes atIndexPath:indexPath];
-}
-
-- (void)configureMediaPlayerCell:(MUKMediaCarouselPlayerCell *)cell mediaURL:(NSURL *)mediaURL forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
-{
-    cell.delegate = self;
-    
-    // Set media URL (this will create room for thumbnail)
-    if (mediaURL) {
-        [cell setMediaURL:mediaURL];
-    }
-    
-    // Nullify existing thumbnail
-    cell.thumbnailImageView.image = nil;
-    
-    // Try to load thumbnail to appeal user eye, from cache
-    UIImage *thumbnail = [[self cacheForImageKind:MUKMediaImageKindThumbnail] objectAtIndex:ItemIndexForIndexPath(indexPath) isNull:NULL];
-    
-    // Thumbnail available: display it
-    if (thumbnail) {
-        [self setThumbnailImage:thumbnail stock:NO inPlayerCell:cell hideActivityIndicator:YES];
-    }
-    
-    // Thumbnail unavailable: request to delegate
-    else {
-        // Show loading
-        [cell.activityIndicatorView startAnimating];
-        
-        // Request loading
-        [self loadImageOfKind:MUKMediaImageKindThumbnail forItemAtIndexPath:indexPath inNextRunLoop:YES];
-        
-        // Use stock thumbnail in the meanwhile
-        if (cell.thumbnailImageView.image == nil) {
-            thumbnail = [self stockThumbnailForMediaKind:attributes.kind];
-            [self setThumbnailImage:thumbnail stock:YES inPlayerCell:cell hideActivityIndicator:NO];
-        }
-    }
-}
-
-- (BOOL)shouldSetLoadedImageOfKind:(MUKMediaImageKind)imageKind intoPlayerCell:(MUKMediaCarouselPlayerCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    if (!cell || !indexPath) return NO;
-    
-    BOOL shouldSetImage = NO;
-    
-    // Only thumbnails and when cell is still visible
-    if (imageKind == MUKMediaImageKindThumbnail &&
-        [[self.collectionView indexPathsForVisibleItems] containsObject:indexPath])
-    {
-        shouldSetImage = YES;
-    }
-    
-    return shouldSetImage;
-}
-
-- (void)setThumbnailImage:(UIImage *)image stock:(BOOL)isStock inPlayerCell:(MUKMediaCarouselPlayerCell *)cell hideActivityIndicator:(BOOL)hideActivityIndicator
-{
-    if (hideActivityIndicator) {
-        [cell.activityIndicatorView stopAnimating];
-    }
-
-    cell.thumbnailImageView.image = image;
-    cell.thumbnailImageView.contentMode = (isStock ? UIViewContentModeCenter : UIViewContentModeScaleAspectFit);
-}
-
-- (void)dismissThumbnailInPlayerCell:(MUKMediaCarouselPlayerCell *)cell forItemAtIndex:(NSInteger)index
-{
-    // Cancel thumbnail loading
-    [self cancelAllImageLoadingsForItemAtIndex:index];
-    
-    // Hide thumbnail
-    [self setThumbnailImage:nil stock:NO inPlayerCell:cell hideActivityIndicator:YES];
-}
-
-- (void)configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes atIndexPath:(NSIndexPath *)indexPath
-{
-    cell.delegate = self;
-    
-    BOOL isNull = NO;
-    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
-    NSURL *decodedMediaURL = [self.youTubeDecodedURLCache objectAtIndex:kItemIndex isNull:&isNull];
-    
-    BOOL isUsingWebView = NO;
-    if (decodedMediaURL == nil) {
-        NSURL *youTubeURL = [self.delegate carouselViewController:self mediaURLForItemAtIndex:kItemIndex];
-        
-        if (isNull) {
-            // Go straight with web view
-            isUsingWebView = YES;
-            [self configureYouTubePlayerCell:cell forMediaAttributes:attributes undecodableYouTubeURL:youTubeURL atIndexPath:indexPath];
-        }
-        else {
-            // No cached URL, but try to decode
-            [self beginDecodingMovieURLFromYouTubeURL:youTubeURL forItemAtIndex:kItemIndex];
-        }
-    }
-    
-    // Call full configuration if needed
-    if (isUsingWebView == NO) {
-        [self configureYouTubePlayerCell:cell forMediaAttributes:attributes decodedMediaURL:decodedMediaURL atIndexPath:indexPath];
-    }
-}
-
-- (void)configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes decodedMediaURL:(NSURL *)mediaURL atIndexPath:(NSIndexPath *)indexPath
-{
-    // Anyway, call plain media player method
-    [self configureMediaPlayerCell:cell mediaURL:mediaURL forMediaAttributes:attributes atIndexPath:indexPath];
-    
-    // Show spinner if no media has been set
-    if (!mediaURL) {
-        [cell.activityIndicatorView startAnimating];
-    }
-}
-
-- (void)configureYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell forMediaAttributes:(MUKMediaAttributes *)attributes undecodableYouTubeURL:(NSURL *)youTubeURL atIndexPath:(NSIndexPath *)indexPath
-{
-    // Anyway, call plain media player method
-    [self configureMediaPlayerCell:cell mediaURL:nil forMediaAttributes:attributes atIndexPath:indexPath];
-    
-    // Show web view with spinner
-    [cell.activityIndicatorView startAnimating];
-    [cell setYouTubeURL:youTubeURL];
-}
-
 #pragma mark - Private — Bars
 
 - (BOOL)areBarsHidden {
@@ -878,11 +805,11 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
         [self setNeedsStatusBarAppearanceUpdate];
     }
     
-    for (MUKMediaCarouselCell *cell in [self.collectionView visibleCells]) {
-        if ([cell isKindOfClass:[MUKMediaCarouselCell class]]) {
-            if (hidden || (!hidden && [cell.captionLabel.text length] > 0)) {
-                [cell setCaptionHidden:hidden animated:animated completion:nil];
-            }
+    for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
+    {
+        if (hidden || (!hidden && [viewController.captionLabel.text length] > 0))
+        {
+            [viewController setCaptionHidden:hidden animated:animated completion:nil];
         }
     } // for
 }
@@ -892,110 +819,132 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     [self setBarsHidden:!barsHidden animated:YES];
 }
 
-#pragma mark - <UICollectionViewDataSource>
+#pragma mark - <UIPageViewControllerDelegate>
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers
 {
-    return [self.delegate numberOfItemsInCarouselViewController:self];
+    [self setBarsHidden:YES animated:YES];
+    
+    // Save pending view controllers
+    self.pendingViewControllers = [pendingViewControllers mutableCopy];
+    
+    // Configure new view controllers
+    for (MUKMediaCarouselItemViewController *itemViewController in pendingViewControllers)
+    {
+#if DEBUG_LOAD_LOGGING
+        NSLog(@"Configuring media at index %i at -pageViewController:willTransitionToViewControllers:", itemViewController.mediaIndex);
+#endif
+        // Load attributes
+        MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:itemViewController.mediaIndex];
+        [self configureItemViewController:itemViewController forMediaAttributes:attributes];
+    }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
 {
-    // Load attributes
-    MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:ItemIndexForIndexPath(indexPath)];
+    // When view controller disappear, stop loadings
+    for (MUKMediaCarouselItemViewController *previousViewController in previousViewControllers)
+    {
+        if (![pageViewController.viewControllers containsObject:previousViewController])
+        {
+#if DEBUG_LOAD_LOGGING
+            NSLog(@"Cancel all loadings for media at index %i at -didFinishAnimating:previousViewControllers:transitionCompleted:", previousViewController.mediaIndex);
+#endif
+            [self cancelAllLoadingsForItemViewController:previousViewController];
+        }
+    } // for
     
-    // Create cell
-    UICollectionViewCell *cell = [self dequeueCellForMediaAttributes:attributes atIndexPath:indexPath];
-    
-    // Configure cell
-    [self configureCell:cell forMediaAttributes:attributes atIndexPath:indexPath];
-    
-    return cell;
+    // Clean pending view controllers
+    self.pendingViewControllers = nil;
 }
 
-#pragma mark - <UICollectionViewDelegate>
+#pragma mark - <UIPageViewControllerDataSource>
 
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
-    [self cancelAllLoadingsForCellAdIndexPath:indexPath cell:cell];
+    MUKMediaCarouselItemViewController *itemViewController = (MUKMediaCarouselItemViewController *)viewController;
+    
+    // It's first item
+    if (itemViewController.mediaIndex <= 0) {
+        return nil;
+    }
+    
+    return [self newItemViewControllerForMediaAtIndex:itemViewController.mediaIndex - 1];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
+{
+    MUKMediaCarouselItemViewController *itemViewController = (MUKMediaCarouselItemViewController *)viewController;
+    
+    // It's last item
+    NSInteger itemsCount = [self.carouselDelegate numberOfItemsInCarouselViewController:self];
+    if (itemViewController.mediaIndex + 1 >= itemsCount) {
+        return nil;
+    }
+    
+    return [self newItemViewControllerForMediaAtIndex:itemViewController.mediaIndex + 1];
+}
+
+#pragma mark - <MUKMediaCarouselItemViewControllerDelegate>
+
+- (void)carouselItemViewControllerDidReceiveTap:(MUKMediaCarouselItemViewController *)viewController
 {
     // Show movie controls if bars are hidden and current item is an audio/video
     // Hide movie controls if bars are shows and current item is already playing
-    MUKMediaCarouselPlayerCell *cell = (MUKMediaCarouselPlayerCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    if ([cell isKindOfClass:[MUKMediaCarouselPlayerCell class]]) {
-        if ([self areBarsHidden]) {
-            [cell setPlayerControlsHidden:NO animated:YES completion:nil];
-        }
-        else if (cell.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
-        {
-            [cell setPlayerControlsHidden:YES animated:YES completion:nil];
-        }
-    }
     
-    [self toggleBarsVisibility];
-}
-
-#pragma mark - <UICollectionViewDelegateFlowLayout>
-
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return collectionView.frame.size;
-}
-
-#pragma mark - <UIScrollViewDelegate>
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self setBarsHidden:YES animated:YES];
-}
-
-#pragma mark - <MUKMediaCarouselFullImageCellDelegate>
-
-- (void)carouselFullImageCell:(MUKMediaCarouselFullImageCell *)cell imageScrollViewDidReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
-{
-    [self toggleBarsVisibility];
-}
-
-#pragma mark - <MUKMediaCarouselPlayerCellDelegate>
-
-- (void)carouselPlayerCellDidChangeNowPlayingMovie:(MUKMediaCarouselPlayerCell *)cell
-{
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
-    if (indexPath == nil) {
-        return;
-    }
-    
-    NSInteger const kItemIndex = ItemIndexForIndexPath(indexPath);
-
-    // Dismiss thumbnail (if needed) when new playback starts (or begins scrubbing)
-    if ([self shouldDismissThumbnailAsNewPlaybackStartsInPlayerCell:cell forItemAtIndex:kItemIndex])
+    if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]])
     {
-        [self dismissThumbnailInPlayerCell:cell forItemAtIndex:kItemIndex];
+        MUKMediaCarouselPlayerViewController *playerViewController = (MUKMediaCarouselPlayerViewController *)viewController;
+        if ([self areBarsHidden]) {
+            [playerViewController setPlayerControlsHidden:NO animated:YES completion:nil];
+        }
+        else if (playerViewController.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+        {
+            [playerViewController setPlayerControlsHidden:YES animated:YES completion:nil];
+        }
+    }
+    
+    [self toggleBarsVisibility];
+}
+
+#pragma mark - <MUKMediaCarouselFullImageViewControllerDelegate>
+
+- (void)carouselFullImageViewController:(MUKMediaCarouselFullImageViewController *)viewController imageScrollViewDidReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
+{
+    [self toggleBarsVisibility];
+}
+
+#pragma mark - <MUKMediaCarouselPlayerViewControllerDelegate>
+
+- (void)carouselPlayerViewControllerDidChangeNowPlayingMovie:(MUKMediaCarouselPlayerViewController *)viewController
+{
+    // Dismiss thumbnail (if needed) when new playback starts (or begins scrubbing)
+    if ([self shouldDismissThumbnailAsNewPlaybackStartsInPlayerViewController:viewController])
+    {
+        [self dismissThumbnailInPlayerViewController:viewController];
     }
 }
 
-- (void)carouselPlayerCellDidChangePlaybackState:(MUKMediaCarouselPlayerCell *)cell
+- (void)carouselPlayerViewControllerDidChangePlaybackState:(MUKMediaCarouselPlayerViewController *)viewController
 {
     // Hide bars when playback starts
-    if (cell.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
+    if (viewController.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
     {
         [self setBarsHidden:YES animated:YES];
     }
 }
 
-#pragma mark - <MUKMediaCarouselYouTubePlayerCellDelegate>
+#pragma mark - <MUKMediaCarouselYouTubePlayerViewControllerDelegate>
 
-- (void)carouselYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell webView:(UIWebView *)webView didReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
+- (void)carouselYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController webView:(UIWebView *)webView didReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
 {
     [self toggleBarsVisibility];
 }
 
-- (void)carouselYouTubePlayerCell:(MUKMediaCarouselYouTubePlayerCell *)cell didFinishLoadingWebView:(UIWebView *)webView error:(NSError *)error
+- (void)carouselYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController didFinishLoadingWebView:(UIWebView *)webView error:(NSError *)error
 {
-    cell.thumbnailImageView.image = nil;
-    [cell.activityIndicatorView stopAnimating];
+    viewController.thumbnailImageView.image = nil;
+    [viewController.activityIndicatorView stopAnimating];
 }
 
 #pragma mark - <LBYouTubeExtractorDelegate>
@@ -1017,13 +966,13 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     // Set as not running
     [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
     
-    // Get & configure cell
-    NSIndexPath *const kIndexPath = IndexPathForItemIndex(kItemIndex);
-    MUKMediaCarouselYouTubePlayerCell *cell = (MUKMediaCarouselYouTubePlayerCell *)[self.collectionView cellForItemAtIndexPath:kIndexPath];
+    // Get & configure view controller
+    MUKMediaCarouselYouTubePlayerViewController *viewController = (MUKMediaCarouselYouTubePlayerViewController *)[self visibleItemViewControllerForMediaAtIndex:kItemIndex];
     
-    if ([cell isMemberOfClass:[MUKMediaCarouselYouTubePlayerCell class]]) {
+    if ([viewController isMemberOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
+    {
         MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kItemIndex];
-        [self configureYouTubePlayerCell:cell forMediaAttributes:attributes decodedMediaURL:videoURL atIndexPath:kIndexPath];
+        [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes decodedMediaURL:videoURL];
     }
 }
 
@@ -1039,13 +988,13 @@ static inline NSIndexPath *IndexPathForItemIndex(NSInteger index) {
     // Set as not running
     [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
     
-    // Get & configure cell
-    NSIndexPath *const kIndexPath = IndexPathForItemIndex(kItemIndex);
-    MUKMediaCarouselYouTubePlayerCell *cell = (MUKMediaCarouselYouTubePlayerCell *)[self.collectionView cellForItemAtIndexPath:kIndexPath];
+    // Get & configure view controller
+    MUKMediaCarouselYouTubePlayerViewController *viewController = (MUKMediaCarouselYouTubePlayerViewController *)[self visibleItemViewControllerForMediaAtIndex:kItemIndex];
     
-    if ([cell isMemberOfClass:[MUKMediaCarouselYouTubePlayerCell class]]) {
+    if ([viewController isMemberOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
+    {
         MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kItemIndex];        
-        [self configureYouTubePlayerCell:cell forMediaAttributes:attributes undecodableYouTubeURL:extractor.youTubeURL atIndexPath:kIndexPath];
+        [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes undecodableYouTubeURL:extractor.youTubeURL];
     }
 }
 
