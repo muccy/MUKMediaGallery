@@ -3,6 +3,7 @@
 #import "CarouselViewController.h"
 
 #define DEBUG_SIMULATE_ASSETS_DOWNLOADING   0
+#define DEBUG_HUGE_ASSETS                   0
 
 @interface ThumbnailsViewController () <MUKMediaThumbnailsViewControllerDelegate>
 @property (nonatomic) NSOperationQueue *networkQueue;
@@ -62,7 +63,20 @@
 
 + (NSArray *)newAssets {
     NSMutableArray *mediaAssets = [[NSMutableArray alloc] init];
+
+#if DEBUG_HUGE_ASSETS
+    NSArray *URLStrings = @[@"http://farm8.staticflickr.com/7350/9866729914_97a955b4b8_o.jpg", @"http://farm8.staticflickr.com/7434/10921869254_7bffef2e3b_o.jpg", @"http://farm5.staticflickr.com/4057/4591850430_c48b559490_o.jpg", @"http://farm4.staticflickr.com/3260/3113370526_6a61e6b257_o.jpg", @"http://farm8.staticflickr.com/7453/10505239263_dc6dc13cbb_o.jpg", @"http://farm4.staticflickr.com/3330/3646343982_0240258b96_o.jpg", @"http://farm1.staticflickr.com/61/366959006_94023bb220_o.jpg", @"http://farm3.staticflickr.com/2370/2328858444_650067ed20_o.jpg", @"http://farm3.staticflickr.com/2576/4200626213_2eaeb1d045_o.jpg", @"http://farm1.staticflickr.com/161/368122234_30c9ddf6ae_o.jpg"];
     
+    for (NSString *URLString in URLStrings) {
+        NSString *thumbURLString = [URLString stringByReplacingOccurrencesOfString:@"_o." withString:@"_m."];
+
+        MediaAsset *asset = [[MediaAsset alloc] initWithKind:MUKMediaKindImage];
+        asset.URL = [NSURL URLWithString:URLString];
+        asset.thumbnailURL = [NSURL URLWithString:thumbURLString];
+        
+        [mediaAssets addObject:asset];
+    }
+#else
     for (NSInteger i=0; i<100; i++) {
         MediaAsset *youTubeVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindYouTubeVideo];
         youTubeVideoAsset.duration = 906; // 15:06
@@ -104,6 +118,7 @@
         remoteAudioAsset.URL = [NSURL URLWithString:@"http://ia600201.us.archive.org/21/items/SexForModerns-PenetratingLoveRay/SexForModerns-PenetratingLoveRay.mp3"];
         [mediaAssets addObject:remoteAudioAsset];
     }
+#endif
     
     return mediaAssets;
 }
