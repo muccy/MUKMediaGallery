@@ -532,7 +532,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
         MUKMediaCarouselViewController *carouselViewController = [self.delegate thumbnailsViewController:self carouselToPresentAfterSelectingItemAtIndex:indexPath.item];
         
         if (carouselViewController) {
-            [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO];
+            [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO completion:nil];
             
             self.isTransitioningWithCarouselViewController = YES;
             

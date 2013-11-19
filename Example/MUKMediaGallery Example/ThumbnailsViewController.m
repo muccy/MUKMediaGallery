@@ -167,7 +167,7 @@
 
 - (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPresentAfterSelectingItemAtIndex:(NSInteger)idx
 {
-    CarouselViewController *carouselViewController = [[CarouselViewController alloc] initWithCollectionViewLayout:nil];
+    CarouselViewController *carouselViewController = [[CarouselViewController alloc] init];
     carouselViewController.mediaAssets = self.mediaAssets;
     return carouselViewController;
 }

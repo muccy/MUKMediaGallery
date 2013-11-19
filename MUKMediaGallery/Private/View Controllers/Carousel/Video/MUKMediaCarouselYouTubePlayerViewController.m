@@ -1,28 +1,23 @@
-#import "MUKMediaCarouselYouTubePlayerCell.h"
+#import "MUKMediaCarouselYouTubePlayerViewController.h"
 
-@interface MUKMediaCarouselYouTubePlayerCell () <UIGestureRecognizerDelegate, UIWebViewDelegate>
+@interface MUKMediaCarouselYouTubePlayerViewController () <UIGestureRecognizerDelegate, UIWebViewDelegate>
 @property (nonatomic, weak, readwrite) UIWebView *webView;
 @property (nonatomic) CGRect lastWebViewBounds;
 @end
 
-@implementation MUKMediaCarouselYouTubePlayerCell
-
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self createThumbnailImageViewIfNeededInSuperview:self.contentView belowSubview:self.overlayView];
-        _lastWebViewBounds = CGRectNull;
-    }
-    
-    return self;
-}
+@implementation MUKMediaCarouselYouTubePlayerViewController
 
 - (void)dealloc {
     [self disposeWebView];
 }
 
-- (void)layoutSubviews {
-    [super layoutSubviews];
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self createThumbnailImageViewIfNeededInSuperview:self.view belowSubview:self.overlayView];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     
     // Do the best to resize web view embed
     if (self.webView.superview != nil) {
@@ -47,7 +42,7 @@
     
     // Create web view if needed
     if (self.webView == nil) {
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:self.contentView.bounds];
+        UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
         webView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
         webView.allowsInlineMediaPlayback = YES;
         webView.mediaPlaybackRequiresUserAction = YES;
@@ -58,15 +53,14 @@
         webView.delegate = self;
         
         UIView *relativeView;
-        if ([self.thumbnailImageView.superview isEqual:self.contentView])
-        {
+        if ([self.thumbnailImageView.superview isEqual:self.view]) {
             relativeView = self.thumbnailImageView;
         }
         else {
             relativeView = self.overlayView;
         }
-
-        [self.contentView insertSubview:webView belowSubview:relativeView];
+        
+        [self.view insertSubview:webView belowSubview:relativeView];
         self.webView = webView;
         
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleWebViewTap:)];
@@ -77,7 +71,7 @@
     self.lastWebViewBounds = self.webView.bounds;
     
     // Load HTML embed
-    NSString *html = [self youTubeEmbedForURL:youTubeURL size:self.contentView.bounds.size];
+    NSString *html = [self youTubeEmbedForURL:youTubeURL size:self.view.bounds.size];
     [self.webView loadHTMLString:html baseURL:nil];
 }
 
@@ -99,6 +93,10 @@
 
 #pragma mark - Private
 
+static void CommonInit(MUKMediaCarouselYouTubePlayerViewController *vc) {
+    vc->_lastWebViewBounds = CGRectNull;
+}
+
 - (void)disposeWebView {
     [self.webView loadHTMLString:@"<html></html>" baseURL:nil];
     self.webView.delegate = nil;
@@ -119,13 +117,13 @@
 
 - (void)updateYouTubeEmbedInWebView:(UIWebView *)webView toSize:(CGSize)size {
     static NSString *const kJSCommandMask = @"\
-        (function (width, height) {\
-            var embeds = document.getElementsByTagName('embed');\
-            if (embeds.length == 0) return;\
-            var embed = embeds[0];\
-            embed.width = width;\
-            embed.height = height;\
-        })(%.0f, %.0f);\
+    (function (width, height) {\
+    var embeds = document.getElementsByTagName('embed');\
+    if (embeds.length == 0) return;\
+    var embed = embeds[0];\
+    embed.width = width;\
+    embed.height = height;\
+    })(%.0f, %.0f);\
     ";
     
     NSString *command = [[NSString alloc] initWithFormat:kJSCommandMask, size.width, size.height];
@@ -136,7 +134,7 @@
 
 - (void)handleWebViewTap:(UITapGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateEnded) {
-        [self.delegate carouselYouTubePlayerCell:self webView:self.webView didReceiveTapWithGestureRecognizer:recognizer];
+        [self.delegate carouselYouTubePlayerViewController:self webView:self.webView didReceiveTapWithGestureRecognizer:recognizer];
     }
 }
 
@@ -150,12 +148,12 @@
 #pragma mark - <UIWebViewDelegate>
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self.delegate carouselYouTubePlayerCell:self didFinishLoadingWebView:webView error:nil];
+    [self.delegate carouselYouTubePlayerViewController:self didFinishLoadingWebView:webView error:nil];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    [self.delegate carouselYouTubePlayerCell:self didFinishLoadingWebView:webView error:error];
+    [self.delegate carouselYouTubePlayerViewController:self didFinishLoadingWebView:webView error:error];
 }
 
 @end

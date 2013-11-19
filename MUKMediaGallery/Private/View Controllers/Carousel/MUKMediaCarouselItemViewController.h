@@ -1,20 +1,24 @@
 #import <UIKit/UIKit.h>
 
-@interface MUKMediaCarouselCell : UICollectionViewCell
+// A page of carousel
+@interface MUKMediaCarouselItemViewController : UIViewController
+@property (nonatomic, readonly) NSInteger mediaIndex;
 @property (nonatomic, weak, readonly) UIView *overlayView;
 @property (nonatomic, weak, readonly) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, weak, readonly) UILabel *captionLabel;
 @property (nonatomic, weak, readonly) UIView *captionBackgroundView;
 @property (nonatomic, weak, readonly) UIImageView *thumbnailImageView;
 
+- (instancetype)initWithMediaIndex:(NSInteger)idx;
 @end
 
-@interface MUKMediaCarouselCell (Caption)
+
+@interface MUKMediaCarouselItemViewController (Caption)
 - (BOOL)isCaptionHidden;
 - (void)setCaptionHidden:(BOOL)hidden animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler;
 @end
 
 
-@interface MUKMediaCarouselCell (Thumbnail)
+@interface MUKMediaCarouselItemViewController (Thumbnail)
 - (void)createThumbnailImageViewIfNeededInSuperview:(UIView *)superview belowSubview:(UIView *)subview;
 @end
