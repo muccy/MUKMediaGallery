@@ -3,7 +3,7 @@
 #import "CarouselViewController.h"
 
 #define DEBUG_SIMULATE_ASSETS_DOWNLOADING   0
-#define DEBUG_HUGE_ASSETS                   1
+#define DEBUG_HUGE_ASSETS                   0
 
 @interface ThumbnailsViewController () <MUKMediaThumbnailsViewControllerDelegate>
 @property (nonatomic) NSOperationQueue *networkQueue;

@@ -122,7 +122,7 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
         viewController.automaticallyAdjustsScrollViewInsets = NO;
     }
     
-    viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:1 cacheNulls:NO];
+    viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:2 cacheNulls:NO];
     viewController.thumbnailImagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:7 cacheNulls:NO];
     viewController.mediaAttributesCache = [[MUKMediaAttributesCache alloc] initWithCountLimit:7 cacheNulls:YES];
     
