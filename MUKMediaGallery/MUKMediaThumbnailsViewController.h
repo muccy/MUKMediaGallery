@@ -83,6 +83,7 @@ typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
 
 /**
  Where transition is applied.
+ 
  @param viewController The thumbnails view controller which requests this info.
  @param carouselViewController The carousel view controller which
  will be presented.
@@ -90,7 +91,22 @@ typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
  @return A navigation controller if you have chosen a push style.
  A generic view controller if you have chosen a cover vertical style.
  */
-- (id)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController presentationViewControllerForCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
+- (UIViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController presentationViewControllerForCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
+
+/**
+ The view controller which is pushed/presented.
+ 
+ @param viewController The thumbnails view controller which requests this info.
+ @param proposedViewController The view controller the thumbnails view controller
+ tries to present naturally.
+ @param carouselViewController The carousel view controller which
+ will be presented.
+ @param idx Media item index in carousel.
+ @return A proper view controller to be pushed/presented. You can use proposedViewController
+ to perform some kind of containment, if needed. If you return nil, proposedViewController
+ is used as default (the same behaviour you get if you don't implement this method).
+ */
+- (UIViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController viewControllerToPresent:(UIViewController *)proposedViewController toShowCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
 
 @end
 

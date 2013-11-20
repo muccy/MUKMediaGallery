@@ -542,21 +542,47 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                 transition = [self.delegate thumbnailsViewController:self transitionToPresentCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
             }
             
+            UIViewController *presentationViewController = nil;
+            if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+            {
+                presentationViewController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+            }
+            
+            // Define a local block to choose what to present
+            UIViewController *(^viewControllerToPresentBlock)(UIViewController *defaultViewController);
+            viewControllerToPresentBlock = ^(UIViewController *defaultViewController){
+                // Choose what to present
+                UIViewController *viewController = nil;
+                if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:viewControllerToPresent:toShowCarouselViewController:forItemAtIndex:)])
+                {
+                    viewController = [self.delegate thumbnailsViewController:self viewControllerToPresent:defaultViewController toShowCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                }
+                
+                if (![viewController isKindOfClass:[UIViewController class]]) {
+                    viewController = defaultViewController;
+                }
+                
+                return viewController;
+            };
+            
             switch (transition) {
                 case MUKMediaThumbnailsViewControllerToCarouselTransitionPush:
                 {
+                    // Choose presenter
                     UINavigationController *navController = nil;
-                    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+                    if ([presentationViewController isKindOfClass:[UINavigationController class]])
                     {
-                        navController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                        navController = (UINavigationController *)presentationViewController;
                     }
-                    
-                    if (![navController respondsToSelector:@selector(pushViewController:animated:)])
-                    {
+                    else {
                         navController = self.navigationController;
                     }
                     
-                    [navController pushViewController:carouselViewController animated:YES];
+                    // Choose what to present
+                    UIViewController *viewController = viewControllerToPresentBlock(carouselViewController);
+
+                    // Present it!
+                    [navController pushViewController:viewController animated:YES];
                     
                     break;
                 }
@@ -564,13 +590,6 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                 case MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical:
                 case MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve:
                 {
-                    UIViewController *presentationViewController = nil;
-                    
-                    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
-                    {
-                        presentationViewController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
-                    }
-                    
                     if (![presentationViewController respondsToSelector:@selector(presentViewController:animated:completion:)])
                     {
                         presentationViewController = self;
@@ -584,15 +603,18 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:carouselViewController];
                     navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
                     
+                    // Choose what to present
+                    UIViewController *viewController = viewControllerToPresentBlock(navController);
+                    
                     // Choose transition style
                     if (transition == MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve)
                     {
-                        navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                        viewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
                     }
                     
                     // Present it!
                     self.carouselPresentationViewController = presentationViewController;
-                    [presentationViewController presentViewController:navController animated:YES completion:nil];
+                    [presentationViewController presentViewController:viewController animated:YES completion:nil];
                     
                     break;
                 }
