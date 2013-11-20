@@ -1,7 +1,7 @@
 MUKMediaGallery
 ===============
 MUKMediaGallery is a simple iOS 6+ library built to provide you a component which replicates Photos app functionalities.
-This version is 2.0, a complete rewrite from previous version, which now can take benefit of `UICollectionView`.
+This version is 2.0, a complete rewrite from previous version, which now can take benefit of `UICollectionView` and `UIPageViewController`.
 
 Requirements
 ------------
