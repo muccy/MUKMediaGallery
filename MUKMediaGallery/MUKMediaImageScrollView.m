@@ -10,6 +10,7 @@
 @end
 
 @implementation MUKMediaImageScrollView
+@dynamic image;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -94,6 +95,10 @@
     [self addSubview:self.zoomView];
     
     [self configureForImageSize:image.size];
+}
+
+- (UIImage *)image {
+    return self.zoomView.image;
 }
 
 #pragma mark - Private

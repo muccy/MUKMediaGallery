@@ -1,5 +1,12 @@
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
+{
+    MUKMediaThumbnailsViewControllerToCarouselTransitionPush,
+    MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical,
+    MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve
+};
+
 @class MUKMediaThumbnailsViewController;
 @class MUKMediaCarouselViewController;
 @class MUKMediaAttributes;
@@ -55,11 +62,51 @@
  @param viewController The thumbnails view controller which requests this info.
  @param idx Media item index in carousel.
  @return An initialized carousel view controller. If this method is not implemented
- (or it returns nil), no carousel will be pushed.
+ (or it returns nil), no carousel will be presented.
  -[MUKMediaCarouselViewController scrollToItemAtIndex:animated:] is automatically
  called on returned instance.
  */
-- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPushAfterSelectingItemAtIndex:(NSInteger)idx;
+- (MUKMediaCarouselViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController carouselToPresentAfterSelectingItemAtIndex:(NSInteger)idx;
+
+/**
+ How do you want to present carousel? You can choose here.
+ If not implemented, MUKMediaThumbnailsViewControllerToCarouselTransitionPush
+ is default.
+ 
+ @param viewController The thumbnails view controller which requests this info.
+ @param carouselViewController The carousel view controller which
+ will be presented.
+ @param idx Media item index in carousel.
+ @return Transition style.
+ */
+- (MUKMediaThumbnailsViewControllerToCarouselTransition)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController transitionToPresentCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
+
+/**
+ Where transition is applied.
+ 
+ @param viewController The thumbnails view controller which requests this info.
+ @param carouselViewController The carousel view controller which
+ will be presented.
+ @param idx Media item index in carousel.
+ @return A navigation controller if you have chosen a push style.
+ A generic view controller if you have chosen a cover vertical style.
+ */
+- (UIViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController presentationViewControllerForCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
+
+/**
+ The view controller which is pushed/presented.
+ 
+ @param viewController The thumbnails view controller which requests this info.
+ @param proposedViewController The view controller the thumbnails view controller
+ tries to present naturally.
+ @param carouselViewController The carousel view controller which
+ will be presented.
+ @param idx Media item index in carousel.
+ @return A proper view controller to be pushed/presented. You can use proposedViewController
+ to perform some kind of containment, if needed. If you return nil, proposedViewController
+ is used as default (the same behaviour you get if you don't implement this method).
+ */
+- (UIViewController *)thumbnailsViewController:(MUKMediaThumbnailsViewController *)viewController viewControllerToPresent:(UIViewController *)proposedViewController toShowCarouselViewController:(MUKMediaCarouselViewController *)carouselViewController forItemAtIndex:(NSInteger)idx;
 
 @end
 

@@ -20,6 +20,8 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 @property (nonatomic) UIStatusBarStyle previousStatusBarStyle;
 @property (nonatomic) BOOL isTransitioningWithCarouselViewController;
 @property (nonatomic) UINavigationBar *observedNavigationBar;
+@property (nonatomic, weak) UIViewController *carouselPresentationViewController;
+@property (nonatomic) BOOL shouldReloadDataInViewWillAppear;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -85,6 +87,11 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     else {
         self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
     }
+    
+    if (self.shouldReloadDataInViewWillAppear) {
+        self.shouldReloadDataInViewWillAppear = NO;
+        [self.collectionView reloadData];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -101,6 +108,16 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
         else {
             self.navigationController.navigationBar.barStyle = self.previousNavigationBarStyle;
         }
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    for (NSIndexPath *indexPath in [self.collectionView indexPathsForVisibleItems])
+    {
+        [self requestLoadingCancellationForImageAtIndexPath:indexPath];
+        self.shouldReloadDataInViewWillAppear = YES;
     }
 }
 
@@ -189,6 +206,24 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     if (layout) {
         viewController.collectionView.collectionViewLayout = layout;
     }
+}
+
+- (void)requestLoadingCancellationForImageAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
+    {
+        NSInteger const kImageIndex = indexPath.item;
+        
+        if ([self isLoadingImageAtIndex:kImageIndex]) {
+            [self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:kImageIndex];
+            
+            // Mark as not loading
+            [self setLoading:NO imageAtIndex:kImageIndex];
+            
+            // Cancel image resizing
+            [self cancelImageResizingForItemAtIndexPath:indexPath];
+            
+        } // if -isLoadingImageAtIndex:
+    } // if delegate responds
 }
 
 #pragma mark - Private — Layout
@@ -324,11 +359,17 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
             
             // This block is called by delegate which can give back an image
             // asynchronously
+            __weak MUKMediaThumbnailsViewController *weakSelf = self;
             void (^completionHandler)(UIImage *) = ^(UIImage *image) {
+                MUKMediaThumbnailsViewController *strongSelf = weakSelf;
+                if (!strongSelf) {
+                    return;
+                }
+                
                 // If it is still loading...
-                if ([self isLoadingImageAtIndex:kImageIndex]) {
+                if ([strongSelf isLoadingImageAtIndex:kImageIndex]) {
                     // Resize image in a detached queue
-                    [self beginResizingImage:image toThumbnailSize:[[self class] thumbnailSize] forItemAtIndexPath:indexPath];
+                    [strongSelf beginResizingImage:image toThumbnailSize:[[strongSelf class] thumbnailSize] forItemAtIndexPath:indexPath];
                 }
             };
             
@@ -456,6 +497,13 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     return icon;
 }
 
+#pragma mark - Private — Carousel
+
+- (void)carouselViewControllerDoneBarButtonItemPressed:(id)sender {
+    [self.carouselPresentationViewController dismissViewControllerAnimated:YES completion:nil];
+    self.carouselPresentationViewController = nil;
+}
+
 #pragma mark - <UICollectionViewDataSource>
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -474,36 +522,106 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:cancelLoadingForImageAtIndex:)])
-    {
-        NSInteger const kImageIndex = indexPath.item;
-
-        if ([self isLoadingImageAtIndex:kImageIndex]) {
-            [self.delegate thumbnailsViewController:self cancelLoadingForImageAtIndex:kImageIndex];
-            
-            // Mark as not loading
-            [self setLoading:NO imageAtIndex:kImageIndex];
-            
-            // Cancel image resizing
-            [self cancelImageResizingForItemAtIndexPath:indexPath];
-            
-        } // if -isLoadingImageAtIndex:
-    } // if delegate responds
+    [self requestLoadingCancellationForImageAtIndexPath:indexPath];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {    
-    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:carouselToPushAfterSelectingItemAtIndex:)])
+    if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:carouselToPresentAfterSelectingItemAtIndex:)])
     {
-        MUKMediaCarouselViewController *carouselViewController = [self.delegate thumbnailsViewController:self carouselToPushAfterSelectingItemAtIndex:indexPath.item];
+        MUKMediaCarouselViewController *carouselViewController = [self.delegate thumbnailsViewController:self carouselToPresentAfterSelectingItemAtIndex:indexPath.item];
         
         if (carouselViewController) {
-            [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO];
+            [carouselViewController scrollToItemAtIndex:indexPath.item animated:NO completion:nil];
             
-            if (carouselViewController) {
-                self.isTransitioningWithCarouselViewController = YES;
-                [self.navigationController pushViewController:carouselViewController animated:YES];
+            self.isTransitioningWithCarouselViewController = YES;
+            
+            MUKMediaThumbnailsViewControllerToCarouselTransition transition = MUKMediaThumbnailsViewControllerToCarouselTransitionPush;
+            if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:transitionToPresentCarouselViewController:forItemAtIndex:)])
+            {
+                transition = [self.delegate thumbnailsViewController:self transitionToPresentCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
             }
+            
+            UIViewController *presentationViewController = nil;
+            if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:presentationViewControllerForCarouselViewController:forItemAtIndex:)])
+            {
+                presentationViewController = [self.delegate thumbnailsViewController:self presentationViewControllerForCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+            }
+            
+            // Define a local block to choose what to present
+            UIViewController *(^viewControllerToPresentBlock)(UIViewController *defaultViewController);
+            viewControllerToPresentBlock = ^(UIViewController *defaultViewController){
+                // Choose what to present
+                UIViewController *viewController = nil;
+                if ([self.delegate respondsToSelector:@selector(thumbnailsViewController:viewControllerToPresent:toShowCarouselViewController:forItemAtIndex:)])
+                {
+                    viewController = [self.delegate thumbnailsViewController:self viewControllerToPresent:defaultViewController toShowCarouselViewController:carouselViewController forItemAtIndex:indexPath.item];
+                }
+                
+                if (![viewController isKindOfClass:[UIViewController class]]) {
+                    viewController = defaultViewController;
+                }
+                
+                return viewController;
+            };
+            
+            switch (transition) {
+                case MUKMediaThumbnailsViewControllerToCarouselTransitionPush:
+                {
+                    // Choose presenter
+                    UINavigationController *navController = nil;
+                    if ([presentationViewController isKindOfClass:[UINavigationController class]])
+                    {
+                        navController = (UINavigationController *)presentationViewController;
+                    }
+                    else {
+                        navController = self.navigationController;
+                    }
+                    
+                    // Choose what to present
+                    UIViewController *viewController = viewControllerToPresentBlock(carouselViewController);
+
+                    // Present it!
+                    [navController pushViewController:viewController animated:YES];
+                    
+                    break;
+                }
+                    
+                case MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical:
+                case MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve:
+                {
+                    if (![presentationViewController respondsToSelector:@selector(presentViewController:animated:completion:)])
+                    {
+                        presentationViewController = self;
+                    }
+                    
+                    // Create a button to close modal presentation
+                    UIBarButtonItem *doneBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(carouselViewControllerDoneBarButtonItemPressed:)];
+                    carouselViewController.navigationItem.leftBarButtonItem = doneBarButtonItem;
+                    
+                    // Embed in navigation controller
+                    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:carouselViewController];
+                    navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+                    
+                    // Choose what to present
+                    UIViewController *viewController = viewControllerToPresentBlock(navController);
+                    
+                    // Choose transition style
+                    if (transition == MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve)
+                    {
+                        viewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                    }
+                    
+                    // Present it!
+                    self.carouselPresentationViewController = presentationViewController;
+                    [presentationViewController presentViewController:viewController animated:YES completion:nil];
+                    
+                    break;
+                }
+                    
+                default:
+                    break;
+            } // switch
         }
     }
 }

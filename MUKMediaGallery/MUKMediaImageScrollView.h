@@ -43,6 +43,11 @@
 @property (nonatomic) float doubleTapZoomFactor;
 
 /**
+ The image currently displayed.
+ */
+@property (nonatomic, readonly) UIImage *image;
+
+/**
  Shows image unzoomed.
  
  @param image Image to display.

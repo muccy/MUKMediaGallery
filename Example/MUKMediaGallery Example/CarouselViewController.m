@@ -7,11 +7,11 @@
 
 @implementation CarouselViewController
 
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    self = [super initWithCollectionViewLayout:layout];
+- (id)init {
+    self = [super init];
     if (self) {
         self.title = @"Media Carousel";
-        self.delegate = self;
+        self.carouselDelegate = self;
         _networkQueue = [[NSOperationQueue alloc] init];
         _networkQueue.maxConcurrentOperationCount = 2;
     }

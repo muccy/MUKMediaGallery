@@ -1,13 +1,16 @@
 #import "MUKMediaModelCache.h"
 
+NSUInteger const MUKMediaModelCacheDefaultCostLimit = 10000000;
+
 @implementation MUKMediaModelCache
 
-- (instancetype)initWithCountLimit:(NSInteger)countLimit cacheNulls:(BOOL)cacheNulls
+- (instancetype)initWithCountLimit:(NSInteger)countLimit cacheNulls:(BOOL)cacheNulls 
 {
     self = [super init];
     if (self) {
         _cache = [[NSCache alloc] init];
         _cache.countLimit = countLimit;
+        _cache.totalCostLimit = MUKMediaModelCacheDefaultCostLimit;
         
         _cacheNulls = cacheNulls;
         
@@ -39,7 +42,13 @@
         }
     }
 
-    [self.cache setObject:object forKey:@(index)];
+    NSUInteger cost = 0;
+    if ([object isKindOfClass:[UIImage class]]) {
+        UIImage *image = object;
+        cost = image.size.width * image.size.height;
+    }
+    
+    [self.cache setObject:object forKey:@(index) cost:cost];
 }
 
 - (id)objectAtIndex:(NSInteger)index isNull:(BOOL *)isNull {

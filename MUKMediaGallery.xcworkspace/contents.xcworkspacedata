@@ -72,35 +72,51 @@
             location = "group:MUKMediaGalleryUtils.m">
          </FileRef>
          <Group
+            location = "group:View Controllers"
+            name = "View Controllers">
+            <Group
+               location = "group:Carousel"
+               name = "Carousel">
+               <FileRef
+                  location = "group:MUKMediaCarouselItemViewController.h">
+               </FileRef>
+               <FileRef
+                  location = "group:MUKMediaCarouselItemViewController.m">
+               </FileRef>
+               <Group
+                  location = "group:Image"
+                  name = "Image">
+                  <FileRef
+                     location = "group:MUKMediaCarouselFullImageViewController.h">
+                  </FileRef>
+                  <FileRef
+                     location = "group:MUKMediaCarouselFullImageViewController.m">
+                  </FileRef>
+               </Group>
+               <Group
+                  location = "group:Video"
+                  name = "Video">
+                  <FileRef
+                     location = "group:MUKMediaCarouselPlayerViewController.h">
+                  </FileRef>
+                  <FileRef
+                     location = "group:MUKMediaCarouselPlayerViewController.m">
+                  </FileRef>
+                  <FileRef
+                     location = "group:MUKMediaCarouselYouTubePlayerViewController.h">
+                  </FileRef>
+                  <FileRef
+                     location = "group:MUKMediaCarouselYouTubePlayerViewController.m">
+                  </FileRef>
+               </Group>
+            </Group>
+         </Group>
+         <Group
             location = "group:Views"
             name = "Views">
             <Group
                location = "group:Cells"
                name = "Cells">
-               <FileRef
-                  location = "group:MUKMediaCarouselCell.h">
-               </FileRef>
-               <FileRef
-                  location = "group:MUKMediaCarouselCell.m">
-               </FileRef>
-               <FileRef
-                  location = "group:MUKMediaCarouselFullImageCell.h">
-               </FileRef>
-               <FileRef
-                  location = "group:MUKMediaCarouselFullImageCell.m">
-               </FileRef>
-               <FileRef
-                  location = "group:MUKMediaCarouselPlayerCell.h">
-               </FileRef>
-               <FileRef
-                  location = "group:MUKMediaCarouselPlayerCell.m">
-               </FileRef>
-               <FileRef
-                  location = "group:MUKMediaCarouselYouTubePlayerCell.h">
-               </FileRef>
-               <FileRef
-                  location = "group:MUKMediaCarouselYouTubePlayerCell.m">
-               </FileRef>
                <FileRef
                   location = "group:MUKMediaThumbnailCell.h">
                </FileRef>

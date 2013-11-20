@@ -1,4 +1,4 @@
-#import "MUKMediaCarouselCell.h"
+#import "MUKMediaCarouselItemViewController.h"
 #import "MUKMediaGalleryToolbar.h"
 #import "MUKMediaGalleryUtils.h"
 
@@ -7,7 +7,7 @@ static CGFloat const kCaptionLabelLateralPadding = 8.0f;
 static CGFloat const kCaptionLabelBottomPadding = 5.0f;
 static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
-@interface MUKMediaCarouselCell () <UIToolbarDelegate>
+@interface MUKMediaCarouselItemViewController () <UIToolbarDelegate>
 @property (nonatomic, weak, readwrite) UIView *overlayView;
 @property (nonatomic, weak, readwrite) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, weak, readwrite) UILabel *captionLabel;
@@ -17,36 +17,46 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 @property (nonatomic, strong) NSLayoutConstraint *captionLabelBottomConstraint, *captionLabelTopConstraint, *captionBackgroundViewBottomConstraint, *captionBackgroundViewTopConstraint;
 @end
 
-@implementation MUKMediaCarouselCell
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        UIView *overlayView = [self newOverlayViewInSuperview:self.contentView];
-        self.overlayView = overlayView;
-        
-        UIActivityIndicatorView *activityIndicatorView = [self newCenteredActivityIndicatorViewInSuperview:overlayView];
-        self.activityIndicatorView = activityIndicatorView;
-        
-        UILabel *captionLabel = [self newBottomAttachedCaptionLabelInSuperview:overlayView];
-        self.captionLabel = captionLabel;
-        
-        UIView *captionBackgroundView = [self newBottomAttachedBackgroundViewForCaptionLabel:captionLabel inSuperview:overlayView];
-        self.captionBackgroundView = captionBackgroundView;
-
-        [self updateCaptionConstraintsWhenHidden:NO];
-        
-        [self registerToContentSizeCategoryNotifications];
-    }
-    return self;
-}
+@implementation MUKMediaCarouselItemViewController
 
 - (void)dealloc {
     [self unregisterFromContentSizeCategoryNotifications];
 }
 
+- (instancetype)initWithMediaIndex:(NSInteger)idx {
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        _mediaIndex = idx;
+    }
+    
+    return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    UIView *overlayView = [self newOverlayViewInSuperview:self.view];
+    self.overlayView = overlayView;
+    
+    UIActivityIndicatorView *activityIndicatorView = [self newCenteredActivityIndicatorViewInSuperview:overlayView];
+    self.activityIndicatorView = activityIndicatorView;
+    
+    UILabel *captionLabel = [self newBottomAttachedCaptionLabelInSuperview:overlayView];
+    self.captionLabel = captionLabel;
+    
+    UIView *captionBackgroundView = [self newBottomAttachedBackgroundViewForCaptionLabel:captionLabel inSuperview:overlayView];
+    self.captionBackgroundView = captionBackgroundView;
+    
+    [self updateCaptionConstraintsWhenHidden:NO];
+    [self registerToContentSizeCategoryNotifications];
+    [self attachTapGestureRecognizer];
+}
+
 #pragma mark - Caption
+
+- (BOOL)isCaptionHidden {
+    return self.captionBackgroundView.alpha < 1.0f;
+}
 
 - (void)setCaptionHidden:(BOOL)hidden animated:(BOOL)animated completion:(void (^)(BOOL finished))completionHandler
 {
@@ -62,7 +72,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
                 
                 // Animate constraints change too, if requested
                 [UIView animateWithDuration:duration animations:^{
-                    [self layoutIfNeeded];
+                    [self.view layoutIfNeeded];
                 } completion:nil];
             }
             
@@ -80,7 +90,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
         [self updateCaptionConstraintsWhenHidden:hidden];
         
         [UIView animateWithDuration:duration animations:^{
-            [self layoutIfNeeded];
+            [self.view layoutIfNeeded];
         } completion:completionHandler];
     }
 }
@@ -150,7 +160,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     
     constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:[label(<=maxHeight)]" options:0 metrics:@{ @"maxHeight" : @(kCaptionLabelMaxHeight) } views:viewsDict];
     [superview addConstraints:constraints];
-
+    
     return label;
 }
 
@@ -163,7 +173,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
         MUKMediaGalleryToolbar *toolbar = [[MUKMediaGalleryToolbar alloc] initWithFrame:label.frame];
         toolbar.barStyle = UIBarStyleBlack;
         toolbar.delegate = self;
-
+        
         view = toolbar;
     }
     else {
@@ -178,7 +188,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     NSDictionary *viewsDict = NSDictionaryOfVariableBindings(view);
     NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-(0)-[view]-(0)-|" options:0 metrics:nil views:viewsDict];
     [superview addConstraints:constraints];
-
+    
     NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeHeight multiplier:1.0f constant:kCaptionLabelBottomPadding + kCaptionLabelTopPadding];
     [superview addConstraint:constraint];
     
@@ -210,7 +220,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
         self.captionBackgroundViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.captionBackgroundView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
         [self.captionBackgroundView.superview addConstraint:self.captionBackgroundViewBottomConstraint];
     }
-
+    
     // Change constraints
     NSArray *unusedConstraints, *usedConstraints;
     
@@ -227,7 +237,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     [superview addConstraints:usedConstraints];
     
     // Notify
-    [self setNeedsUpdateConstraints];
+    [self.view setNeedsUpdateConstraints];
 }
 
 #pragma mark - Private — Notifications
@@ -265,6 +275,19 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     }
     
     return font;
+}
+
+#pragma mark - Private — Tap Gesture Recognizer
+
+- (void)attachTapGestureRecognizer {
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [self.view addGestureRecognizer:gestureRecognizer];
+}
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateEnded) {
+        [self.delegate carouselItemViewControllerDidReceiveTap:self];
+    }
 }
 
 #pragma mark - <UIToolbarDelegate>
