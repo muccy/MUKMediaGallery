@@ -3,7 +3,8 @@
 typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
 {
     MUKMediaThumbnailsViewControllerToCarouselTransitionPush,
-    MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical
+    MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical,
+    MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve
 };
 
 @class MUKMediaThumbnailsViewController;
@@ -69,6 +70,8 @@ typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
 
 /**
  How do you want to present carousel? You can choose here.
+ If not implemented, MUKMediaThumbnailsViewControllerToCarouselTransitionPush
+ is default.
  
  @param viewController The thumbnails view controller which requests this info.
  @param carouselViewController The carousel view controller which

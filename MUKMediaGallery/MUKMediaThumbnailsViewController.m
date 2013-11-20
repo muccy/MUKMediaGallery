@@ -562,6 +562,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                 }
                     
                 case MUKMediaThumbnailsViewControllerToCarouselTransitionCoverVertical:
+                case MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve:
                 {
                     UIViewController *presentationViewController = nil;
                     
@@ -582,6 +583,12 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                     // Embed in navigation controller
                     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:carouselViewController];
                     navController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+                    
+                    // Choose transition style
+                    if (transition == MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve)
+                    {
+                        navController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+                    }
                     
                     // Present it!
                     self.carouselPresentationViewController = presentationViewController;
