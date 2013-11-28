@@ -144,6 +144,9 @@
             </FileRef>
          </Group>
       </Group>
+      <FileRef
+         location = "group:../MUKMediaGallery.podspec">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:Example/MUKMediaGallery Example.xcodeproj">
