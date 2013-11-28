@@ -113,6 +113,7 @@
 
 static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 {
+    // <UIPageViewControllerDelegate, UIPageViewControllerDataSource>
     viewController.delegate = viewController;
     viewController.dataSource = viewController;
     
@@ -436,7 +437,7 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 - (MUKMediaAttributes *)mediaAttributesForItemAtIndex:(NSInteger)idx {
     return [self.mediaAttributesCache mediaAttributesAtIndex:idx cacheIfNeeded:YES loadingHandler:^MUKMediaAttributes *
     {
-        if ([self.delegate respondsToSelector:@selector(carouselViewController:attributesForItemAtIndex:)])
+        if ([self.carouselDelegate respondsToSelector:@selector(carouselViewController:attributesForItemAtIndex:)])
         {
             return [self.carouselDelegate carouselViewController:self attributesForItemAtIndex:idx];
         }
@@ -638,7 +639,7 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
         [self setLoading:NO imageOfKind:imageKind atIndex:index];
         
         // Request delegate to abort
-        if ([self.delegate respondsToSelector:@selector(carouselViewController:cancelLoadingForImageOfKind:atIndex:)])
+        if ([self.carouselDelegate respondsToSelector:@selector(carouselViewController:cancelLoadingForImageOfKind:atIndex:)])
         {
             [self.carouselDelegate carouselViewController:self cancelLoadingForImageOfKind:imageKind atIndex:index];
         }
