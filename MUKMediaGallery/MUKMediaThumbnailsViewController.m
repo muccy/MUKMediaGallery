@@ -126,7 +126,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     [super viewWillLayoutSubviews];
     
     if (!CGRectIsNull(self.lastCollectionSuperviewBounds)) {
-        if (!CGSizeEqualToSize(self.lastCollectionSuperviewBounds.size, self.collectionView.superview.bounds.size))
+        if (self.lastCollectionSuperviewBounds.size.width != self.collectionView.superview.bounds.size.width)
         {
             // Maintain scrolling ratio
             CGFloat const ratio = self.collectionView.superview.bounds.size.height/self.lastCollectionSuperviewBounds.size.height;
