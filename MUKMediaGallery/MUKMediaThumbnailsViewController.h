@@ -123,6 +123,18 @@ typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
 @property (nonatomic, weak) id<MUKMediaThumbnailsViewControllerDelegate> delegate;
 
 /**
+ Size of thumbnail cell.
+ Default: 75x75 for phones, 104x104 for pads.
+ */
+@property (nonatomic) CGSize thumbnailCellSize;
+
+/**
+ Spacing between thumbnail cells.
+ Default: 4.0 for phones, 5.0 for pads.
+ */
+@property (nonatomic) CGFloat thumbnailCellSpacing;
+
+/**
  Empties caches and reloads underlying collection view, requesting every info
  from scratch.
  Remember to cancel your image loadings before to call this method.

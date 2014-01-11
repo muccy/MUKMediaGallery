@@ -13,7 +13,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 @property (nonatomic) MUKMediaModelCache *imagesCache;
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes;
-@property (nonatomic) CGRect lastCollectionViewBounds;
+@property (nonatomic) CGRect lastCollectionSuperviewBounds, lastCollectionViewBounds;
 @property (nonatomic) NSOperationQueue *thumbnailResizeQueue;
 
 @property (nonatomic) UIBarStyle previousNavigationBarStyle;
@@ -21,7 +21,8 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 @property (nonatomic) BOOL isTransitioningWithCarouselViewController;
 @property (nonatomic) UINavigationBar *observedNavigationBar;
 @property (nonatomic, weak) UIViewController *carouselPresentationViewController;
-@property (nonatomic) BOOL shouldReloadDataInViewWillAppear;
+@property (nonatomic) BOOL shouldReloadDataInViewWillAppear, shouldChangeCollectionViewLayoutAtViewDidLayoutSubviews, shouldChangeCollectionViewContentOffsetAtViewDidLayoutSubviews;
+@property (nonatomic) CGPoint collectionViewContentOffsetToSetAtViewDidLayoutSubviews;
 @end
 
 @implementation MUKMediaThumbnailsViewController
@@ -30,13 +31,13 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        CommonInitialization(self, [[self class] newGridLayout]);
+        CommonInitialization(self, [[UICollectionViewFlowLayout alloc] init]);
     }
     return self;
 }
 
 - (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    layout = [[self class] newGridLayout];
+    layout = [[UICollectionViewFlowLayout alloc] init];
     self = [super initWithCollectionViewLayout:layout];
     if (self) {
         CommonInitialization(self, nil);
@@ -124,10 +125,11 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    if (!CGRectIsNull(self.lastCollectionViewBounds)) {
-        if (!CGSizeEqualToSize(self.lastCollectionViewBounds.size, self.collectionView.bounds.size))
+    if (!CGRectIsNull(self.lastCollectionSuperviewBounds)) {
+        if (!CGSizeEqualToSize(self.lastCollectionSuperviewBounds.size, self.collectionView.superview.bounds.size))
         {
-            CGFloat const ratio = self.collectionView.bounds.size.height/self.lastCollectionViewBounds.size.height;
+            // Maintain scrolling ratio
+            CGFloat const ratio = self.collectionView.superview.bounds.size.height/self.lastCollectionSuperviewBounds.size.height;
             
             CGPoint offset;
             if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
@@ -143,18 +145,68 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
             // Don't include insets into calculations
             offset.y = ((offset.y + self.collectionView.contentInset.top) * ratio) - self.collectionView.contentInset.top;
             
-            // Performance check
-            if (!CGPointEqualToPoint(offset, self.collectionView.contentOffset)) {
-                [self.collectionView setContentOffset:offset animated:NO];
-            }
+            self.shouldChangeCollectionViewContentOffsetAtViewDidLayoutSubviews = YES;
+            self.collectionViewContentOffsetToSetAtViewDidLayoutSubviews = offset;
+
+            // Update layout at -viewDidLayoutSubviews
+            self.shouldChangeCollectionViewLayoutAtViewDidLayoutSubviews = YES;
+            
+            // Hide transition
+            [UIView animateWithDuration:0.25 animations:^{
+                self.collectionView.alpha = 0.0f;
+            } completion:nil];
         }
     }
     
     self.lastCollectionViewBounds = self.collectionView.bounds;
+    self.lastCollectionSuperviewBounds = self.collectionView.superview.bounds;
 }
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+ 
+    if (self.shouldChangeCollectionViewLayoutAtViewDidLayoutSubviews) {
+        self.shouldChangeCollectionViewLayoutAtViewDidLayoutSubviews = NO;
+        
+        // Invalidate layout
+        __weak MUKMediaThumbnailsViewController *weakSelf = self;
+        [self.collectionView performBatchUpdates:nil completion:^(BOOL finished)
+        {
+            MUKMediaThumbnailsViewController *strongSelf = weakSelf;
+            
+            // Sometimes collection view goes out of bounds
+            strongSelf.collectionView.frame = strongSelf.collectionView.superview.bounds;
+            
+            // Maintain scrolling ratio
+            if (strongSelf.shouldChangeCollectionViewContentOffsetAtViewDidLayoutSubviews)
+            {
+                strongSelf.shouldChangeCollectionViewContentOffsetAtViewDidLayoutSubviews = NO;
+                
+                CGPoint const offset = strongSelf.collectionViewContentOffsetToSetAtViewDidLayoutSubviews;
+                if (!CGPointEqualToPoint(offset, strongSelf.collectionView.contentOffset))
+                {
+                    [strongSelf.collectionView setContentOffset:offset animated:NO];
+                }
+            }
+            
+            // Restore visibility
+            [UIView animateWithDuration:0.1 animations:^{
+                strongSelf.collectionView.alpha = 1.0f;
+            } completion:nil];
+        }];
+    }
     
+    // Maintain scrolling ratio also when layout has not been invalidated
+    else if (self.shouldChangeCollectionViewContentOffsetAtViewDidLayoutSubviews)
+    {
+        self.shouldChangeCollectionViewContentOffsetAtViewDidLayoutSubviews = NO;
+        
+        CGPoint const offset = self.collectionViewContentOffsetToSetAtViewDidLayoutSubviews;
+        if (!CGPointEqualToPoint(offset, self.collectionView.contentOffset))
+        {
+            [self.collectionView setContentOffset:offset animated:NO];
+        }
+    }
 }
 
 #pragma mark - Methods
@@ -172,6 +224,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     
     // Reset initial values
     self.lastCollectionViewBounds = CGRectNull;
+    self.lastCollectionSuperviewBounds = CGRectNull;
 
     // Reload collection view
     [self.collectionView reloadData];
@@ -181,6 +234,16 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 
 static void CommonInitialization(MUKMediaThumbnailsViewController *viewController, UICollectionViewLayout *layout)
 {
+    if (UIUserInterfaceIdiomPad == [[UIDevice currentDevice] userInterfaceIdiom])
+    {
+        viewController->_thumbnailCellSize = CGSizeMake(104.0f, 104.0f);
+        viewController->_thumbnailCellSpacing = 5.0f;
+    }
+    else {
+        viewController->_thumbnailCellSize = CGSizeMake(75.0f, 75.0f);
+        viewController->_thumbnailCellSpacing = 4.0f;
+    }
+    
     // One screen contains ~28 thumbnails on phones: cache more than 5 screens
     // One screen contains ~70 thumbnails on pads: cache more than 3 screens
     NSInteger countLimit;
@@ -202,6 +265,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
     viewController.thumbnailResizeQueue.maxConcurrentOperationCount = 1;
     
     viewController.lastCollectionViewBounds = CGRectNull;
+    viewController.lastCollectionSuperviewBounds = CGRectNull;
     
     if (layout) {
         viewController.collectionView.collectionViewLayout = layout;
@@ -227,44 +291,6 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 }
 
 #pragma mark - Private — Layout
-
-+ (UICollectionViewFlowLayout *)newGridLayout {
-    UICollectionViewFlowLayout *grid = [[UICollectionViewFlowLayout alloc] init];
-    grid.itemSize = [self thumbnailSize];
-    grid.minimumInteritemSpacing = [self thumbnailSpacing];
-    grid.minimumLineSpacing = grid.minimumInteritemSpacing;
-    grid.sectionInset = UIEdgeInsetsMake(grid.minimumInteritemSpacing, grid.minimumInteritemSpacing, grid.minimumInteritemSpacing, grid.minimumInteritemSpacing);
-    
-    return grid;
-}
-
-+ (CGSize)thumbnailSize {
-    CGSize size;
-    
-    if (UIUserInterfaceIdiomPad == [[UIDevice currentDevice] userInterfaceIdiom])
-    {
-        size = CGSizeMake(104, 104);
-    }
-    else {
-        size = CGSizeMake(75, 75);
-    }
-    
-    return size;
-}
-
-+ (CGFloat)thumbnailSpacing {
-    CGFloat spacing;
-    
-    if (UIUserInterfaceIdiomPad == [[UIDevice currentDevice] userInterfaceIdiom])
-    {
-        spacing = 5.0f;
-    }
-    else {
-        spacing = 4.0f;
-    }
-    
-    return spacing;
-}
 
 - (BOOL)automaticallyAdjustsTopPadding {
     if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)])
@@ -369,7 +395,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                 // If it is still loading...
                 if ([strongSelf isLoadingImageAtIndex:kImageIndex]) {
                     // Resize image in a detached queue
-                    [strongSelf beginResizingImage:image toThumbnailSize:[[strongSelf class] thumbnailSize] forItemAtIndexPath:indexPath];
+                    [strongSelf beginResizingImage:image toThumbnailSize:strongSelf.thumbnailCellSize forItemAtIndexPath:indexPath];
                 }
             };
             
@@ -502,6 +528,34 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 - (void)carouselViewControllerDoneBarButtonItemPressed:(id)sender {
     [self.carouselPresentationViewController dismissViewControllerAnimated:YES completion:nil];
     self.carouselPresentationViewController = nil;
+}
+
+#pragma mark - <UICollectionViewFlowLayout>
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return self.thumbnailCellSize;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return self.thumbnailCellSpacing/2.0f;
+}
+
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return self.thumbnailCellSpacing;
+}
+
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    CGFloat const availableWidth = CGRectGetWidth(collectionView.superview.frame);
+    NSUInteger const cellsPerRow = floorf(availableWidth/self.thumbnailCellSize.width);
+    
+    CGFloat const usedSpace = (cellsPerRow * self.thumbnailCellSize.width) + ((cellsPerRow - 1) * self.thumbnailCellSpacing);
+    CGFloat const margin = (availableWidth - usedSpace) / 2.0;
+    
+    return UIEdgeInsetsMake(self.thumbnailCellSpacing, margin, self.thumbnailCellSpacing, margin);
 }
 
 #pragma mark - <UICollectionViewDataSource>
