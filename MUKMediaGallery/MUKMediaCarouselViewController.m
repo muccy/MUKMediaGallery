@@ -75,6 +75,8 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
     for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
     {
         [self cancelAllLoadingsForItemViewController:viewController];
@@ -117,10 +119,15 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     viewController.delegate = viewController;
     viewController.dataSource = viewController;
     
-    viewController.wantsFullScreenLayout = YES;
     if ([viewController respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)])
     {
         viewController.automaticallyAdjustsScrollViewInsets = NO;
+    }
+    else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        viewController.wantsFullScreenLayout = YES;
+#pragma clang diagnostic pop
     }
     
     viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:2 cacheNulls:NO];
@@ -141,7 +148,10 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     
     viewController = viewController ?: [self visibleItemViewControllerForMediaAtIndex:viewController.mediaIndex];
     
-    if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]])
+    // If it's a video player and there is no movie player presented full screen,
+    // stop playback
+    if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]] &&
+        !viewController.presentedViewController)
     {
         [self cancelMediaPlaybackInPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController];
     }

@@ -72,7 +72,7 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     if (!self.isTransitioningWithCarouselViewController) {
         // if not coming from carousel, save past bar styles
         self.previousNavigationBarStyle = self.navigationController.navigationBar.barStyle;
-        self.previousNavigationBarStyle = [[UIApplication sharedApplication] statusBarStyle];
+        self.previousStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     else {
         // if coming from carousel, say is not coming from carousel anymore
@@ -81,9 +81,12 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     
     if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmGlossy)
     {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         self.wantsFullScreenLayout = YES;
         self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:animated];
+#pragma clang diagnostic pop
     }
     else {
         self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
