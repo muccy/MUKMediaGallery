@@ -75,6 +75,8 @@
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
     for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
     {
         [self cancelAllLoadingsForItemViewController:viewController];
@@ -146,7 +148,10 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     
     viewController = viewController ?: [self visibleItemViewControllerForMediaAtIndex:viewController.mediaIndex];
     
-    if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]])
+    // If it's a video player and there is no movie player presented full screen,
+    // stop playback
+    if ([viewController isKindOfClass:[MUKMediaCarouselPlayerViewController class]] &&
+        !viewController.presentedViewController)
     {
         [self cancelMediaPlaybackInPlayerViewController:(MUKMediaCarouselPlayerViewController *)viewController];
     }
