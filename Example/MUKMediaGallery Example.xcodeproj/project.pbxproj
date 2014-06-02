@@ -28,6 +28,7 @@
 		069F684717772E8400AD3399 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 069F684517772E8400AD3399 /* InfoPlist.strings */; };
 		069F684917772E8400AD3399 /* MUKMediaGallery_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */; };
 		06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */; };
+		06D94862193C68E5003B7C40 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06D94861193C68E5003B7C40 /* Default-568h@2x.png */; };
 		0D17421BA3704DB7A2B7332B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 952A425C2DF643CE80F8276B /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -71,6 +72,7 @@
 		069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGallery_ExampleTests.m; sourceTree = "<group>"; };
 		06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailsViewController.h; sourceTree = "<group>"; };
 		06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailsViewController.m; sourceTree = "<group>"; };
+		06D94861193C68E5003B7C40 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		952A425C2DF643CE80F8276B /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA50E93CF31544A68881F4C4 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -103,6 +105,7 @@
 		063F7C48177ACCE6005C0BD2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				06D94861193C68E5003B7C40 /* Default-568h@2x.png */,
 				063F7C49177ACCE6005C0BD2 /* Audio */,
 				063F7C4B177ACCE6005C0BD2 /* Images */,
 				063F7C4F177ACCE6005C0BD2 /* Movies */,
@@ -299,6 +302,7 @@
 				063F7C54177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg in Resources */,
 				063F7C55177ACCE6005C0BD2 /* sea.mp4 in Resources */,
 				0622F5E5178460B4000C1382 /* RootViewController.xib in Resources */,
+				06D94862193C68E5003B7C40 /* Default-568h@2x.png in Resources */,
 				063F7C51177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */,
 				069F682E17772E8400AD3399 /* InfoPlist.strings in Resources */,
 			);
