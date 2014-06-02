@@ -1,14 +1,14 @@
 PODS:
-  - AFNetworking (1.3.3)
+  - AFNetworking (1.3.4)
   - LBYouTubeView (0.0.1)
-  - MUKMediaGallery (2.1.1):
+  - MUKMediaGallery (2.1.3):
     - LBYouTubeView (~> 0.0)
     - MUKMediaGallery/ImageScrollView
     - MUKToolkit (~> 1.1)
-  - MUKMediaGallery/ImageScrollView (2.1.1):
+  - MUKMediaGallery/ImageScrollView (2.1.3):
     - LBYouTubeView (~> 0.0)
     - MUKToolkit (~> 1.1)
-  - MUKToolkit (1.1.1)
+  - MUKToolkit (1.1.4)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.3)
@@ -20,9 +20,9 @@ EXTERNAL SOURCES:
     :path: ..
 
 SPEC CHECKSUMS:
-  AFNetworking: 61fdd49e2ffe6380378df37b3b6e70630bb9dd66
-  LBYouTubeView: f4b750e734df5097391361663ca56f037cd751a1
-  MUKMediaGallery: 2a15cb28199b437eb6ff7a6db4fd590789d5e5ad
-  MUKToolkit: ad8366bc72beaf24026704d0633a521ce0cafadc
+  AFNetworking: 80c4e0652b08eb34e25b9c0ff3c82556fe5967b4
+  LBYouTubeView: 1cfaab14c2a2a9ccb46b761165dab364c21751c8
+  MUKMediaGallery: 43c9865e451ab37628c43b7a226e01689582f2a5
+  MUKToolkit: c780b0b11b1b1d7fa3df28f3cf20ae127858f749
 
-COCOAPODS: 0.28.0
+COCOAPODS: 0.33.1
