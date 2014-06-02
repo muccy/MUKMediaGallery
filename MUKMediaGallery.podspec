@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name      = 'MUKMediaGallery'
-  s.version   = '2.1.3'
+  s.version   = '2.1.4'
   s.summary   = 'A simple iOS library built to provide you a component which replicates Photos app functionalities.'
   s.license   = { :type => 'BSD 3-Clause', :file => 'LICENSE' }
   s.platform  = :ios, '6.0'
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
     'Marco Muccinelli' => 'muccymac@gmail.com'
   }
   s.source = {
-    :git => 'https://muccy@bitbucket.org/muccy/mukmediagallery.git',
+    :git => 'https://github.com/muccy/MUKMediaGallery.git',
     :tag => s.version.to_s
   } 
   s.compiler_flags      = '-Wdocumentation'
