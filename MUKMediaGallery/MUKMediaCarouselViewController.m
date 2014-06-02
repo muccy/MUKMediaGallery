@@ -117,10 +117,15 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     viewController.delegate = viewController;
     viewController.dataSource = viewController;
     
-    viewController.wantsFullScreenLayout = YES;
     if ([viewController respondsToSelector:@selector(setAutomaticallyAdjustsScrollViewInsets:)])
     {
         viewController.automaticallyAdjustsScrollViewInsets = NO;
+    }
+    else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        viewController.wantsFullScreenLayout = YES;
+#pragma clang diagnostic pop
     }
     
     viewController.imagesCache = [[MUKMediaModelCache alloc] initWithCountLimit:2 cacheNulls:NO];
