@@ -201,24 +201,20 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     UIView *const superview = self.captionLabel.superview;
     
     // Create all constraints
-    if (self.captionLabelTopConstraint == nil) {
+    if (!self.captionLabelTopConstraint) {
         self.captionLabelTopConstraint = [NSLayoutConstraint constraintWithItem:self.captionLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:kCaptionLabelTopPadding];
-        [self.captionLabel.superview addConstraint:self.captionLabelTopConstraint];
     }
     
-    if (self.captionBackgroundViewTopConstraint == nil) {
+    if (!self.captionBackgroundViewTopConstraint) {
         self.captionBackgroundViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.captionBackgroundView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:kCaptionLabelTopPadding];
-        [self.captionBackgroundView.superview addConstraint:self.captionBackgroundViewTopConstraint];
     }
     
-    if (self.captionLabelBottomConstraint == nil) {
+    if (!self.captionLabelBottomConstraint) {
         self.captionLabelBottomConstraint = [NSLayoutConstraint constraintWithItem:self.captionLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:-kCaptionLabelBottomPadding];
-        [self.captionLabel.superview addConstraint:self.captionLabelBottomConstraint];
     }
     
-    if (self.captionBackgroundViewBottomConstraint == nil) {
+    if (!self.captionBackgroundViewBottomConstraint) {
         self.captionBackgroundViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.captionBackgroundView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
-        [self.captionBackgroundView.superview addConstraint:self.captionBackgroundViewBottomConstraint];
     }
     
     // Change constraints
