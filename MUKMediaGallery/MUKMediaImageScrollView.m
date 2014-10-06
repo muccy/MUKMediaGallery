@@ -118,26 +118,40 @@ static void CommonInitialization(MUKMediaImageScrollView *view) {
 
 #pragma mark - Private — Layout
 
+- (BOOL)hasImageWithPositiveSize {
+    return self.imageSize.width > 0.0f && self.imageSize.height > 0.0f;
+}
+
 - (void)configureForImageSize:(CGSize)imageSize {
     self.imageSize = imageSize;
     self.contentSize = imageSize;
     [self setMaxMinZoomScalesForCurrentBounds];
-    self.zoomScale = self.minimumZoomScale;
+    
+    if ([self hasImageWithPositiveSize]) {
+        self.zoomScale = self.minimumZoomScale;
+    }
 }
 
 - (void)setMaxMinZoomScalesForCurrentBounds {
     CGSize boundsSize = self.bounds.size;
     
-    // calculate min/max zoomscale
-    CGFloat xScale = boundsSize.width  / self.imageSize.width;    // the scale needed to perfectly fit the image width-wise
-    CGFloat yScale = boundsSize.height / self.imageSize.height;   // the scale needed to perfectly fit the image height-wise
-
-    CGFloat minScale = MIN(xScale, yScale);
-    CGFloat maxScale = minScale * self.maximumZoomFactor;
+    CGFloat minScale, maxScale;
     
-    // don't let minScale exceed maxScale. (If the image is smaller than the screen, we don't want to force it to be zoomed.)
-    if (minScale > maxScale) {
-        minScale = maxScale;
+    if ([self hasImageWithPositiveSize]) {
+        // calculate min/max zoomscale
+        CGFloat xScale = boundsSize.width  / self.imageSize.width;    // the scale needed to perfectly fit the image width-wise
+        CGFloat yScale = boundsSize.height / self.imageSize.height;   // the scale needed to perfectly fit the image height-wise
+        
+        minScale = MIN(xScale, yScale);
+        maxScale = minScale * self.maximumZoomFactor;
+        
+        // don't let minScale exceed maxScale. (If the image is smaller than the screen, we don't want to force it to be zoomed.)
+        if (minScale > maxScale) {
+            minScale = maxScale;
+        }
+    }
+    else {
+        minScale = maxScale = 1.0f;
     }
     
     self.minimumZoomScale = minScale;
