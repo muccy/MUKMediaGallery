@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name      = 'MUKMediaGallery'
-  s.version   = '2.1.4'
+  s.version   = '2.1.5'
   s.summary   = 'A simple iOS library built to provide you a component which replicates Photos app functionalities.'
   s.license   = { :type => 'BSD 3-Clause', :file => 'LICENSE' }
   s.platform  = :ios, '6.0'
