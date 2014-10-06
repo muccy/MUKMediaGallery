@@ -7,13 +7,13 @@
 #import "MUKMediaAttributesCache.h"
 #import "MUKMediaCarouselFlowLayout.h"
 #import "MUKMediaGalleryUtils.h"
-#import "LBYouTubeExtractor.h"
+#import <XCDYouTubeKit/XCDYouTubeKit.h>
 #import <QuartzCore/QuartzCore.h>
 
 #define DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL    0
 #define DEBUG_LOAD_LOGGING                      0
 
-@interface MUKMediaCarouselViewController () <MUKMediaCarouselItemViewControllerDelegate, MUKMediaCarouselFullImageViewControllerDelegate, MUKMediaCarouselPlayerViewControllerDelegate, MUKMediaCarouselYouTubePlayerViewControllerDelegate, LBYouTubeExtractorDelegate>
+@interface MUKMediaCarouselViewController () <MUKMediaCarouselItemViewControllerDelegate, MUKMediaCarouselFullImageViewControllerDelegate, MUKMediaCarouselPlayerViewControllerDelegate, MUKMediaCarouselYouTubePlayerViewControllerDelegate>
 @property (nonatomic) MUKMediaAttributesCache *mediaAttributesCache;
 @property (nonatomic) MUKMediaModelCache *imagesCache, *thumbnailImagesCache, *youTubeDecodedURLCache;
 @property (nonatomic) NSMutableIndexSet *loadingImageIndexes, *loadingThumbnailImageIndexes;
@@ -752,38 +752,106 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
         return;
     }
     
-    LBYouTubeExtractor *extractor = [[LBYouTubeExtractor alloc] initWithURL:youTubeURL quality:LBYouTubeVideoQualityLarge];
-    extractor.delegate = self;
+    NSString *const videoIdentifier = [self identifierInYouTubeURL:youTubeURL];
+    if (!videoIdentifier) {
+        return;
+    }
     
-    self.runningYouTubeExtractors[@(index)] = extractor;
-    [extractor startExtracting];
+    __weak MUKMediaCarouselViewController *weakSelf = self;
+    id<XCDYouTubeOperation> operation = [[XCDYouTubeClient defaultClient] getVideoWithIdentifier:videoIdentifier completionHandler:^(XCDYouTubeVideo *video, NSError *error)
+    {
+        MUKMediaCarouselViewController *strongSelf = weakSelf;
+        [strongSelf didFinishExtractingYouTubeVideo:video error:error forItemAtIndex:index withYouTubeURL:youTubeURL];
+    }];
+    
+    self.runningYouTubeExtractors[@(index)] = operation;
 }
 
 - (void)cancelDecodingMovieURLFromYouTubeForItemAtIndex:(NSInteger)index {
-    LBYouTubeExtractor *extractor = self.runningYouTubeExtractors[@(index)];
-    extractor.delegate = nil;
-    [extractor stopExtracting];
-    
+    id<XCDYouTubeOperation> operation = self.runningYouTubeExtractors[@(index)];
+    [operation cancel];
     [self.runningYouTubeExtractors removeObjectForKey:@(index)];
 }
 
-- (NSInteger)indexOfRunningYouTubeMovieURLExtractor:(LBYouTubeExtractor *)extractor
-{
-    if (!extractor) {
-        return NSNotFound;
+- (NSString *)identifierInYouTubeURL:(NSURL *)youTubeURL {
+    if (!youTubeURL) {
+        return nil;
     }
     
-    NSSet *keys = [self.runningYouTubeExtractors keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop)
-    {
-        if ([obj isEqual:extractor]) {
-            *stop = YES;
-            return YES;
-        }
-        
-        return NO;
-    }];
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=v(=|/))([-a-zA-Z0-9_]+)|(?<=youtu.be/)([-a-zA-Z0-9_]+)" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSString *const youTubeURLString = [youTubeURL absoluteString];
+    NSTextCheckingResult *match = [regex firstMatchInString:youTubeURLString options:0 range:NSMakeRange(0, [youTubeURLString length])];
     
-    return ([keys count] ? [[keys anyObject] integerValue] : NSNotFound);
+    if (match) {
+        NSRange range = [match rangeAtIndex:0];
+        NSString *videoIdentifier = [youTubeURLString substringWithRange:range];
+        return videoIdentifier;
+    }
+
+    return nil;
+}
+
+- (void)didFinishExtractingYouTubeVideo:(XCDYouTubeVideo *)video error:(NSError *)error forItemAtIndex:(NSInteger)itemIndex withYouTubeURL:(NSURL *)youTubeURL
+{
+    // Set as not running
+    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:itemIndex];
+    
+    // Check item is the same
+    NSURL *const updatedYouTubeURL = [self.carouselDelegate carouselViewController:self mediaURLForItemAtIndex:itemIndex];
+    
+    if (![youTubeURL isEqual:updatedYouTubeURL]) {
+        // If it's not the same, stop here
+        return;
+    }
+    
+    // If it's the same, continue caching it (if no video URL, cache is cleared properly)
+#if !DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL
+    NSURL *const extractedURL = [self preferredExtractedYouTubeMovieURLFromVideo:video];
+#else
+    NSURL *const extractedURL = nil;
+#endif
+    [self.youTubeDecodedURLCache setObject:extractedURL atIndex:itemIndex];
+    
+    // Get & configure view controller
+    MUKMediaCarouselYouTubePlayerViewController *viewController = (MUKMediaCarouselYouTubePlayerViewController *)[self visibleItemViewControllerForMediaAtIndex:itemIndex];
+    
+    if ([viewController isMemberOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
+    {
+        MUKMediaAttributes *const attributes = [self mediaAttributesForItemAtIndex:itemIndex];
+        
+        if (extractedURL && !DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL) {
+            [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes decodedMediaURL:extractedURL];
+        }
+        else {
+            [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes undecodableYouTubeURL:youTubeURL];
+        }
+    }
+}
+
+- (NSURL *)preferredExtractedYouTubeMovieURLFromVideo:(XCDYouTubeVideo *)video {
+    if (!video) {
+        return nil;
+    }
+    
+    // Check live streaming first
+    NSURL *URL = video.streamURLs[XCDYouTubeVideoQualityHTTPLiveStreaming];
+    if (URL) {
+        return URL;
+    }
+    
+    // Check video from best quality
+    URL = video.streamURLs[@(XCDYouTubeVideoQualityHD720)];
+    if (URL) {
+        return URL;
+    }
+    
+    URL = video.streamURLs[@(XCDYouTubeVideoQualityMedium360)];
+    if (URL) {
+        return URL;
+    }
+    
+    return video.streamURLs[@(XCDYouTubeVideoQualitySmall240)];
 }
 
 #pragma mark - Private — Bars
@@ -956,57 +1024,6 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 {
     viewController.thumbnailImageView.image = nil;
     [viewController.activityIndicatorView stopAnimating];
-}
-
-#pragma mark - <LBYouTubeExtractorDelegate>
-
-- (void)youTubeExtractor:(LBYouTubeExtractor *)extractor didSuccessfullyExtractYouTubeURL:(NSURL *)videoURL
-{
-#if DEBUG_YOUTUBE_EXTRACTION_ALWAYS_FAIL
-    [self youTubeExtractor:extractor failedExtractingYouTubeURLWithError:nil];
-    return;
-#endif
-    
-    // Get item index
-    NSInteger const kItemIndex = [self indexOfRunningYouTubeMovieURLExtractor:extractor];
-    if (kItemIndex == NSNotFound) return;
-    
-    // Cache it
-    [self.youTubeDecodedURLCache setObject:videoURL atIndex:kItemIndex];
-    
-    // Set as not running
-    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
-    
-    // Get & configure view controller
-    MUKMediaCarouselYouTubePlayerViewController *viewController = (MUKMediaCarouselYouTubePlayerViewController *)[self visibleItemViewControllerForMediaAtIndex:kItemIndex];
-    
-    if ([viewController isMemberOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
-    {
-        MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kItemIndex];
-        [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes decodedMediaURL:videoURL];
-    }
-}
-
-- (void)youTubeExtractor:(LBYouTubeExtractor *)extractor failedExtractingYouTubeURLWithError:(NSError *)error
-{
-    // Get item index
-    NSInteger const kItemIndex = [self indexOfRunningYouTubeMovieURLExtractor:extractor];
-    if (kItemIndex == NSNotFound) return;
-    
-    // Cache it
-    [self.youTubeDecodedURLCache setObject:nil atIndex:kItemIndex];
-    
-    // Set as not running
-    [self cancelDecodingMovieURLFromYouTubeForItemAtIndex:kItemIndex];
-    
-    // Get & configure view controller
-    MUKMediaCarouselYouTubePlayerViewController *viewController = (MUKMediaCarouselYouTubePlayerViewController *)[self visibleItemViewControllerForMediaAtIndex:kItemIndex];
-    
-    if ([viewController isMemberOfClass:[MUKMediaCarouselYouTubePlayerViewController class]])
-    {
-        MUKMediaAttributes *attributes = [self mediaAttributesForItemAtIndex:kItemIndex];        
-        [self configureYouTubePlayerViewController:viewController forMediaAttributes:attributes undecodableYouTubeURL:extractor.youTubeURL];
-    }
 }
 
 @end

@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.resource_bundle     = { 'MUKMediaGalleryResources' => 'MUKMediaGallery/Resources/Images/**' }
   
   s.dependency          'MUKToolkit',     '~> 1.1'
-  s.dependency          'LBYouTubeView',  '~> 0.0'
+  s.dependency          'XCDYouTubeKit',  '~> 2.0'
   
   s.subspec "ImageScrollView" do |sp|
     sp.source_files        = 'MUKMediaGallery/MUKMediaImageScrollView.{h,m}'
