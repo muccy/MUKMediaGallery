@@ -11,8 +11,8 @@
 
 @implementation ThumbnailsViewController
 
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    self = [super initWithCollectionViewLayout:layout];
+- (id)init {
+    self = [super init];
     if (self) {
         self.title = @"Thumbnails Grid";
         self.delegate = self;

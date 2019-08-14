@@ -140,4 +140,9 @@ typedef NS_ENUM(NSInteger, MUKMediaThumbnailsViewControllerToCarouselTransition)
  Remember to cancel your image loadings before to call this method.
  */
 - (void)reloadData;
+
+- (instancetype)init NS_DESIGNATED_INITIALIZER;
+- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout NS_UNAVAILABLE;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
+- (instancetype)initWithCoder:(NSCoder *)coder NS_UNAVAILABLE;
 @end

@@ -6,6 +6,7 @@
 @end
 
 @implementation MUKMediaCarouselYouTubePlayerViewController
+@dynamic delegate;
 
 - (void)dealloc {
     [self disposeWebView];

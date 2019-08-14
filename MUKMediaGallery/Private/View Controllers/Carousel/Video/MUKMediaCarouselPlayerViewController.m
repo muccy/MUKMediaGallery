@@ -9,6 +9,7 @@
 @end
 
 @implementation MUKMediaCarouselPlayerViewController
+@dynamic delegate;
 
 - (void)dealloc {
     [self cancelPlayerControlsHideTimer];

@@ -27,27 +27,13 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 
 @implementation MUKMediaThumbnailsViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id)init {
+    self = [super initWithCollectionViewLayout:[[UICollectionViewFlowLayout alloc] init]];
     if (self) {
         CommonInitialization(self, [[UICollectionViewFlowLayout alloc] init]);
     }
-    return self;
-}
-
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    layout = [[UICollectionViewFlowLayout alloc] init];
-    self = [super initWithCollectionViewLayout:layout];
-    if (self) {
-        CommonInitialization(self, nil);
-    }
     
     return self;
-}
-
-- (id)init {
-    return [self initWithCollectionViewLayout:nil];
 }
 
 - (void)dealloc {

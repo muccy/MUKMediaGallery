@@ -239,17 +239,13 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 #pragma mark - Private — Notifications
 
 - (void)registerToContentSizeCategoryNotifications {
-    if (&UIContentSizeCategoryDidChangeNotification != NULL) {
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc addObserver:self selector:@selector(contentSizeCategoryDidChangeNotification:) name:UIContentSizeCategoryDidChangeNotification object:nil];
-    }
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc addObserver:self selector:@selector(contentSizeCategoryDidChangeNotification:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
 - (void)unregisterFromContentSizeCategoryNotifications {
-    if (&UIContentSizeCategoryDidChangeNotification != NULL) {
-        NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-        [nc removeObserver:self name:UIContentSizeCategoryDidChangeNotification object:nil];
-    }
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc removeObserver:self name:UIContentSizeCategoryDidChangeNotification object:nil];
 }
 
 - (void)contentSizeCategoryDidChangeNotification:(NSNotification *)notification
