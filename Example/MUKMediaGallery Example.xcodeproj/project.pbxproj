@@ -9,11 +9,10 @@
 /* Begin PBXBuildFile section */
 		0622F5E4178460B4000C1382 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0622F5E2178460B4000C1382 /* RootViewController.m */; };
 		0622F5E5178460B4000C1382 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0622F5E3178460B4000C1382 /* RootViewController.xib */; };
+		0631BB162303E76500915252 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0631BB152303E76500915252 /* Launch Screen.storyboard */; };
+		0631BB182303E78600915252 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0631BB172303E78600915252 /* Media.xcassets */; };
 		063F7C47177ACB55005C0BD2 /* MediaAsset.m in Sources */ = {isa = PBXBuildFile; fileRef = 063F7C46177ACB55005C0BD2 /* MediaAsset.m */; };
 		063F7C51177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */; };
-		063F7C52177ACCE6005C0BD2 /* palms-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4C177ACCE6005C0BD2 /* palms-thumbnail.jpg */; };
-		063F7C53177ACCE6005C0BD2 /* palms.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4D177ACCE6005C0BD2 /* palms.jpg */; };
-		063F7C54177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */; };
 		063F7C55177ACCE6005C0BD2 /* sea.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 063F7C50177ACCE6005C0BD2 /* sea.mp4 */; };
 		06807E5F177C260F00AF0BC8 /* CarouselViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06807E5E177C260F00AF0BC8 /* CarouselViewController.m */; };
 		069F682417772E8400AD3399 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 069F682317772E8400AD3399 /* Foundation.framework */; };
@@ -28,7 +27,6 @@
 		069F684717772E8400AD3399 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 069F684517772E8400AD3399 /* InfoPlist.strings */; };
 		069F684917772E8400AD3399 /* MUKMediaGallery_ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */; };
 		06A5A08D1778147E00B00309 /* ThumbnailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */; };
-		06D94862193C68E5003B7C40 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 06D94861193C68E5003B7C40 /* Default-568h@2x.png */; };
 		6F274E261216CE39252B4333 /* libPods-MUKMediaGallery Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CAF187C5D4B3C68A6A64883E /* libPods-MUKMediaGallery Example.a */; };
 /* End PBXBuildFile section */
 
@@ -46,12 +44,11 @@
 		0622F5E1178460B4000C1382 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		0622F5E2178460B4000C1382 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		0622F5E3178460B4000C1382 /* RootViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		0631BB152303E76500915252 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		0631BB172303E78600915252 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		063F7C45177ACB55005C0BD2 /* MediaAsset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaAsset.h; sourceTree = "<group>"; };
 		063F7C46177ACB55005C0BD2 /* MediaAsset.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaAsset.m; sourceTree = "<group>"; };
 		063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "SexForModerns-StopTheClock_64kb.mp3"; sourceTree = "<group>"; };
-		063F7C4C177ACCE6005C0BD2 /* palms-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "palms-thumbnail.jpg"; sourceTree = "<group>"; };
-		063F7C4D177ACCE6005C0BD2 /* palms.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = palms.jpg; sourceTree = "<group>"; };
-		063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "sea-movie-thumbnail.jpg"; sourceTree = "<group>"; };
 		063F7C50177ACCE6005C0BD2 /* sea.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = sea.mp4; sourceTree = "<group>"; };
 		06807E5D177C260F00AF0BC8 /* CarouselViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CarouselViewController.h; sourceTree = "<group>"; };
 		06807E5E177C260F00AF0BC8 /* CarouselViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CarouselViewController.m; sourceTree = "<group>"; };
@@ -72,7 +69,6 @@
 		069F684817772E8400AD3399 /* MUKMediaGallery_ExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUKMediaGallery_ExampleTests.m; sourceTree = "<group>"; };
 		06A5A08B1778147E00B00309 /* ThumbnailsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThumbnailsViewController.h; sourceTree = "<group>"; };
 		06A5A08C1778147E00B00309 /* ThumbnailsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbnailsViewController.m; sourceTree = "<group>"; };
-		06D94861193C68E5003B7C40 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		CAF187C5D4B3C68A6A64883E /* libPods-MUKMediaGallery Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MUKMediaGallery Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7BA49451EBB886668E4C1EF /* Pods-MUKMediaGallery Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MUKMediaGallery Example.debug.xcconfig"; path = "Target Support Files/Pods-MUKMediaGallery Example/Pods-MUKMediaGallery Example.debug.xcconfig"; sourceTree = "<group>"; };
 		EC88F22AF568F16D8BA82301 /* Pods-MUKMediaGallery Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MUKMediaGallery Example.release.xcconfig"; path = "Target Support Files/Pods-MUKMediaGallery Example/Pods-MUKMediaGallery Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -106,9 +102,7 @@
 		063F7C48177ACCE6005C0BD2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				06D94861193C68E5003B7C40 /* Default-568h@2x.png */,
 				063F7C49177ACCE6005C0BD2 /* Audio */,
-				063F7C4B177ACCE6005C0BD2 /* Images */,
 				063F7C4F177ACCE6005C0BD2 /* Movies */,
 			);
 			path = Resources;
@@ -120,16 +114,6 @@
 				063F7C4A177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 */,
 			);
 			path = Audio;
-			sourceTree = "<group>";
-		};
-		063F7C4B177ACCE6005C0BD2 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				063F7C4C177ACCE6005C0BD2 /* palms-thumbnail.jpg */,
-				063F7C4D177ACCE6005C0BD2 /* palms.jpg */,
-				063F7C4E177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg */,
-			);
-			path = Images;
 			sourceTree = "<group>";
 		};
 		063F7C4F177ACCE6005C0BD2 /* Movies */ = {
@@ -199,6 +183,8 @@
 				069F682C17772E8400AD3399 /* InfoPlist.strings */,
 				069F682F17772E8400AD3399 /* main.m */,
 				069F683117772E8400AD3399 /* MUKMediaGallery Example-Prefix.pch */,
+				0631BB152303E76500915252 /* Launch Screen.storyboard */,
+				0631BB172303E78600915252 /* Media.xcassets */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -227,7 +213,6 @@
 				E7BA49451EBB886668E4C1EF /* Pods-MUKMediaGallery Example.debug.xcconfig */,
 				EC88F22AF568F16D8BA82301 /* Pods-MUKMediaGallery Example.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -309,12 +294,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				063F7C52177ACCE6005C0BD2 /* palms-thumbnail.jpg in Resources */,
-				063F7C53177ACCE6005C0BD2 /* palms.jpg in Resources */,
-				063F7C54177ACCE6005C0BD2 /* sea-movie-thumbnail.jpg in Resources */,
+				0631BB182303E78600915252 /* Media.xcassets in Resources */,
+				0631BB162303E76500915252 /* Launch Screen.storyboard in Resources */,
 				063F7C55177ACCE6005C0BD2 /* sea.mp4 in Resources */,
 				0622F5E5178460B4000C1382 /* RootViewController.xib in Resources */,
-				06D94862193C68E5003B7C40 /* Default-568h@2x.png in Resources */,
 				063F7C51177ACCE6005C0BD2 /* SexForModerns-StopTheClock_64kb.mp3 in Resources */,
 				069F682E17772E8400AD3399 /* InfoPlist.strings in Resources */,
 			);
