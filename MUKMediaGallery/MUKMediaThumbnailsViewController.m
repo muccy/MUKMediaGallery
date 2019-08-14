@@ -43,7 +43,15 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+    UIColor *color;
+    if (@available(iOS 13, *)) {
+        color = UIColor.systemBackgroundColor;
+    }
+    else {
+        color = UIColor.whiteColor;
+    }
+    self.collectionView.backgroundColor = color;
+    
     [self.collectionView registerClass:[MUKMediaThumbnailCell class] forCellWithReuseIdentifier:kCellIdentifier];
     
     if (![self automaticallyAdjustsTopPadding]) {
@@ -453,7 +461,24 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
 
 - (void)configureThumbnailCell:(MUKMediaThumbnailCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    cell.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1.0f];
+    UIColor *color;
+    if (@available(iOS 13, *)) {
+        color = [UIColor colorWithDynamicProvider:^UIColor * _Nonnull(UITraitCollection * _Nonnull traitCollection) {
+            switch (traitCollection.userInterfaceStyle) {
+                case UIUserInterfaceStyleDark:
+                    return [UIColor colorWithWhite:0.4f alpha:1.0f];
+                    break;
+                    
+                default:
+                    return [UIColor colorWithWhite:0.9f alpha:1.0f];
+                    break;
+            }
+        }];
+    }
+    else {
+        color = [UIColor colorWithWhite:0.9f alpha:1.0f];
+    }
+    cell.backgroundColor = color;
     
     // Get cached image or request it to delegate
     UIImage *image = [self cachedImageOrRequestLoadingForItemAtIndexPath:indexPath];
