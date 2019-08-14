@@ -14,7 +14,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 @property (nonatomic, weak, readwrite) UIView *captionBackgroundView;
 @property (nonatomic, weak, readwrite) UIImageView *thumbnailImageView;
 
-@property (nonatomic, strong) NSLayoutConstraint *captionLabelBottomConstraint, *captionLabelTopConstraint, *captionBackgroundViewBottomConstraint, *captionBackgroundViewTopConstraint;
+@property (nonatomic, copy, nullable) NSArray<NSLayoutConstraint *> *captionRelatedConstraints;
 @end
 
 @implementation MUKMediaCarouselItemViewController
@@ -189,8 +189,7 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"|-(0)-[view]-(0)-|" options:0 metrics:nil views:viewsDict];
     [superview addConstraints:constraints];
     
-    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeHeight multiplier:1.0f constant:kCaptionLabelBottomPadding + kCaptionLabelTopPadding];
-    [superview addConstraint:constraint];
+    [view.topAnchor constraintEqualToAnchor:label.topAnchor constant:-kCaptionLabelTopPadding].active = YES;
     
     return view;
 }
@@ -198,42 +197,34 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 #pragma mark - Private — Caption
 
 - (void)updateCaptionConstraintsWhenHidden:(BOOL)hidden {
-    UIView *const superview = self.captionLabel.superview;
-    
-    // Create all constraints
-    if (!self.captionLabelTopConstraint) {
-        self.captionLabelTopConstraint = [NSLayoutConstraint constraintWithItem:self.captionLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:kCaptionLabelTopPadding];
-    }
-    
-    if (!self.captionBackgroundViewTopConstraint) {
-        self.captionBackgroundViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.captionBackgroundView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:kCaptionLabelTopPadding];
-    }
-    
-    if (!self.captionLabelBottomConstraint) {
-        self.captionLabelBottomConstraint = [NSLayoutConstraint constraintWithItem:self.captionLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:-kCaptionLabelBottomPadding];
-    }
-    
-    if (!self.captionBackgroundViewBottomConstraint) {
-        self.captionBackgroundViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.captionBackgroundView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:superview attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0.0f];
-    }
-    
-    // Change constraints
-    NSArray *unusedConstraints, *usedConstraints;
+    NSArray<NSLayoutConstraint *> *newConstraints;
     
     if (hidden) {
-        usedConstraints = @[ self.captionLabelTopConstraint, self.captionBackgroundViewTopConstraint ];
-        unusedConstraints = @[ self.captionLabelBottomConstraint, self.captionBackgroundViewBottomConstraint ];
+        newConstraints = @[
+            [self.captionLabel.topAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:kCaptionLabelTopPadding],
+            [self.captionBackgroundView.topAnchor constraintEqualToAnchor:self.view.bottomAnchor constant:kCaptionLabelTopPadding]
+        ];
     }
     else {
-        usedConstraints = @[ self.captionLabelBottomConstraint, self.captionBackgroundViewBottomConstraint ];
-        unusedConstraints = @[ self.captionLabelTopConstraint, self.captionBackgroundViewTopConstraint ];
+        NSLayoutAnchor *safeBottomAnchor;
+        if (@available(iOS 11.0, *)) {
+            safeBottomAnchor = self.view.safeAreaLayoutGuide.bottomAnchor;
+        } else {
+            safeBottomAnchor = self.view.layoutMarginsGuide.bottomAnchor;
+        }
+        
+        newConstraints = @[
+            [self.captionLabel.bottomAnchor constraintEqualToAnchor:safeBottomAnchor constant:-kCaptionLabelBottomPadding],
+            [self.captionBackgroundView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor]
+        ];
     }
     
-    [superview removeConstraints:unusedConstraints];
-    [superview addConstraints:usedConstraints];
+    if (self.captionRelatedConstraints) {
+        [NSLayoutConstraint deactivateConstraints:self.captionRelatedConstraints];
+    }
     
-    // Notify
-    [self.view setNeedsUpdateConstraints];
+    [NSLayoutConstraint activateConstraints:newConstraints];
+    self.captionRelatedConstraints = newConstraints;
 }
 
 #pragma mark - Private — Notifications
