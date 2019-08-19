@@ -55,12 +55,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
-    {
-        self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    }
-    
+
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+
     if (self.shouldReloadDataInViewWillAppear) {
         self.shouldReloadDataInViewWillAppear = NO;
         
@@ -859,29 +856,9 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 }
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated {
-    BOOL automaticallyManagesStatusBar = [self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-    
-    if (!automaticallyManagesStatusBar) {
-        UIStatusBarAnimation animation = UIStatusBarAnimationNone;
-        
-        if (animated) {
-            if (hidden) {
-                animation = UIStatusBarAnimationSlide;
-            }
-            else {
-                animation = UIStatusBarAnimationFade;
-            }
-        }
-        
-        [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:animation];
-    }
-    
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    
-    if (automaticallyManagesStatusBar) {
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
-    
+    [self setNeedsStatusBarAppearanceUpdate];
+
     for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
     {
         if (hidden || (!hidden && [viewController.captionLabel.text length] > 0))
@@ -933,6 +910,13 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     
     // Clean pending view controllers
     self.pendingViewControllers = nil;
+    
+    if (finished && [pageViewController.viewControllers.firstObject isKindOfClass:MUKMediaCarouselPlayerViewController.class]) {
+        MUKMediaCarouselPlayerViewController *const playerViewController = (MUKMediaCarouselPlayerViewController *)pageViewController.viewControllers.firstObject;
+        if (playerViewController.playerView.player.rate == 0) {
+            [playerViewController.playerView setPlayerControlsHidden:NO animated:YES completion:nil];
+        }
+    }
 }
 
 #pragma mark - <UIPageViewControllerDataSource>
@@ -1003,6 +987,7 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     if (viewController.playerView.player.rate > 0.0) {
         // Hide bars when playback starts
         [self setBarsHidden:YES animated:YES];
+        [viewController.playerView setPlayerControlsHidden:YES animated:YES completion:nil];
     }
 }
 

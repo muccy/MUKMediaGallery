@@ -137,12 +137,6 @@
                location = "group:MUKMediaGallerySlider.m">
             </FileRef>
             <FileRef
-               location = "group:MUKMediaGalleryToolbar.h">
-            </FileRef>
-            <FileRef
-               location = "group:MUKMediaGalleryToolbar.m">
-            </FileRef>
-            <FileRef
                location = "group:MUKMediaPlayerView.h">
             </FileRef>
             <FileRef

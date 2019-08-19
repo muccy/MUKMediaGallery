@@ -1,5 +1,4 @@
 #import "MUKMediaCarouselItemViewController.h"
-#import "MUKMediaGalleryToolbar.h"
 #import "MUKMediaGalleryUtils.h"
 
 static CGFloat const kCaptionLabelMaxHeight = 80.0f;
@@ -7,7 +6,7 @@ static CGFloat const kCaptionLabelLateralPadding = 8.0f;
 static CGFloat const kCaptionLabelBottomPadding = 5.0f;
 static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
-@interface MUKMediaCarouselItemViewController () <UIToolbarDelegate>
+@interface MUKMediaCarouselItemViewController ()
 @property (nonatomic, weak, readwrite) UIView *overlayView;
 @property (nonatomic, weak, readwrite) UIActivityIndicatorView *activityIndicatorView;
 @property (nonatomic, weak, readwrite) UILabel *captionLabel;
@@ -166,20 +165,8 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
 
 - (UIView *)newBottomAttachedBackgroundViewForCaptionLabel:(UILabel *)label inSuperview:(UIView *)superview
 {
-    UIView *view;
-    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
-    {
-        // A toolbar gives live blurry effect on iOS 7
-        MUKMediaGalleryToolbar *toolbar = [[MUKMediaGalleryToolbar alloc] initWithFrame:label.frame];
-        toolbar.barStyle = UIBarStyleBlack;
-        toolbar.delegate = self;
-        
-        view = toolbar;
-    }
-    else {
-        view = [[UIView alloc] initWithFrame:label.frame];
-        view.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
-    }
+    UIVisualEffect *const effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    UIVisualEffectView *const view = [[UIVisualEffectView alloc] initWithEffect:effect];
     
     view.userInteractionEnabled = NO;
     view.translatesAutoresizingMaskIntoConstraints = NO;
@@ -271,12 +258,6 @@ static CGFloat const kCaptionLabelTopPadding = 3.0f;
     if (recognizer.state == UIGestureRecognizerStateEnded) {
         [self.delegate carouselItemViewControllerDidReceiveTap:self];
     }
-}
-
-#pragma mark - <UIToolbarDelegate>
-
-- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
-    return UIBarPositionBottom;
 }
 
 @end

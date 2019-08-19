@@ -103,17 +103,12 @@
     } else {
         bottomAnchor = self.layoutMarginsGuide.bottomAnchor;
     }
-    NSLayoutConstraint *const bottomConstraint = [controlsView.bottomAnchor constraintEqualToAnchor:bottomAnchor];
-    bottomConstraint.priority = UILayoutPriorityDefaultHigh - 5;
-    
-    NSLayoutConstraint *const safetyBottomConstraint = [controlsView.bottomAnchor constraintLessThanOrEqualToAnchor:bottomAnchor];
-    safetyBottomConstraint.priority = UILayoutPriorityRequired - 1;
+    NSLayoutConstraint *const bottomConstraint = [controlsView.bottomAnchor constraintLessThanOrEqualToAnchor:bottomAnchor];
     
     [NSLayoutConstraint activateConstraints:@[
         [controlsView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
         [controlsView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor],
-        bottomConstraint,
-        safetyBottomConstraint
+        bottomConstraint
     ]];
 }
 

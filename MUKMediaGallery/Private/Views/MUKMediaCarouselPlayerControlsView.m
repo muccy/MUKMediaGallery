@@ -1,5 +1,4 @@
 #import "MUKMediaCarouselPlayerControlsView.h"
-#import "MUKMediaGalleryToolbar.h"
 #import "MUKMediaGalleryUtils.h"
 #import "MUKMediaGallerySlider.h"
 #import <MUKToolkit/MUK+String.h>
@@ -7,8 +6,7 @@
 
 static CGFloat const kToolbarHeight = 44.0f;
 
-@interface MUKMediaCarouselPlayerControlsView () <UIToolbarDelegate>
-@property (nonatomic, weak) UIView *backgroundView;
+@interface MUKMediaCarouselPlayerControlsView ()
 @property (nonatomic, weak) UIButton *playPauseButton;
 @property (nonatomic, weak) UISlider *slider;
 @property (nonatomic, weak) UILabel *timeLabel;
@@ -73,8 +71,17 @@ static CGFloat const kToolbarHeight = 44.0f;
 #pragma mark - Private — View Building
 
 - (void)insertSubviews {
-    UIView *backgroundView = [self newBackgroundViewInSuperview:self];
-    _backgroundView = backgroundView;
+    UIVisualEffect *const effect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    UIVisualEffectView *const backgroundView = [[UIVisualEffectView alloc] initWithEffect:effect];
+    backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:backgroundView];
+
+    [NSLayoutConstraint activateConstraints:@[
+        [backgroundView.topAnchor constraintEqualToAnchor:self.topAnchor],
+        [backgroundView.leadingAnchor constraintEqualToAnchor:self.leadingAnchor],
+        [backgroundView.bottomAnchor constraintEqualToAnchor:self.bottomAnchor],
+        [backgroundView.trailingAnchor constraintEqualToAnchor:self.trailingAnchor]
+    ]];
     
     UIButton *playPauseButton = [self newPlayPauseButtonInSuperview:self];
     _playPauseButton = playPauseButton;
@@ -89,28 +96,6 @@ static CGFloat const kToolbarHeight = 44.0f;
     [self showPauseIconForPlayer:nil];
     [self showSliderProgressForPlayer:nil];
     [self showPlaybackTimeAndDurationForPlayer:nil];
-}
-
-- (UIView *)newBackgroundViewInSuperview:(UIView *)superview {
-    UIView *view;
-    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
-    {
-        // A toolbar gives live blurry effect on iOS 7
-        MUKMediaGalleryToolbar *toolbar = [[MUKMediaGalleryToolbar alloc] initWithFrame:superview.bounds];
-        toolbar.barStyle = UIBarStyleBlack;
-        toolbar.delegate = self;
-        
-        view = toolbar;
-    }
-    else {
-        view = [[UIView alloc] initWithFrame:superview.bounds];
-        view.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.5f];
-    }
-    
-    view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-    [superview addSubview:view];
-
-    return view;
 }
 
 - (UIButton *)newPlayPauseButtonInSuperview:(UIView *)superview {
@@ -172,14 +157,8 @@ static CGFloat const kToolbarHeight = 44.0f;
     NSDictionary *const viewsDict = NSDictionaryOfVariableBindings(slider, label);
     NSArray *constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"[slider]-(6)-[label(>=20)]-(6)-|" options:0 metrics:nil views:viewsDict];
     [superview addConstraints:constraints];
-    
-    CGFloat offset = 2.0f;
-    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmGlossy)
-    {
-        offset = 1.0f;
-    }
-    
-    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:slider attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:offset];
+
+    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:slider attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:2];
     [superview addConstraint:constraint];
     
     return label;
@@ -355,12 +334,6 @@ static CGFloat const kToolbarHeight = 44.0f;
     if (CMTIME_IS_VALID(self.player.currentItem.duration)) {
         [self showSliderProgressForPlayer:self.player];
     }
-}
-
-#pragma mark - <UIToolbarDelegate>
-
-- (UIBarPosition)positionForBar:(id<UIBarPositioning>)bar {
-    return UIBarPositionBottom;
 }
 
 @end

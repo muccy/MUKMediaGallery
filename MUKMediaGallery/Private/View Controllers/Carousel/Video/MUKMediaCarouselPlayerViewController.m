@@ -20,7 +20,6 @@
     
     if (self.playerView == nil) {
         [self insertPlayerView];
-        [self updateControlsViewConstraints];
         
         // Create room for thumbnail
         [self createThumbnailImageViewIfNeededInSuperview:self.playerView belowSubview:self.playerView.controlsView];
@@ -40,19 +39,26 @@
     [self.playerView setPlayerControlsHidden:NO animated:NO completion:nil];
 }
 
-#pragma mark - Private — Player Controls
-
-- (void)updateControlsViewConstraints {
-    [self.playerView.controlsView.bottomAnchor constraintEqualToAnchor:self.captionBackgroundView.topAnchor].active = YES;
-}
-
 #pragma mark - Private — Player
 
 - (void)insertPlayerView {
     MUKMediaPlayerView *playerView = [[MUKMediaPlayerView alloc] initWithFrame:self.view.bounds];
     playerView.delegate = self;
-    playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+    playerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.view insertSubview:playerView belowSubview:self.overlayView];
+    
+    NSLayoutConstraint *const bottomConstraint = [playerView.controlsView.bottomAnchor constraintEqualToAnchor:self.captionBackgroundView.topAnchor constant:-1.0f/UIScreen.mainScreen.scale];
+    bottomConstraint.priority = UILayoutPriorityDefaultHigh;
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [playerView.topAnchor constraintEqualToAnchor:self.view.topAnchor],
+        [playerView.leadingAnchor constraintEqualToAnchor:self.view.leadingAnchor],
+        [playerView.bottomAnchor constraintEqualToAnchor:self.view.bottomAnchor],
+        [playerView.trailingAnchor constraintEqualToAnchor:self.view.trailingAnchor],
+        
+        bottomConstraint
+    ]];
+    
     self.playerView = playerView;
 }
 

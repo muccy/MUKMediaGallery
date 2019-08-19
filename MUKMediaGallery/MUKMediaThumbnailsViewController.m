@@ -17,7 +17,6 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
 @property (nonatomic) NSOperationQueue *thumbnailResizeQueue;
 
 @property (nonatomic) UIBarStyle previousNavigationBarStyle;
-@property (nonatomic) UIStatusBarStyle previousStatusBarStyle;
 @property (nonatomic) BOOL isTransitioningWithCarouselViewController;
 @property (nonatomic) UINavigationBar *observedNavigationBar;
 @property (nonatomic, weak) UIViewController *carouselPresentationViewController;
@@ -66,25 +65,13 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     if (!self.isTransitioningWithCarouselViewController) {
         // if not coming from carousel, save past bar styles
         self.previousNavigationBarStyle = self.navigationController.navigationBar.barStyle;
-        self.previousStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
     }
     else {
         // if coming from carousel, say is not coming from carousel anymore
         self.isTransitioningWithCarouselViewController = NO;
     }
     
-    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmGlossy)
-    {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        self.wantsFullScreenLayout = YES;
-        self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackTranslucent animated:animated];
-#pragma clang diagnostic pop
-    }
-    else {
-        self.navigationController.navigationBar.barStyle = UIBarStyleDefault;
-    }
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
     
     if (self.shouldReloadDataInViewWillAppear) {
         self.shouldReloadDataInViewWillAppear = NO;
@@ -97,15 +84,8 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
     
     if (!self.isTransitioningWithCarouselViewController) {
         // If not transitioning to carousel, reset past bar values
-        
-        if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmGlossy)
-        {
-            self.navigationController.navigationBar.barStyle = self.previousNavigationBarStyle;
-            [[UIApplication sharedApplication] setStatusBarStyle:self.previousStatusBarStyle animated:animated];
-        }
-        else {
-            self.navigationController.navigationBar.barStyle = self.previousNavigationBarStyle;
-        }
+        self.navigationController.navigationBar.barStyle = self.previousNavigationBarStyle;
+        [self setNeedsStatusBarAppearanceUpdate];
     }
 }
 
@@ -128,17 +108,10 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
             // Maintain scrolling ratio
             CGFloat const ratio = self.collectionView.superview.bounds.size.height/self.lastCollectionSuperviewBounds.size.height;
             
-            CGPoint offset;
-            if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
-            {
-                // Value stored in self.collectionView.contentOffset is already
-                // changed at this moment: use bounds instead (on iOS 7 and over)
-                offset = self.lastCollectionViewBounds.origin;
-            }
-            else {
-                offset = self.collectionView.contentOffset;
-            }
-            
+            // Value stored in self.collectionView.contentOffset is already
+            // changed at this moment: use bounds instead (on iOS 7 and over)
+            CGPoint offset = self.lastCollectionViewBounds.origin;
+    
             // Don't include insets into calculations
             offset.y = ((offset.y + self.collectionView.contentInset.top) * ratio) - self.collectionView.contentInset.top;
             
@@ -203,6 +176,18 @@ static NSString *const kNavigationBarBoundsKVOIdentifier = @"NavigationBarFrameK
         {
             [self.collectionView setContentOffset:offset animated:NO];
         }
+    }
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+    switch (self.navigationController.navigationBar.barStyle) {
+        case UIBarStyleBlackTranslucent:
+            return UIStatusBarStyleLightContent;
+            break;
+            
+        default:
+            return UIStatusBarStyleDefault;
+            break;
     }
 }
 
