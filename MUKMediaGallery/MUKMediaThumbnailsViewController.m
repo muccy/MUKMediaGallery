@@ -658,6 +658,7 @@ static void CommonInitialization(MUKMediaThumbnailsViewController *viewControlle
                     
                     // Choose what to present
                     UIViewController *viewController = viewControllerToPresentBlock(navController);
+                    viewController.modalPresentationStyle = UIModalPresentationFullScreen;
                     
                     // Choose transition style
                     if (transition == MUKMediaThumbnailsViewControllerToCarouselTransitionCrossDissolve)
