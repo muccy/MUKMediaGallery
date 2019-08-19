@@ -21,7 +21,13 @@
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     self.window.rootViewController = navController;
     
-    self.window.backgroundColor = [UIColor whiteColor];
+    if (@available(iOS 13, *)) {
+        // No window background
+    }
+    else {
+        self.window.backgroundColor = [UIColor whiteColor];
+    }
+    
     [self.window makeKeyAndVisible];
     return YES;
 }

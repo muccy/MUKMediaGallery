@@ -7,6 +7,7 @@
 @end
 
 @implementation MUKMediaCarouselFullImageViewController
+@dynamic delegate;
 
 - (instancetype)initWithMediaIndex:(NSInteger)idx {
     self = [super initWithMediaIndex:idx];

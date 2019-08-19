@@ -9,7 +9,7 @@
 
 
 @interface MUKMediaCarouselFullImageViewController : MUKMediaCarouselItemViewController
-@property (nonatomic, weak) id<MUKMediaCarouselFullImageViewControllerDelegate>delegate;
+@property (nonatomic, weak) id<MUKMediaCarouselFullImageViewControllerDelegate> delegate;
 
 @property (nonatomic, weak, readonly) MUKMediaImageScrollView *imageScrollView;
 @property (nonatomic, readonly) MUKMediaImageKind imageKind;

@@ -55,12 +55,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    if ([MUKMediaGalleryUtils defaultUIParadigm] == MUKMediaGalleryUIParadigmLayered)
-    {
-        self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    }
-    
+
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+
     if (self.shouldReloadDataInViewWillAppear) {
         self.shouldReloadDataInViewWillAppear = NO;
         
@@ -727,9 +724,7 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
         shouldDismissThumbnail = NO;
     }
     else {
-        if (viewController.moviePlayerController.playbackState != MPMoviePlaybackStateStopped ||
-            viewController.moviePlayerController.playbackState != MPMoviePlaybackStatePaused)
-        {
+        if (viewController.playerView.player.rate > 0.0) {
             shouldDismissThumbnail = YES;
         }
         else {
@@ -861,29 +856,9 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 }
 
 - (void)setBarsHidden:(BOOL)hidden animated:(BOOL)animated {
-    BOOL automaticallyManagesStatusBar = [self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
-    
-    if (!automaticallyManagesStatusBar) {
-        UIStatusBarAnimation animation = UIStatusBarAnimationNone;
-        
-        if (animated) {
-            if (hidden) {
-                animation = UIStatusBarAnimationSlide;
-            }
-            else {
-                animation = UIStatusBarAnimationFade;
-            }
-        }
-        
-        [[UIApplication sharedApplication] setStatusBarHidden:hidden withAnimation:animation];
-    }
-    
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
-    
-    if (automaticallyManagesStatusBar) {
-        [self setNeedsStatusBarAppearanceUpdate];
-    }
-    
+    [self setNeedsStatusBarAppearanceUpdate];
+
     for (MUKMediaCarouselItemViewController *viewController in self.viewControllers)
     {
         if (hidden || (!hidden && [viewController.captionLabel.text length] > 0))
@@ -935,6 +910,13 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     
     // Clean pending view controllers
     self.pendingViewControllers = nil;
+    
+    if (finished && [pageViewController.viewControllers.firstObject isKindOfClass:MUKMediaCarouselPlayerViewController.class]) {
+        MUKMediaCarouselPlayerViewController *const playerViewController = (MUKMediaCarouselPlayerViewController *)pageViewController.viewControllers.firstObject;
+        if (playerViewController.playerView.player.rate == 0) {
+            [playerViewController.playerView setPlayerControlsHidden:NO animated:YES completion:nil];
+        }
+    }
 }
 
 #pragma mark - <UIPageViewControllerDataSource>
@@ -975,11 +957,10 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
     {
         MUKMediaCarouselPlayerViewController *playerViewController = (MUKMediaCarouselPlayerViewController *)viewController;
         if ([self areBarsHidden]) {
-            [playerViewController setPlayerControlsHidden:NO animated:YES completion:nil];
+            [playerViewController.playerView setPlayerControlsHidden:NO animated:YES completion:nil];
         }
-        else if (playerViewController.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
-        {
-            [playerViewController setPlayerControlsHidden:YES animated:YES completion:nil];
+        else if (playerViewController.playerView.player.rate > 0.0) {
+            [playerViewController.playerView setPlayerControlsHidden:YES animated:YES completion:nil];
         }
     }
     
@@ -995,21 +976,18 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 
 #pragma mark - <MUKMediaCarouselPlayerViewControllerDelegate>
 
-- (void)carouselPlayerViewControllerDidChangeNowPlayingMovie:(MUKMediaCarouselPlayerViewController *)viewController
+- (void)carouselPlayerViewControllerDidChangePlaybackState:(MUKMediaCarouselPlayerViewController *)viewController
 {
     // Dismiss thumbnail (if needed) when new playback starts (or begins scrubbing)
     if ([self shouldDismissThumbnailAsNewPlaybackStartsInPlayerViewController:viewController])
     {
         [self dismissThumbnailInPlayerViewController:viewController];
     }
-}
-
-- (void)carouselPlayerViewControllerDidChangePlaybackState:(MUKMediaCarouselPlayerViewController *)viewController
-{
-    // Hide bars when playback starts
-    if (viewController.moviePlayerController.playbackState == MPMoviePlaybackStatePlaying)
-    {
+    
+    if (viewController.playerView.player.rate > 0.0) {
+        // Hide bars when playback starts
         [self setBarsHidden:YES animated:YES];
+        [viewController.playerView setPlayerControlsHidden:YES animated:YES completion:nil];
     }
 }
 

@@ -11,8 +11,8 @@
 
 @implementation ThumbnailsViewController
 
-- (id)initWithCollectionViewLayout:(UICollectionViewLayout *)layout {
-    self = [super initWithCollectionViewLayout:layout];
+- (id)init {
+    self = [super init];
     if (self) {
         self.title = @"Thumbnails Grid";
         self.delegate = self;
@@ -158,7 +158,7 @@
         [mediaAssets addObject:youTubeVideoAsset];
         
         MediaAsset *localVideoAsset = [[MediaAsset alloc] initWithKind:MUKMediaKindVideo];
-        localVideoAsset.thumbnailURL = [MUK URLForImageFileNamed:@"sea-movie-thumbnail.jpg" bundle:nil];
+        localVideoAsset.thumbnailURL = [[NSBundle mainBundle] URLForResource:@"sea-movie-thumbnail" withExtension:@"jpg"];
         localVideoAsset.URL = [[NSBundle mainBundle] URLForResource:@"sea" withExtension:@"mp4"];
         localVideoAsset.caption = @"A local video asset downloaded from Flickr which has been recorded to be relaxing and entertaining";
         [mediaAssets addObject:localVideoAsset];
