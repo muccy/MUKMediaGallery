@@ -2,17 +2,16 @@
 #import "MUKMediaGalleryUtils.h"
 #import "MUKMediaGallerySlider.h"
 #import <MUKToolkit/MUK+String.h>
-#import <MUKSignal/MUKSignal.h>
 
 static CGFloat const kToolbarHeight = 44.0f;
+static void *const kKVOContext = (void *)&kKVOContext;
 
 @interface MUKMediaCarouselPlayerControlsView ()
 @property (nonatomic, weak) UIButton *playPauseButton;
 @property (nonatomic, weak) UISlider *slider;
 @property (nonatomic, weak) UILabel *timeLabel;
-@property (nonatomic) BOOL isTouchingSlider;
+@property (nonatomic) BOOL isTouchingSlider, isObservingPlayer;
 @property (nonatomic) id timeObserver;
-@property (nonatomic) MUKSignalObservation<MUKKVOSignal *> *rateObservation, *durationObservation;
 @end
 
 @implementation MUKMediaCarouselPlayerControlsView
@@ -64,6 +63,25 @@ static CGFloat const kToolbarHeight = 44.0f;
         
         if (player) {
             [self startObservingPlayer:player];
+        }
+    }
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context != &kKVOContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+
+    if (object == self.player) {
+        if ([keyPath isEqualToString:@"currentItem.duration"]) {
+            [self playerDurationDidChange];
+        }
+        else if ([keyPath isEqualToString:NSStringFromSelector(@selector(rate))]) {
+            [self playerRateDidChange];
         }
     }
 }
@@ -277,15 +295,21 @@ static CGFloat const kToolbarHeight = 44.0f;
 #pragma mark - Private — Observations
 
 - (void)startObservingPlayer:(AVPlayer *)player {
-    [self addProgressUpdateObserverToPlayer:player];
-    [self observeRateOfPlayer:player];
-    [self observeDurationOfPlayer:player];
+    if (!self.isObservingPlayer) {
+        [self addProgressUpdateObserverToPlayer:player];
+        [player addObserver:self forKeyPath:NSStringFromSelector(@selector(rate)) options:NSKeyValueObservingOptionNew context:kKVOContext];
+        [player addObserver:self forKeyPath:@"currentItem.duration" options:NSKeyValueObservingOptionNew context:kKVOContext];
+        self.isObservingPlayer = YES;
+    }
 }
 
 - (void)stopObservingPlayer {
-    [self removeProgressUpdateObserver];
-    [self stopObservingRate];
-    [self stopObservingDuration];
+    if (self.isObservingPlayer) {
+        [self removeProgressUpdateObserver];
+        [self.player removeObserver:self forKeyPath:NSStringFromSelector(@selector(rate)) context:kKVOContext];
+        [self.player removeObserver:self forKeyPath:@"currentItem.duration" context:kKVOContext];
+        self.isObservingPlayer = NO;
+    }
 }
 
 - (void)addProgressUpdateObserverToPlayer:(AVPlayer *)player {
@@ -305,32 +329,15 @@ static CGFloat const kToolbarHeight = 44.0f;
     }
 }
 
-- (void)observeRateOfPlayer:(AVPlayer *)player {
-    MUKKVOSignal *const signal = [[MUKKVOSignal alloc] initWithObject:player keyPath:NSStringFromSelector(@selector(rate))];
-    self.rateObservation = [MUKSignalObservation observationWithSignal:signal token:[signal subscribeWithTarget:self action:@selector(rateDidChange:)]];
-}
-
-- (void)stopObservingRate {
-    self.rateObservation = nil;
-}
-
-- (void)rateDidChange:(MUKKVOSignalChange<NSNumber *> *)change {
+- (void)playerRateDidChange {
     if (!self.isTouchingSlider) {
         [self showPauseIconForPlayer:self.player];
         [self showPlaybackTimeAndDurationForPlayer:self.player];
     }
 }
 
-- (void)observeDurationOfPlayer:(AVPlayer *)player {
-    MUKKVOSignal *const signal = [[MUKKVOSignal alloc] initWithObject:player keyPath:@"currentItem.duration"];
-    self.durationObservation = [MUKSignalObservation observationWithSignal:signal token:[signal subscribeWithTarget:self action:@selector(durationDidChange:)]];
-}
 
-- (void)stopObservingDuration {
-    self.durationObservation = nil;
-}
-
-- (void)durationDidChange:(MUKKVOSignalChange<NSValue *> *)change {
+- (void)playerDurationDidChange {
     if (CMTIME_IS_VALID(self.player.currentItem.duration)) {
         [self showSliderProgressForPlayer:self.player];
     }

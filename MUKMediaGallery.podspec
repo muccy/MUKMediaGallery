@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name      = 'MUKMediaGallery'
-  s.version   = '2.2.1'
+  s.version   = '2.2.2'
   s.summary   = 'A simple iOS library built to provide you a component which replicates Photos app functionalities.'
   s.license   = { :type => 'BSD 3-Clause', :file => 'LICENSE' }
   s.platform  = :ios, '9.0'
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.resource_bundle     = { 'MUKMediaGalleryResources' => 'MUKMediaGallery/Resources/Images/**' }
   
   s.dependency          'MUKToolkit',     '~> 1.1'
-  s.dependency          'MUKSignal', '~> 1.0.5'
+  s.dependency          'MUKSignal', '~> 1.1.0'
   s.dependency          'XCDYouTubeKit',  '~> 2.0'
   
   s.subspec "ImageScrollView" do |sp|

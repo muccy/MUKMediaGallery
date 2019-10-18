@@ -6,13 +6,14 @@
 //
 
 #import "MUKMediaPlayerView.h"
-#import <MUKSignal/MUKSignal.h>
+
+static void *const kKVOContext = (void *)&kKVOContext;
 
 @interface MUKMediaPlayerView () 
 @property (nonatomic, readonly) AVPlayerLayer *playerLayer;
 @property (nonatomic) float rateBeforeSliderTouches;
 @property (nonatomic, nullable) NSTimer *playerControlsHideTimer;
-@property (nonatomic, nullable) MUKSignalObservation *rateObservation;
+@property (nonatomic) BOOL isObservingPlayer;
 @end
 
 @implementation MUKMediaPlayerView
@@ -20,7 +21,7 @@
 
 - (void)dealloc {
     [self cancelPlayerControlsHideTimer];
-    [self stopPlayerObservations];
+    [self stopObservingPlayer];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -58,10 +59,10 @@
  
 - (void)setPlayer:(AVPlayer *)player {
     if (player != self.player) {
-        [self stopPlayerObservations];
+        [self stopObservingPlayer];
         self.playerLayer.player = player;
         self.controlsView.player = player;
-        [self startPlayerObservations];
+        [self startObservingPlayer];
     }
 }
  
@@ -86,6 +87,22 @@
     [UIView animateWithDuration:kDuration animations:^{
         self.controlsView.alpha = (hidden ? 0.0f : 1.0f);
     } completion:completionHandler];
+}
+
+#pragma mark - KVO
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (context != &kKVOContext) {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        return;
+    }
+
+    if (object == self.player) {
+        if ([keyPath isEqualToString:NSStringFromSelector(@selector(rate))]) {
+            [self playerRateDidChange];
+        }
+    }
 }
 
 #pragma mark - Private
@@ -171,16 +188,20 @@
 
 #pragma mark - Private — Observations
 
-- (void)startPlayerObservations {
-    MUKKVOSignal *signal = [[MUKKVOSignal alloc] initWithObject:self.player keyPath:NSStringFromSelector(@selector(rate))];
-    self.rateObservation = [MUKSignalObservation observationWithSignal:signal token:[signal subscribeWithTarget:self action:@selector(rateDidChange)]];
+- (void)startObservingPlayer {
+    if (!self.isObservingPlayer && self.player) {
+        [self.player addObserver:self forKeyPath:NSStringFromSelector(@selector(rate)) options:NSKeyValueObservingOptionNew context:kKVOContext];
+        self.isObservingPlayer = YES;
+    }
 }
 
-- (void)stopPlayerObservations {
-    self.rateObservation = nil;
+- (void)stopObservingPlayer {
+    if (self.isObservingPlayer) {
+        [self.player removeObserver:self forKeyPath:NSStringFromSelector(@selector(rate)) context:kKVOContext];
+    }
 }
 
-- (void)rateDidChange {
+- (void)playerRateDidChange {
     // When media starts playing, hide controls after a while
     if (self.player.rate > 0.0) {
         [self startPlayerControlsHideTimer];
