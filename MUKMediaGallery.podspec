@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.resource_bundle     = { 'MUKMediaGalleryResources' => 'MUKMediaGallery/Resources/Images/**' }
   
   s.dependency          'MUKToolkit',     '~> 1.1'
-  s.dependency          'MUKSignal', '~> 1.0.5'
+  s.dependency          'MUKSignal', '~> 1.1.0'
   s.dependency          'XCDYouTubeKit',  '~> 2.0'
   
   s.subspec "ImageScrollView" do |sp|
