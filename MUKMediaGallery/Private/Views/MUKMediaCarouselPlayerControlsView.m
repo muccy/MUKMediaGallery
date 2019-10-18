@@ -2,7 +2,6 @@
 #import "MUKMediaGalleryUtils.h"
 #import "MUKMediaGallerySlider.h"
 #import <MUKToolkit/MUK+String.h>
-#import <MUKSignal/MUKSignal.h>
 
 static CGFloat const kToolbarHeight = 44.0f;
 static void *const kKVOContext = (void *)&kKVOContext;
