@@ -1,7 +1,7 @@
 #import "MUKMediaCarouselYouTubePlayerViewController.h"
 
-@interface MUKMediaCarouselYouTubePlayerViewController () <UIGestureRecognizerDelegate, UIWebViewDelegate>
-@property (nonatomic, weak, readwrite) UIWebView *webView;
+@interface MUKMediaCarouselYouTubePlayerViewController () <UIGestureRecognizerDelegate, WKNavigationDelegate>
+@property (nonatomic, weak, readwrite) WKWebView *webView;
 @property (nonatomic) CGRect lastWebViewBounds;
 @end
 
@@ -52,15 +52,19 @@
     
     // Create web view if needed
     if (self.webView == nil) {
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        WKWebViewConfiguration *const configuration = [[WKWebViewConfiguration alloc] init];
+        configuration.allowsInlineMediaPlayback = YES;
+        if (@available(iOS 10.0, *)) {
+            configuration.mediaTypesRequiringUserActionForPlayback = WKAudiovisualMediaTypeAll;
+        }
+
+        WKWebView *webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:configuration];
         webView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-        webView.allowsInlineMediaPlayback = YES;
-        webView.mediaPlaybackRequiresUserAction = YES;
         webView.opaque = NO;
         webView.backgroundColor = [UIColor clearColor];
         webView.multipleTouchEnabled = NO;
         webView.scrollView.scrollEnabled = NO;
-        webView.delegate = self;
+        webView.navigationDelegate = self;
         
         UIView *relativeView;
         if ([self.thumbnailImageView.superview isEqual:self.view]) {
@@ -105,7 +109,7 @@
 
 - (void)disposeWebView {
     [self.webView loadHTMLString:@"<html></html>" baseURL:nil];
-    self.webView.delegate = nil;
+    self.webView.navigationDelegate = nil;
     [self.webView removeFromSuperview];
     self.webView = nil;
 }
@@ -121,7 +125,7 @@
     return [NSString stringWithFormat:kEmbedHTMLMask, URLString, size.width, size.height];
 }
 
-- (void)updateYouTubeEmbedInWebView:(UIWebView *)webView toSize:(CGSize)size {
+- (void)updateYouTubeEmbedInWebView:(WKWebView *)webView toSize:(CGSize)size {
     static NSString *const kJSCommandMask = @"\
     (function (width, height) {\
     var embeds = document.getElementsByTagName('embed');\
@@ -133,7 +137,7 @@
     ";
     
     NSString *command = [[NSString alloc] initWithFormat:kJSCommandMask, size.width, size.height];
-    [webView stringByEvaluatingJavaScriptFromString:command];
+    [webView evaluateJavaScript:command completionHandler:nil];
 }
 
 #pragma mark - Private — Gesture Recognizers
@@ -151,14 +155,13 @@
     return YES;
 }
 
-#pragma mark - <UIWebViewDelegate>
+#pragma mark - <WKNavigationDelegate>
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self.delegate carouselYouTubePlayerViewController:self didFinishLoadingWebView:webView error:nil];
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     [self.delegate carouselYouTubePlayerViewController:self didFinishLoadingWebView:webView error:error];
 }
 

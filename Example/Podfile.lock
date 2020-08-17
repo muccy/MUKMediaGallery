@@ -1,17 +1,17 @@
 PODS:
   - AFNetworking (1.3.4)
-  - MUKMediaGallery (2.2.1):
-    - MUKMediaGallery/ImageScrollView (= 2.2.1)
+  - MUKMediaGallery (2.2.2):
+    - MUKMediaGallery/ImageScrollView (= 2.2.2)
     - MUKSignal (~> 1.1.0)
     - MUKToolkit (~> 1.1)
     - XCDYouTubeKit (~> 2.0)
-  - MUKMediaGallery/ImageScrollView (2.2.1):
+  - MUKMediaGallery/ImageScrollView (2.2.2):
     - MUKSignal (~> 1.1.0)
     - MUKToolkit (~> 1.1)
     - XCDYouTubeKit (~> 2.0)
   - MUKSignal (1.1)
   - MUKToolkit (1.1.4)
-  - XCDYouTubeKit (2.8.1)
+  - XCDYouTubeKit (2.14.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 1.3)
@@ -31,11 +31,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: cf8e418e16f0c9c7e5c3150d019a3c679d015018
-  MUKMediaGallery: 91ccb6df37c9e80fbcb15f3ca1846905888efa52
+  MUKMediaGallery: 70400a30ecff2aadff416855ead334ccf8545882
   MUKSignal: 37e5dd227e69f4bc1de8bacf32ede996468f67f7
   MUKToolkit: 68d80c87be918154bfd21e64158b1580c6dd2472
-  XCDYouTubeKit: 4ca4e3322fa556ec1c32932d378365c15ce1386e
+  XCDYouTubeKit: 5d50bbacdd9fedf26fb578bab901d946ff3d064c
 
 PODFILE CHECKSUM: 1477218c74701004cb5479860789bd9bbab48430
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.9.3
