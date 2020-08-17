@@ -993,12 +993,12 @@ static void CommonInitialization(MUKMediaCarouselViewController *viewController)
 
 #pragma mark - <MUKMediaCarouselYouTubePlayerViewControllerDelegate>
 
-- (void)carouselYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController webView:(UIWebView *)webView didReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
+- (void)carouselYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController webView:(WKWebView *)webView didReceiveTapWithGestureRecognizer:(UITapGestureRecognizer *)gestureRecognizer
 {
     [self toggleBarsVisibility];
 }
 
-- (void)carouselYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController didFinishLoadingWebView:(UIWebView *)webView error:(NSError *)error
+- (void)carouselYouTubePlayerViewController:(MUKMediaCarouselYouTubePlayerViewController *)viewController didFinishLoadingWebView:(WKWebView *)webView error:(NSError *)error
 {
     viewController.thumbnailImageView.image = nil;
     [viewController.activityIndicatorView stopAnimating];
